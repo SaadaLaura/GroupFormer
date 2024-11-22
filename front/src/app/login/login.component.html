@@ -1,13 +1,13 @@
 <div class="login-container">
-    <h1>Connexion à votre compte</h1>
-    <p>Saisissez votre e-mail universitaire</p>
-    <input type="email" placeholder="Exemple@ecole.com" class="input-box" [(ngModel)]="email" [ngClass]="{'error': emailError || loginError}">
-    <div *ngIf="emailError" class="error-message">Veuillez saisir votre email universitaire</div>
-    <div class="password-container">
-      <input type="password" placeholder="Mot de passe" class="input-box" id="password" [(ngModel)]="password" [ngClass]="{'error': passwordError || loginError}">
-      <button type="button" class="show-password-btn" (click)="togglePasswordVisibility()">Afficher</button>
-    </div>
-    <div *ngIf="passwordError" class="error-message">Veuillez saisir votre mot de passe</div>
-    <div *ngIf="loginError" class="error-message">Adresse e-mail ou mot de passe erroné, veuillez réessayer.</div>
-    <button (click)="login()" class="login-btn">S'identifier</button>
+  <h1>Connexion à votre compte</h1>
+  <p>Saisissez votre e-mail universitaire</p>
+  <input type="email" placeholder="Exemple@ecole.com" class="input-box" [(ngModel)]="email" [ngClass]="{'error': emailError || loginError}" (keydown.enter)="login()">
+  <div *ngIf="emailError" class="error-message">Veuillez saisir votre email universitaire</div>
+  <div class="password-container">
+    <input type="password" placeholder="Mot de passe" class="input-box" id="password" [(ngModel)]="password" [ngClass]="{'error': passwordError || loginError}" (keydown.enter)="login()">
+    <button type="button" class="show-password-btn" (click)="togglePasswordVisibility()">Afficher</button>
   </div>
+  <div *ngIf="passwordError" class="error-message">Veuillez saisir votre mot de passe</div>
+  <div *ngIf="loginError" class="error-message">Adresse e-mail ou mot de passe erroné, veuillez réessayer.</div>
+  <button (click)="login()" class="login-btn">S'identifier</button>
+</div>
