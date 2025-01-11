@@ -1,0 +1,87 @@
+<app-navbar></app-navbar>
+<br>
+<h2 class="profil-title">Informations sur le profil</h2>
+<div class="profil-info">
+  <div class="info-group">
+    <label for="password">Mot de passe :</label>
+    <ng-container *ngIf="!editMode['password']; else editPassword">
+      <span>{{ password ? '••••••••' : 'vide' }}</span>
+    </ng-container>
+    <ng-template #editPassword>
+      <input [type]="showPassword ? 'text' : 'password'" id="password" name="password" [(ngModel)]="password">
+    </ng-template>
+    <button class="icone" type="button" (click)="toggleEditMode('password')">
+      <span class="material-symbols-outlined">{{ editMode['password'] ? 'check' : 'edit' }}</span>
+    </button>
+    <button *ngIf="editMode['password']" type="button" (click)="togglePasswordVisibility()">{{ showPassword ? 'Masquer' : 'Afficher' }}</button>
+  </div>
+  <div class="info-group">
+    <label for="interests">Centre d'intérêt <span class="required">*</span> :</label>
+    <ng-container *ngIf="!editMode['interests']; else editInterests">
+      <ul *ngIf="interests.length; else noInterests">
+        <li *ngFor="let interest of interests" class="list-item">
+          {{ interest }}
+          <button class="icone" type="button" (click)="removeInterest(interest)">
+            <span class="material-symbols-outlined">delete</span>
+          </button>
+        </li>
+      </ul>
+      <ng-template #noInterests><em>vide</em></ng-template>
+    </ng-container>
+    <ng-template #editInterests>
+      <input type="text" id="newInterest" name="newInterest" [(ngModel)]="newInterest">
+    </ng-template>
+    <button class="icone" type="button" (click)="addInterest()">
+      <span class="material-symbols-outlined">{{ editMode['interests'] ? 'check' : 'edit' }}</span>
+    </button>
+  </div>
+  <div class="info-group">
+    <label for="skills">Skills <span class="required">*</span> :</label>
+    <ng-container *ngIf="!editMode['skills']; else editSkills">
+      <ul *ngIf="skills.length; else noSkills">
+        <li *ngFor="let skill of skills" class="list-item">
+          {{ skill }}
+          <button class="icone" type="button" (click)="removeSkill(skill)">
+            <span class="material-symbols-outlined">delete</span>
+          </button>
+        </li>
+      </ul>
+      <ng-template #noSkills><em>vide</em></ng-template>
+    </ng-container>
+    <ng-template #editSkills>
+      <input type="text" id="newSkill" name="newSkill" [(ngModel)]="newSkill">
+    </ng-template>
+    <button class="icone" type="button" (click)="addSkill()">
+      <span class="material-symbols-outlined">{{ editMode['skills'] ? 'check' : 'edit' }}</span>
+    </button>
+  </div>
+  <div class="info-group">
+    <label for="major">Majeur :</label>
+    <ng-container *ngIf="!editMode['major']; else editMajor">
+      <span>{{ major ? major : 'vide' }}</span>
+    </ng-container>
+    <ng-template #editMajor>
+      <input type="text" id="newMajor" name="newMajor" [(ngModel)]="newMajor">
+    </ng-template>
+    <button class="icone" type="button" (click)="addMajor()">
+      <span class="material-symbols-outlined">{{ editMode['major'] ? 'check' : 'edit' }}</span>
+    </button>
+  </div>
+  <div class="info-group">
+    <label for="hasGroup">Avez-vous un groupe ? <span class="required">*</span> :</label>
+    <select id="hasGroup" name="hasGroup" [(ngModel)]="hasGroup" (change)="onGroupChange()">
+      <option value="">Sélectionnez</option>
+      <option value="oui">Oui</option>
+      <option value="non">Non</option>
+    </select>
+  </div>
+  <div *ngIf="hasGroup === 'oui'" class="info-group">
+    <label for="hasProjectTopic">Votre groupe a-t-il un sujet de projet ? <span class="required">*</span> :</label>
+    <select id="hasProjectTopic" name="hasProjectTopic" [(ngModel)]="hasProjectTopic">
+      <option value="">Sélectionnez</option>
+      <option value="oui">Oui</option>
+      <option value="non">Non</option>
+    </select>
+  </div>
+</div>
+<p class="legend"><em>* : important à remplir</em></p>

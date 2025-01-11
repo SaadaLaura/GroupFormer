@@ -1,22 +1,6 @@
-<header class="navbar">
-    <div class="navbar-left">
-      <span class="project-name">GroupFormer</span>
-    </div>
-    <div class="navbar-right">
-      <ng-container *ngIf="isLoggedIn; else notLoggedIn">
-        <div class="initials" (click)="toggleDropdown()">GF</div>
-        <div class="dropdown-menu" *ngIf="dropdownOpen">
-          <button (click)="logout()">Déconnexion</button>
-        </div>
-      </ng-container>
-      <ng-template #notLoggedIn>
-        <button (click)="navigateTo('login')">Connexion</button>
-        <button (click)="navigateTo('register')">S'inscrire</button>
-      </ng-template>
-    </div>
-  </header>
+<app-navbar></app-navbar>
   
-  <main class="content">
+<main class="content">
     <h1 class="main-title">Trouver facilement un groupe ou un projet</h1>
     <p class="main-description">A la recherche d'un groupe ou d'un projet ?<br>Ne cherchez plus, vous le trouverez ici !</p>
     <button (click)="navigateTo('register')" class="signup-btn">S'inscrire maintenant</button>

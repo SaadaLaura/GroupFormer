@@ -1,0 +1,98 @@
+.profil-title {
+  text-align: center;
+  margin: 20px 0;
+}
+
+.profil-info {
+  max-width: 600px;
+  margin: 0;
+  padding: 20px;
+}
+
+.info-group {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.info-group label {
+  flex: 0 0 auto;
+  margin-right: 10px; /* Ajuster l'espacement entre le label et la zone de texte */
+  text-align: left;
+  white-space: nowrap; /* Empêcher le label de se casser en plusieurs lignes */
+}
+
+.info-group input,
+.info-group select,
+.info-group span {
+  max-width: 115px;
+  padding: 8px;
+  margin: 0; /* Supprimer la marge par défaut */
+}
+
+.info-group input:focus,
+.info-group select:focus {
+  outline: none; /* Supprimer le rectangle de focus */
+  border-color: #007bff; /* Changer la couleur de la bordure au focus */
+}
+
+.info-group button {
+  margin-left: 10px;
+  padding: 8px 12px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.info-group button:hover {
+  background-color: #0056b3;
+}
+
+.info-group button.icone {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  margin-left: 10px;
+  font-size: 10px;
+  color: black; 
+  outline: none; /* Supprimer le rectangle de focus */
+}
+
+.info-group button.icone:hover {
+  color: #007bff; /* Couleur de l'icône au survol */
+}
+
+.info-group button.icone:focus {
+  outline: none; /* Supprimer le rectangle de focus */
+}
+
+.list-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-left: -25px;
+}
+
+.list-item:not(:last-child) {
+  margin-bottom: -10px; /* Diminuer la hauteur entre les éléments sauf le dernier */
+}
+
+.list-item .icone {
+  font-size: 10px; /* Taille de l'icône de suppression */
+  margin-left: 5px;
+}
+
+.required {
+  color: red;
+  font-size: 0.8em;
+  vertical-align: super;
+}
+
+.legend {
+  margin-top: 20px;
+  font-size: 0.9em;
+  color: red;
+}

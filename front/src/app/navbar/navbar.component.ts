@@ -1,16 +1,16 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { NavbarComponent } from '../navbar/navbar.component';
 import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'app-home',
+  selector: 'app-navbar',
   standalone: true,
-  imports: [CommonModule, NavbarComponent],
-  templateUrl: './home.component.html',
-  styleUrl: './home.component.scss'
+  imports: [CommonModule],
+  templateUrl: './navbar.component.html',
+  styleUrl: './navbar.component.scss'
 })
-export class HomeComponent {
+
+export class NavbarComponent {
   isLoggedIn: boolean = false;
   dropdownOpen: boolean = false;
 
@@ -22,4 +22,14 @@ export class HomeComponent {
     this.router.navigate([route]);
   }
 
+  toggleDropdown() {
+    this.dropdownOpen = !this.dropdownOpen;
+  }
+
+  logout() {
+    localStorage.removeItem('isLoggedIn');
+    this.isLoggedIn = false;
+    this.dropdownOpen = false;
+    this.router.navigate(['/']);
+  }
 }
