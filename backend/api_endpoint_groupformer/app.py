@@ -37,6 +37,38 @@ def get_students():
     con.close()
     return jsonify(rows)
 
+@app.route('/student/<student_id>', methods=['GET'])
+def get_emp(student_id):
+    """
+    Récupère un étudiant en fonction de son id.
+    ---
+    tags:
+      - Student
+    parameters:
+        - name: student_id
+          in: path
+          type: string
+          required: true
+          description: ID de l'étudiant
+    responses:
+      200:
+        description: Information de l'étudiant.
+      404:
+        description: Étudiant non trouvé.
+    """
+    try:
+        con = db_connect()
+        cur = con.cursor()
+        # TODO: Use parameterized query to avoid SQL injection
+        row = cur.execute('SELECT * FROM person WHERE id_user = ?', (student_id,)).fetchone()
+        con.close()
+
+        if row:
+            return jsonify(row), 200
+        else:
+            return jsonify({"error": "Étudiant non trouvé"}), 404
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 # @app.route('/employee/', methods=['POST'])
 # def add_emp():
