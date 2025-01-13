@@ -1,11 +1,13 @@
-import sqlite3
-from flask import Flask
 from flasgger import Swagger
+from flask import Flask
+
+from announcement import announcement
 from student import student
 
 app = Flask(__name__)
 swagger = Swagger(app)
 app.register_blueprint(student, url_prefix='/student')
+app.register_blueprint(announcement, url_prefix='/announcement')
 
 
 if __name__== "__main__":
