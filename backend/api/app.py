@@ -1,6 +1,7 @@
 import sqlite3
 from flask import Flask, jsonify, request
 from flasgger import Swagger
+from endpoint.student import student
 
 app = Flask(__name__)
 swagger = Swagger(app)
