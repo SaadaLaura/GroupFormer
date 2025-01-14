@@ -1,33 +1,33 @@
 tags:
-  - Student
-summary: "Renvoie un étudiant en fonction de son id"
+  - Announcement
+summary: "Renvoie une annonce en fonction de son id"
 produces:
   - "application/json"
 parameters:
-  - name: student_id
+  - name: announcement_id
     in: path
     type: integer
     required: true
 definitions:
-  User:
+  Announcement:
     type: object
     properties:
-      id_user:
+      id_announcement:
         type: integer
-      firstname:
+      project_name:
         type: string
-      lastname:
+      description:
         type: string
-      email:
-        type: string
-      password:
-        type: string
+      publication:
+        type: datetime
+      id_project:
+        type: integer
 responses:
   200:
     description: "OK"
     schema:
       type: object
-      $ref: "#/definitions/User"
+      $ref: "#/definitions/Announcement"
   404:
     description: "Not Found"
   #    schema:
@@ -35,6 +35,6 @@ responses:
   #      properties:
   #        error:
   #          type: "string"
-  #          example: "No student found"
+  #          example: "No announcement found"
   500:
     description: "Internal Server Error"

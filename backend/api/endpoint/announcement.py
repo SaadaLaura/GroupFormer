@@ -2,28 +2,34 @@ from flasgger import swag_from
 from flask import Blueprint, jsonify
 
 from backend.api.utils.db_connection import db_connect
+from backend.api.utils.query_result_mapper import QueryResultMapper
 
 announcement_bp = Blueprint('announcement', __name__)
 
 @announcement_bp.route('/', methods=['GET'])
 @swag_from('swagger/announcement/announcement.yaml')
-def get_announcement():
+def get_announcements():
     try:
-        con = db_connect()
-        cur = con.cursor()
-        rows = cur.execute("SELECT * FROM announcement").fetchall()
+        connection = db_connect()
+        cursor = connection.cursor()
+        rows = cursor.execute("SELECT * FROM announcement").fetchall()
+        connection.close()
 
-        if rows:
-            columns = [desc[0] for desc in cur.description]
-            announcements = []
-            for row in rows:
-                data = dict(zip(columns, row))
-                announcements.append(data)
+        return QueryResultMapper.map_multiple_rows(cursor, rows, 'No announcements found')
 
-            con.close()
-            return jsonify(announcements), 200
-        else:
-            con.close()
-            return jsonify({'message': 'No announcements found'}), 404
+    except Exception as e:
+        return jsonify({'message': str(e)}), 500
+
+@announcement_bp.route('/<announcement_id>', methods=['GET'])
+@swag_from('swagger/announcement/announcement_by_id.yaml')
+def get_announcement(announcement_id):
+    try:
+        connection = db_connect()
+        cursor = connection.cursor()
+        row = cursor.execute('SELECT * FROM announcement WHERE id_announcement = ?', (announcement_id,)).fetchone()
+        connection.close()
+
+        return QueryResultMapper.map_single_row(cursor, row, 'Announcement not found')
+
     except Exception as e:
         return jsonify({'message': str(e)}), 500

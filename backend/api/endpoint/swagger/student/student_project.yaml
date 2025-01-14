@@ -1,6 +1,6 @@
 tags:
   - Student
-summary: "Renvoie le groupe d'un étudiant en fonction de son id"
+summary: "Renvoie le groupe (projet) d'un étudiant en fonction de son id"
 produces:
   - "application/json"
 parameters:
@@ -26,9 +26,8 @@ responses:
   200:
     description: "OK"
     schema:
-      type: array
-      items:
-        $ref: "#/definitions/Project"
+      type: object
+      $ref: "#/definitions/Project"
   404:
     description: "Not Found"
   #    schema:

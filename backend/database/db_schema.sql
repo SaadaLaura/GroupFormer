@@ -29,12 +29,12 @@ CREATE TABLE project
 
 CREATE TABLE announcement
 (
-    id_announcement_ INT,
+    id_announcement INT,
     project_name VARCHAR(50) NOT NULL,
     description VARCHAR(50),
     publication DATE,
     id_project INT NOT NULL,
-    PRIMARY KEY(id_announcement_),
+    PRIMARY KEY(id_announcement),
     FOREIGN KEY(id_project) REFERENCES project (id_project)
 );
 
@@ -83,7 +83,7 @@ CREATE TABLE searches(
     id_announcement_ INT,
     PRIMARY KEY(id_skill, id_announcement_),
     FOREIGN KEY(id_skill) REFERENCES skill (id_skill),
-    FOREIGN KEY(id_announcement_) REFERENCES announcement (id_announcement_)
+    FOREIGN KEY(id_announcement_) REFERENCES announcement (id_announcement)
 );
 
 CREATE TABLE likes(
@@ -98,6 +98,6 @@ CREATE TABLE is_about(
     id_announcement_ INT,
     id_subject INT,
     PRIMARY KEY(id_announcement_, id_subject),
-    FOREIGN KEY(id_announcement_) REFERENCES announcement(id_announcement_),
+    FOREIGN KEY(id_announcement_) REFERENCES announcement(id_announcement),
     FOREIGN KEY(id_subject) REFERENCES subject (id_subject)
 );
