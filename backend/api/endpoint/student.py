@@ -39,14 +39,32 @@ def get_student(student_id):
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-@student_bp.route('/<student_id>/group', methods=['GET'])
-@swag_from('swagger/student/student_project.yaml')
-def get_student_group(student_id):
-
+@student_bp.route('/<student_id>/skill', methods=['GET'])
+@swag_from('swagger/student/student_skill.yaml')
+def get_student_skill(student_id):
     try:
         connection = db_connect()
         cursor = connection.cursor()
+        rows = cursor.execute('''
+            SELECT name FROM skill
+            JOIN master ON skill.id_skill = master.id_skill
+            WHERE id_user = ?
+            ''', (student_id,)).fetchall()
 
+        connection.close()
+        # TODO: vérifier l'id student d'abord
+        return QueryResultMapper.map_into_list(rows, 'No skills found for the student')
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@student_bp.route('/<student_id>/group', methods=['GET'])
+@swag_from('swagger/student/student_project.yaml')
+def get_student_group(student_id):
+    try:
+        connection = db_connect()
+        cursor = connection.cursor()
+        # TODO: d'abord vérifier que l'étudiant à un groupe
         row = cursor.execute('''
             SELECT project.* FROM project
             JOIN student ON project.id_project = student.id_project

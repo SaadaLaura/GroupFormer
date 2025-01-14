@@ -18,3 +18,11 @@ class QueryResultMapper:
             return jsonify(data_list), 200
         else:
             return jsonify({"error": error_message}), 404
+
+    @staticmethod
+    def map_into_list(rows, error_message):
+        if rows:
+            data_list = [row[0] for row in rows]
+            return jsonify(data_list), 200
+        else:
+            return jsonify({"error": error_message}), 404

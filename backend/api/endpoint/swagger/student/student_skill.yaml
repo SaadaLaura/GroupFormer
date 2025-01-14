@@ -1,0 +1,27 @@
+tags:
+  - Student
+summary: "Renvoie les compétences d'un étudiant en fonction de son id"
+produces:
+  - "application/json"
+parameters:
+  - name: student_id
+    in: path
+    type: integer
+    required: true
+responses:
+  200:
+    description: "OK"
+    schema:
+      type: array
+      items:
+        type: string
+  404:
+    description: "Not Found"
+  #    schema:
+  #      type: "object"
+  #      properties:
+  #        error:
+  #          type: "string"
+  #          example: "No student found"
+  500:
+    description: "Internal Server Error"
