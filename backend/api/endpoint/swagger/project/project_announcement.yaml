@@ -1,8 +1,13 @@
 tags:
-  - Announcement
-summary: "Liste toutes les annonces"
+  - Project
+summary: "Liste toutes les annonces d'un projet en fonction de son id"
 produces:
   - "application/json"
+parameters:
+  - name: project_id
+    in: path
+    type: integer
+    required: true
 definitions:
   Announcement:
     type: object
@@ -24,11 +29,5 @@ responses:
         $ref: '#/definitions/Announcement'
   404:
     description: "Not Found"
-#    schema:
-#      type: "object"
-#      properties:
-#        error:
-#          type: "string"
-#          example: "No announcement found"
   500:
     description: "Internal Server Error"

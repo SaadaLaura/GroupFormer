@@ -30,7 +30,6 @@ CREATE TABLE project
 CREATE TABLE announcement
 (
     id_announcement INT,
-    project_name VARCHAR(50) NOT NULL,
     description VARCHAR(50),
     publication DATE,
     id_project INT NOT NULL,

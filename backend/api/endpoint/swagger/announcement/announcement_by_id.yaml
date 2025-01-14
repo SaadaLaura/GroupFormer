@@ -14,8 +14,6 @@ definitions:
     properties:
       id_announcement:
         type: integer
-      project_name:
-        type: string
       description:
         type: string
       publication:

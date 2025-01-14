@@ -1,6 +1,6 @@
 tags:
   - Announcement
-summary: "Renvoie les sujets correspondant l'annonce en fonction de son id"
+summary: "Renvoie les sujets correspondant à une annonce en fonction de son id"
 produces:
   - "application/json"
 parameters:

@@ -31,7 +31,7 @@ INSERT INTO likes VALUES
                       (795135, 2);
 
 INSERT INTO announcement VALUES
-    (1234, 'GroupFormer', 'Recherche étudiant en Data', '03/12/2024', 111);
+    (1234, 'Recherche étudiant en Data', '03/12/2024', 111);
 
 INSERT INTO searches VALUES (2, 1234);
 
