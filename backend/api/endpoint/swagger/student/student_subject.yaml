@@ -1,6 +1,6 @@
 tags:
   - Student
-summary: "Renvoie les compétences d'un étudiant en fonction de son id"
+summary: "Renvoie les sujets suivi d'un étudiant en fonction de son id"
 produces:
   - "application/json"
 parameters:

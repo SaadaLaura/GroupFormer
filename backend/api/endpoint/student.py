@@ -58,6 +58,25 @@ def get_student_skill(student_id):
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+@student_bp.route('/<student_id>/subject', methods=['GET'])
+@swag_from('swagger/student/student_subject.yaml')
+def get_student_subject(student_id):
+    try:
+        connection = db_connect()
+        cursor = connection.cursor()
+        rows = cursor.execute('''
+            SELECT name FROM subject
+            JOIN likes ON subject.id_subject = likes.id_subject
+            WHERE id_user = ?
+            ''', (student_id,)).fetchall()
+
+        connection.close()
+        # TODO: vérifier l'id student d'abord
+        return QueryResultMapper.map_into_list(rows, 'No subjects found for the student')
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 @student_bp.route('/<student_id>/group', methods=['GET'])
 @swag_from('swagger/student/student_project.yaml')
 def get_student_group(student_id):

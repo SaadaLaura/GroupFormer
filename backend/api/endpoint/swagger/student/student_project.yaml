@@ -30,11 +30,5 @@ responses:
       $ref: "#/definitions/Project"
   404:
     description: "Not Found"
-  #    schema:
-  #      type: "object"
-  #      properties:
-  #        error:
-  #          type: "string"
-  #          example: "No student found"
   500:
     description: "Internal Server Error"
