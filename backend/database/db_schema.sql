@@ -23,7 +23,7 @@ CREATE TABLE project
     name VARCHAR(50) NOT NULL,
     deadline DATE,
     description VARCHAR(50),
-    EtudiantMax INT,
+    size INT,
     PRIMARY KEY(id_project)
 );
 

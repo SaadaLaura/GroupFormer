@@ -3,10 +3,10 @@ from flask import Blueprint, jsonify
 
 from backend.api.utils.db_connection import db_connect
 
-announcement = Blueprint('announcement', __name__)
+announcement_bp = Blueprint('announcement', __name__)
 
-@announcement.route('/', methods=['GET'])
-@swag_from('swagger/announcement.yaml')
+@announcement_bp.route('/', methods=['GET'])
+@swag_from('swagger/announcement/announcement.yaml')
 def get_announcement():
     try:
         con = db_connect()

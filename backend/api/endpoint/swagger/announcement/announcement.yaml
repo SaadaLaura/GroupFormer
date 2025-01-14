@@ -1,0 +1,36 @@
+tags:
+  - Announcement
+summary: "Liste toutes les annonces"
+produces:
+  - "application/json"
+definitions:
+  Announcement:
+    type: object
+    properties:
+      id_announcement:
+        type: integer
+      project_name:
+        type: string
+      description:
+        type: string
+      publication:
+        type: datetime
+      id_project:
+        type: integer
+responses:
+  200:
+    description: "OK"
+    schema:
+      type: array
+      items:
+        $ref: '#/definitions/Announcement'
+  404:
+    description: "Not Found"
+#    schema:
+#      type: "object"
+#      properties:
+#        error:
+#          type: "string"
+#          example: "No announcement found"
+  500:
+    description: "Internal Server Error"
