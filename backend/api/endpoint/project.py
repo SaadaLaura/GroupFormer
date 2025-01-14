@@ -48,7 +48,7 @@ def get_project_announcement(project_id):
 
         connection.close()
 
-        return QueryResultMapper.map_single_row(cursor, row, 'Project announcement not found')
+        return QueryResultMapper.map_multiple_rows(cursor, row, 'Project announcement not found')
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
