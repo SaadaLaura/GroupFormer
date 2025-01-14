@@ -33,3 +33,41 @@ def get_announcement(announcement_id):
 
     except Exception as e:
         return jsonify({'message': str(e)}), 500
+
+@announcement_bp.route('/<announcement_id>/search', methods=['GET'])
+@swag_from('swagger/announcement/announcement_search.yaml')
+def get_announcement_search(announcement_id):
+    try:
+        connection = db_connect()
+        cursor = connection.cursor()
+        rows = cursor.execute('''
+            SELECT name FROM skill
+            JOIN searches ON skill.id_skill = searches.id_skill
+            WHERE id_announcement = ?
+            ''', (announcement_id,)).fetchall()
+
+        connection.close()
+        # TODO: vérifier l'id announcement d'abord
+        return QueryResultMapper.map_into_list(rows, 'No skills found for this announcement')
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@announcement_bp.route('/<announcement_id>/about', methods=['GET'])
+@swag_from('swagger/announcement/announcement_about.yaml')
+def get_announcement_about(announcement_id):
+    try:
+        connection = db_connect()
+        cursor = connection.cursor()
+        rows = cursor.execute('''
+            SELECT name FROM subject
+            JOIN is_about ON subject.id_subject = is_about.id_subject
+            WHERE id_announcement = ?
+            ''', (announcement_id,)).fetchall()
+
+        connection.close()
+        # TODO: vérifier l'id announcement d'abord
+        return QueryResultMapper.map_into_list(rows, 'No subjects found for this announcement')
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500

@@ -1,0 +1,21 @@
+tags:
+  - Announcement
+summary: "Renvoie les compétences recherchées dans l'annonce en fonction de son id"
+produces:
+  - "application/json"
+parameters:
+  - name: announcement_id
+    in: path
+    type: integer
+    required: true
+responses:
+  200:
+    description: "OK"
+    schema:
+      type: array
+      items:
+        type: string
+  404:
+    description: "Not Found"
+  500:
+    description: "Internal Server Error"
