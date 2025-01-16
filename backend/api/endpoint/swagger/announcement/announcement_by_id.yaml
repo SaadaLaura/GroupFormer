@@ -1,0 +1,38 @@
+tags:
+  - Announcement
+summary: "Renvoie une annonce en fonction de son id"
+produces:
+  - "application/json"
+parameters:
+  - name: announcement_id
+    in: path
+    type: integer
+    required: true
+definitions:
+  Announcement:
+    type: object
+    properties:
+      id_announcement:
+        type: integer
+      description:
+        type: string
+      publication:
+        type: datetime
+      id_project:
+        type: integer
+responses:
+  200:
+    description: "OK"
+    schema:
+      type: object
+      $ref: "#/definitions/Announcement"
+  404:
+    description: "Not Found"
+  #    schema:
+  #      type: "object"
+  #      properties:
+  #        error:
+  #          type: "string"
+  #          example: "No announcement found"
+  500:
+    description: "Internal Server Error"
