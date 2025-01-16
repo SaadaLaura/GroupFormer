@@ -1,9 +1,10 @@
 from flasgger import Swagger
 from flask import Flask
 
-from announcement import announcement_bp
-from backend.api.endpoint.project import project_bp
-from student import student_bp
+from .announcement import announcement_bp
+from .project import project_bp
+from .student import student_bp
+
 
 app = Flask(__name__)
 swagger = Swagger(app)
