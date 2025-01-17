@@ -1,5 +1,5 @@
 .signup-btn {
-    margin-top: 20px;
+    margin-top: 10px; 
     padding: 10px 20px;
     font-size: 1em;
     background-color: #007bff;
@@ -8,4 +8,54 @@
     border-radius: 20px; /* Bords arrondis */
     cursor: pointer;
     transition: background-color 0.3s;
+
+    &:hover {
+        background-color: #0056b3;
+    }
 }
+
+.main-title {
+    text-align: center;
+    font-size: 2rem;
+    margin-bottom: 20px;
+}
+
+.description-title {
+    font-size: 1.3rem;
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+.description-section {
+    margin: 20px 0;
+    padding: 10px;
+    width: calc(100% - 40px); /* Prendre le maximum de l'écran sur la droite */
+    background-color: #f2ebeb; 
+    border-radius: 10px; /* Coins arrondis */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Ombre légère */
+    text-align: center; 
+
+    .description-content {
+        font-size: 1rem;
+        line-height: 1.6;
+
+        p {
+            margin: 10px 0;
+        }
+
+        .separator {
+            margin: 20px auto;
+            border: none;
+            height: 1px;
+            background-color: #707070; 
+            width: 50%; /* Ajuste la largeur de la ligne */
+        }
+    }
+}
+
+.help-title {
+    font-size: 1.3rem;
+    margin-bottom: 15px;
+    text-align: left;
+}
+

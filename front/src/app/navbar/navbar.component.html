@@ -1,18 +1,24 @@
 <header class="navbar">
-    <div class="navbar-left">
-      <img src="assets/img/logo_groupFormer.png" alt="GroupFormer Logo" class="project-logo">
-    </div>
-    <div class="navbar-right">
-      <ng-container *ngIf="isLoggedIn; else notLoggedIn">
-        <div class="initials" (click)="toggleDropdown()">GF</div>
-        <div class="dropdown-menu" *ngIf="dropdownOpen">
-          <button (click)="navigateTo('profil')">Profil</button>
-          <button (click)="logout()">Déconnexion</button>
-        </div>
-      </ng-container>
-      <ng-template #notLoggedIn>
-        <button (click)="navigateTo('login')">Connexion</button>
-        <button (click)="navigateTo('register')">S'inscrire</button>
-      </ng-template>
-    </div>
-  </header>
+  <div class="navbar-logo">
+    <img src="assets/img/logo_groupFormer.png" alt="GroupFormer Logo" class="project-logo">
+  </div>
+  <nav class="navbar-menu">
+    <a (click)="navigateTo('home')"><span>Accueil</span></a>
+    <a (click)="navigateTo('group-search')"><span>Recherche de groupe</span></a>
+    <a (click)="navigateTo('subject')"><span>Sujet</span></a>
+    <a (click)="navigateTo('statistics')"><span>Statistique</span></a>
+  </nav>
+  <div class="navbar-profil">
+    <ng-container *ngIf="isLoggedIn; else notLoggedIn">
+      <div class="initials" (click)="toggleDropdown()">GF</div>
+      <div class="dropdown-menu" *ngIf="dropdownOpen">
+        <a (click)="navigateTo('profil')">Profil</a>
+        <a (click)="logout()">Déconnexion</a>
+      </div>
+    </ng-container>
+    <ng-template #notLoggedIn>
+      <a (click)="navigateTo('login')">Connexion</a>
+      <a (click)="navigateTo('register')">S'inscrire</a>
+    </ng-template>
+  </div>
+</header>
