@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NavbarComponent } from '../navbar/navbar.component';
+import { StateService } from '../shared/state.service';
 
 @Component({
   selector: 'app-profil',
@@ -10,7 +11,7 @@ import { NavbarComponent } from '../navbar/navbar.component';
   templateUrl: './profil.component.html',
   styleUrls: ['./profil.component.scss']
 })
-export class ProfilComponent {
+export class ProfilComponent implements OnInit {
   password: string = 'GroupFormer';
   interests: string[] = [];
   skills: string[] = [];
@@ -18,7 +19,7 @@ export class ProfilComponent {
   newInterest: string = '';
   newSkill: string = '';
   newMajor: string = '';
-  hasGroup: string = '';
+  hasGroup: string = ''; // Valeur par défaut
   hasProjectTopic: string = '';
   showPassword: boolean = false;
   editMode: { [key: string]: boolean } = {
@@ -27,6 +28,16 @@ export class ProfilComponent {
     skills: false,
     major: false
   };
+
+  constructor(private stateService: StateService) {}
+
+  ngOnInit() {
+    this.stateService.hasGroup$.subscribe(hasGroup => {
+      if (hasGroup !== null) {
+        this.hasGroup = hasGroup;
+      }
+    });
+  }
 
   togglePasswordVisibility() {
     this.showPassword = !this.showPassword;
@@ -75,6 +86,7 @@ export class ProfilComponent {
     if (this.hasGroup === 'non') {
       this.hasProjectTopic = '';
     }
+    this.stateService.setHasGroup(this.hasGroup);
   }
 
   removeInterest(interest: string) {

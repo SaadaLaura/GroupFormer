@@ -4,9 +4,10 @@
   </div>
   <nav class="navbar-menu">
     <a (click)="navigateTo('home')"><span>Accueil</span></a>
-    <a (click)="navigateTo('group-search')"><span>Recherche de groupe</span></a>
-    <a (click)="navigateTo('subject')"><span>Sujet</span></a>
-    <a (click)="navigateTo('statistics')"><span>Statistique</span></a>
+    <a *ngIf="hasGroup === 'non'" (click)="navigateTo('group-research')"><span>Recherche de groupe</span></a>
+    <a *ngIf="hasGroup === 'oui'" (click)="navigateTo('student-research')"><span>Recherche d'étudiant</span></a>
+    <a (click)="navigateTo('home')"><span>Sujet</span></a>
+    <a (click)="navigateTo('home')"><span>Statistique</span></a>
   </nav>
   <div class="navbar-profil">
     <ng-container *ngIf="isLoggedIn; else notLoggedIn">
