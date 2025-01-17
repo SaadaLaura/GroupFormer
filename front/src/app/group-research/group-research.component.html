@@ -1,3 +1,26 @@
 <app-navbar></app-navbar>
 <br>
 <h2 class="title-page">Recherche de groupe</h2>
+
+<table class="styled-table">
+  <thead>
+    <tr>
+      <th>Nom du projet</th>
+      <th>Description du projet</th>
+      <th>Nombre d'étudiants manquants</th>
+      <th>Compétence recherchée</th>
+      <th>Description de l'annonce</th>
+      <th>Date de publication</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let detail of projectDetails">
+      <td>{{ detail.projectName }}</td>
+      <td>{{ detail.projectDescription }}</td>
+      <td>{{ detail.missingStudents }}</td>
+      <td>{{ detail.skills }}</td>
+      <td>{{ detail.announcementDescription }}</td>
+      <td>{{ detail.publicationDate }}</td>
+    </tr>
+  </tbody>
+</table>

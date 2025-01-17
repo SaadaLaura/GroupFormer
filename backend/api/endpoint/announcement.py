@@ -43,7 +43,7 @@ def get_announcement_search(announcement_id):
         rows = cursor.execute('''
             SELECT name FROM skill
             JOIN searches ON skill.id_skill = searches.id_skill
-            WHERE id_announcement = ?
+            WHERE id_announcement_ = ?
             ''', (announcement_id,)).fetchall()
 
         connection.close()
