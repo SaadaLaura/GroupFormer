@@ -1,19 +1,21 @@
 tags:
-  - Announcement
-summary: "Liste toutes les annonces"
+  - Project
+summary: "Liste tout les projets"
 produces:
   - "application/json"
 definitions:
-  Announcement:
+  Project:
     type: object
     properties:
-      id_announcement:
+      id_project:
         type: integer
+      name:
+        type: string
       description:
         type: string
-      publication:
+      deadline:
         type: datetime
-      id_project:
+      size:
         type: integer
 responses:
   200:
@@ -21,7 +23,7 @@ responses:
     schema:
       type: array
       items:
-        $ref: '#/definitions/Announcement'
+        $ref: '#/definitions/Project'
   404:
     description: "Not Found"
 #    schema:
@@ -29,6 +31,6 @@ responses:
 #      properties:
 #        error:
 #          type: "string"
-#          example: "No announcement found"
+#          example: "No projects found"
   500:
     description: "Internal Server Error"
