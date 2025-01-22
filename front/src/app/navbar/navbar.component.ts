@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { StateService } from '../shared/state.service';
+import { StateService } from '../services/state.service';
 
 @Component({
   selector: 'app-navbar',

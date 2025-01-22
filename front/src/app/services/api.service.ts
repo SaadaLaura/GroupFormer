@@ -1,39 +1,23 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { Student } from '../shared/models';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
+export const BASE_URL = 'http://127.0.0.1:8000'; // URL de base de l'API Flask
 
 @Injectable({
   providedIn: 'root'
 })
+
+// Mettre les méthodes communes à plusieurs les services ici comme le Login / Logout, 
 export class ApiService {
-  private baseUrl = 'http://127.0.0.1:8000'; // URL de base de l'API Flask
+  protected baseUrl = BASE_URL;
 
-  constructor(private http: HttpClient) {}
+  constructor(protected http: HttpClient) {}
 
-  getProjects(): Observable<any> {
-    return this.http.get(`${this.baseUrl}/project`);
+  protected handleError(error: HttpErrorResponse): Observable<never> {
+    // Logique de gestion des erreurs commune
+    console.error('An error occurred:', error);
+    return throwError('Something bad happened; please try again later.');
   }
-
-  getAnnouncements(): Observable<any> {
-    return this.http.get(`${this.baseUrl}/announcement`);
-  }
-
-  getProjectAnnouncements(projectId: number): Observable<any> {
-    return this.http.get(`${this.baseUrl}/project/${projectId}/announcement`);
-  }
-
-  getAnnouncementSearch(announcementId: number): Observable<any> {
-    return this.http.get(`${this.baseUrl}/announcement/${announcementId}/search`);
-  }
-
-  getAnnouncementAbout(announcementId: number): Observable<any> {
-    return this.http.get(`${this.baseUrl}/announcement/${announcementId}/about`);
-  }
-
-  getStudents(): Observable<Student[]> {
-    return this.http.get<Student[]>(`${this.baseUrl}/student`);
-  }
-
 }

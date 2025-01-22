@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { NavbarComponent } from '../navbar/navbar.component';
-import { ApiService } from '../services/api.service';
+import { StudentService } from '../services/student.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Student } from '../shared/models';
+import { Student } from '../class/Student';
 
 @Component({
   selector: 'app-student-research',
@@ -19,10 +19,10 @@ export class StudentResearchComponent implements OnInit {
   keywords: string = '';
   major: string = '';
 
-  constructor(private apiService: ApiService) {}
+  constructor(private StudentService: StudentService) {}
 
   ngOnInit(): void {
-    this.apiService.getStudents().subscribe((students: Student[]) => {
+    this.StudentService.getStudents().subscribe((students: Student[]) => {
       this.students = students.filter(student => !student.id_project);
       this.filteredStudents = [...this.students];
     });

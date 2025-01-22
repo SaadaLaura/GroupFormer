@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { NavbarComponent } from '../navbar/navbar.component';
-import { ApiService } from '../services/api.service';
+import { AnnouncementService } from '../services/announcement.service';
+import { ProjectService } from '../services/project.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Project, Announcement, ProjectDetail } from '../shared/models';
+import { Project, ProjectDetail } from '../class/Project';
+import { Announcement } from '../class/Announcement';
 
 @Component({
   selector: 'app-group-research',
@@ -24,17 +26,17 @@ export class GroupResearchComponent implements OnInit {
   selectedMissingStudents: string = '';
   keywords: string = '';
 
-  constructor(private apiService: ApiService) {}
+  constructor(private projectService: ProjectService, private announcementService: AnnouncementService) {}
 
   ngOnInit(): void {
-    this.apiService.getProjects().subscribe((projects: Project[]) => {
+    this.projectService.getProjects().subscribe((projects: Project[]) => {
       this.projects = projects;
       this.loadAnnouncements();
     });
   }
 
   loadAnnouncements(): void {
-    this.apiService.getAnnouncements().subscribe((announcements: Announcement[]) => {
+    this.announcementService.getAnnouncements().subscribe((announcements: Announcement[]) => {
       this.announcements = announcements;
       this.calculateProjectDetails();
     });
@@ -57,11 +59,11 @@ export class GroupResearchComponent implements OnInit {
     });
 
     this.projectDetails.forEach((detail, index) => {
-      this.apiService.getAnnouncementSearch(this.announcements[index].id_announcement).subscribe((data: string[]) => {
+      this.announcementService.getAnnouncementSearch(this.announcements[index].id_announcement).subscribe((data: string[]) => {
         detail.skills = data.join(', ');
       });
 
-      this.apiService.getAnnouncementAbout(this.announcements[index].id_announcement).subscribe((data: string[]) => {
+      this.announcementService.getAnnouncementAbout(this.announcements[index].id_announcement).subscribe((data: string[]) => {
         detail.specialties = data;
         data.forEach((subject: string) => {
           if (!this.specialties.includes(subject)) {

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NavbarComponent } from '../navbar/navbar.component';
-import { StateService } from '../shared/state.service';
+import { StateService } from '../services/state.service';
 
 @Component({
   selector: 'app-profil',
