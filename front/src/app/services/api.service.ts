@@ -25,4 +25,8 @@ export class ApiService {
   getAnnouncementSearch(announcementId: number): Observable<any> {
     return this.http.get(`${this.baseUrl}/announcement/${announcementId}/search`);
   }
+
+  getAnnouncementAbout(announcementId: number): Observable<any> {
+    return this.http.get(`${this.baseUrl}/announcement/${announcementId}/about`);
+  }
 }

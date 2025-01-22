@@ -2,30 +2,39 @@ import { Component, OnInit } from '@angular/core';
 import { NavbarComponent } from '../navbar/navbar.component';
 import { ApiService } from '../services/api.service';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { Project, Announcement, ProjectDetail } from '../shared/models';
 
 @Component({
   selector: 'app-group-research',
   standalone: true,
-  imports: [NavbarComponent, CommonModule],
+  imports: [NavbarComponent, CommonModule, FormsModule],
   templateUrl: './group-research.component.html',
   styleUrls: ['./group-research.component.scss']
 })
 export class GroupResearchComponent implements OnInit {
-  projects: any[] = [];
-  announcements: any[] = [];
-  projectDetails: any[] = [];
+  projects: Project[] = [];
+  announcements: Announcement[] = [];
+  projectDetails: ProjectDetail[] = [];
+  filteredProjectDetails: ProjectDetail[] = [];
+  specialties: string[] = [];
+  missingStudentsRange: number[] = [];
+  searchTerm: string = '';
+  selectedSpecialty: string = '';
+  selectedMissingStudents: string = '';
+  keywords: string = '';
 
   constructor(private apiService: ApiService) {}
 
   ngOnInit(): void {
-    this.apiService.getProjects().subscribe((projects) => {
+    this.apiService.getProjects().subscribe((projects: Project[]) => {
       this.projects = projects;
       this.loadAnnouncements();
     });
   }
 
   loadAnnouncements(): void {
-    this.apiService.getAnnouncements().subscribe((announcements) => {
+    this.apiService.getAnnouncements().subscribe((announcements: Announcement[]) => {
       this.announcements = announcements;
       this.calculateProjectDetails();
     });
@@ -34,32 +43,69 @@ export class GroupResearchComponent implements OnInit {
   calculateProjectDetails(): void {
     this.projectDetails = this.announcements.map(announcement => {
       const project = this.projects.find(p => p.id_project === announcement.id_project);
-      const missingStudents = this.getMissingStudents(project);
-      return {
-        projectName: this.decodeUTF8(project?.name),
-        projectDescription: this.decodeUTF8(project?.description),
-        missingStudents: missingStudents,
-        skills: '',  // Initialiser les compétences à une chaîne vide
-        announcementDescription: this.decodeUTF8(announcement.description),
-        publicationDate: announcement.publication  // Ajouter la date de publication
-      };
+      const missingStudents = project ? this.getMissingStudents(project) : 0;
+      return new ProjectDetail(
+        this.decodeUTF8(project?.name || ''),
+        this.decodeUTF8(project?.description || ''),
+        missingStudents,
+        '',
+        this.decodeUTF8(announcement.description || ''),
+        announcement.publication || '',
+        announcement.id_announcement,
+        []
+      );
     });
 
-    // Charger les compétences pour chaque annonce
     this.projectDetails.forEach((detail, index) => {
-      this.apiService.getAnnouncementSearch(this.announcements[index].id_announcement).subscribe((data) => {
+      this.apiService.getAnnouncementSearch(this.announcements[index].id_announcement).subscribe((data: string[]) => {
         detail.skills = data.join(', ');
       });
+
+      this.apiService.getAnnouncementAbout(this.announcements[index].id_announcement).subscribe((data: string[]) => {
+        detail.specialties = data;
+        data.forEach((subject: string) => {
+          if (!this.specialties.includes(subject)) {
+            this.specialties.push(subject);
+          }
+        });
+      });
+    });
+
+    this.filteredProjectDetails = [...this.projectDetails];
+    this.loadMissingStudentsRange();
+  }
+
+  /**
+   * Cette fonction calcule la plage de valeurs pour le nombre d'étudiants manquants.
+   * Elle trouve le nombre maximum d'étudiants manquants parmi tous les projets,
+   * puis crée un tableau de valeurs allant de 1 à ce nombre maximum.
+   * Ce tableau est utilisé pour remplir le menu déroulant des filtres.
+   */
+  loadMissingStudentsRange(): void {
+    const maxMissingStudents = Math.max(...this.projectDetails.map(detail => detail.missingStudents));
+    this.missingStudentsRange = Array.from({ length: maxMissingStudents }, (_, i) => i + 1);
+  }
+
+  applyFilters(): void {
+    this.filteredProjectDetails = this.projectDetails.filter(detail => {
+      const matchesSearchTerm = detail.projectName.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+                                detail.projectDescription.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+                                detail.announcementDescription.toLowerCase().includes(this.searchTerm.toLowerCase());
+      const matchesSpecialty = this.selectedSpecialty ? detail.specialties.includes(this.selectedSpecialty) : true;
+      const matchesMissingStudents = this.selectedMissingStudents ? detail.missingStudents === +this.selectedMissingStudents : true;
+      const matchesKeywords = this.keywords ? detail.projectName.toLowerCase().includes(this.keywords.toLowerCase()) ||
+                                              detail.projectDescription.toLowerCase().includes(this.keywords.toLowerCase()) : true;
+      return matchesSearchTerm && matchesSpecialty && matchesMissingStudents && matchesKeywords;
     });
   }
 
-  getMissingStudents(project: any): number {
+  getMissingStudents(project: Project): number {
     const projectSize = project.size;
     const studentCount = this.announcements.filter(a => a.id_project === project.id_project).length;
     return projectSize - studentCount;
   }
 
-  decodeUTF8(str: string): string {
-    return decodeURIComponent(escape(str));
+  decodeUTF8(str: string | undefined): string {
+    return str ? decodeURIComponent(escape(str)) : '';
   }
 }

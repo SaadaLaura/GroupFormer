@@ -62,7 +62,7 @@ def get_announcement_about(announcement_id):
         rows = cursor.execute('''
             SELECT name FROM subject
             JOIN is_about ON subject.id_subject = is_about.id_subject
-            WHERE id_announcement = ?
+            WHERE id_announcement_ = ?
             ''', (announcement_id,)).fetchall()
 
         connection.close()
