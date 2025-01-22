@@ -4,10 +4,10 @@ from flask import Blueprint, jsonify
 from backend.api.utils.db_connection import db_connect
 from backend.api.utils.query_result_mapper import QueryResultMapper
 
-student_bp = Blueprint('student', __name__)
+students_bp = Blueprint('students', __name__)
 
-@student_bp.route('/', methods=['GET'])
-@swag_from('swagger/student/student.yaml')
+@students_bp.route('/', methods=['GET'])
+@swag_from('swagger/students/students.yaml')
 def get_students():
     try:
         connection = db_connect()
@@ -15,7 +15,7 @@ def get_students():
         # TODO: crypté password
         rows = cursor.execute('''
             SELECT person.* FROM person
-            JOIN student ON person.id_user = student.id_user
+            JOIN students ON person.id_user = students.id_user
             ''').fetchall()
         connection.close()
 
@@ -24,8 +24,8 @@ def get_students():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-@student_bp.route('/<student_id>', methods=['GET'])
-@swag_from('swagger/student/student_by_id.yaml')
+@students_bp.route('/<student_id>', methods=['GET'])
+@swag_from('swagger/students/students_by_id.yaml')
 def get_student(student_id):
     try:
         connection = db_connect()
@@ -39,8 +39,8 @@ def get_student(student_id):
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-@student_bp.route('/<student_id>/skill', methods=['GET'])
-@swag_from('swagger/student/student_skill.yaml')
+@students_bp.route('/<student_id>/skills', methods=['GET'])
+@swag_from('swagger/students/students_skills.yaml')
 def get_student_skill(student_id):
     try:
         connection = db_connect()
@@ -52,14 +52,14 @@ def get_student_skill(student_id):
             ''', (student_id,)).fetchall()
 
         connection.close()
-        # TODO: vérifier l'id student d'abord
-        return QueryResultMapper.map_into_list(rows, 'No skills found for the student')
+        # TODO: vérifier l'id students d'abord
+        return QueryResultMapper.map_into_list(rows, 'No skills found for the students')
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-@student_bp.route('/<student_id>/subject', methods=['GET'])
-@swag_from('swagger/student/student_subject.yaml')
+@students_bp.route('/<student_id>/subjects', methods=['GET'])
+@swag_from('swagger/students/students_subjects.yaml')
 def get_student_subject(student_id):
     try:
         connection = db_connect()
@@ -71,23 +71,23 @@ def get_student_subject(student_id):
             ''', (student_id,)).fetchall()
 
         connection.close()
-        # TODO: vérifier l'id student d'abord
-        return QueryResultMapper.map_into_list(rows, 'No subjects found for the student')
+        # TODO: vérifier l'id students d'abord
+        return QueryResultMapper.map_into_list(rows, 'No subjects found for the students')
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-@student_bp.route('/<student_id>/group', methods=['GET'])
-@swag_from('swagger/student/student_project.yaml')
+@students_bp.route('/<student_id>/project', methods=['GET'])
+@swag_from('swagger/students/students_project.yaml')
 def get_student_group(student_id):
     try:
         connection = db_connect()
         cursor = connection.cursor()
         # TODO: d'abord vérifier que l'étudiant à un groupe
         row = cursor.execute('''
-            SELECT project.* FROM project
-            JOIN student ON project.id_project = student.id_project
-            WHERE student.id_user = ?
+            SELECT projects.* FROM projects
+            JOIN students ON projects.id_project = students.id_project
+            WHERE students.id_user = ?
             ''', (student_id,)).fetchone()
 
         connection.close()

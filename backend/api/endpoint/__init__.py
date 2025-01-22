@@ -1,15 +1,15 @@
 from flasgger import Swagger
 from flask import Flask
 
-from announcement import announcement_bp
-from backend.api.endpoint.project import project_bp
-from student import student_bp
+from announcements_blueprint import announcements_bp
+from backend.api.endpoint.projects_blueprint import projects_bp
+from students_blueprint import students_bp
 
 app = Flask(__name__)
 swagger = Swagger(app)
-app.register_blueprint(student_bp, url_prefix='/student')
-app.register_blueprint(announcement_bp, url_prefix='/announcement')
-app.register_blueprint(project_bp, url_prefix='/project')
+app.register_blueprint(students_bp, url_prefix='/students')
+app.register_blueprint(announcements_bp, url_prefix='/announcements')
+app.register_blueprint(projects_bp, url_prefix='/projects')
 
 if __name__== "__main__":
     app.run(debug=True, port=8000)
