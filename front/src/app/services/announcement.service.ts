@@ -16,7 +16,7 @@ export class AnnouncementService {
   }
 
   getAnnouncementSearch(announcementId: number): Observable<any> {
-    return this.http.get(`${this.baseUrl}/announcement/${announcementId}/search`);
+    return this.http.get(`${this.baseUrl}/announcement/${announcementId}/research`);
   }
 
   getAnnouncementAbout(announcementId: number): Observable<any> {

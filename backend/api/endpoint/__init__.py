@@ -2,20 +2,17 @@ from flasgger import Swagger
 from flask import Flask, jsonify
 from flask_cors import CORS
 
-from .announcement import announcement_bp
-from .project import project_bp
-from .student import student_bp
+from backend.api.endpoint.announcements_blueprint import announcements_bp
+from backend.api.endpoint.projects_blueprint import projects_bp
+from backend.api.endpoint.students_blueprint import students_bp
 
 app = Flask(__name__)
-CORS(app) 
 swagger = Swagger(app)
-app.register_blueprint(student_bp, url_prefix='/student')
-app.register_blueprint(announcement_bp, url_prefix='/announcement')
-app.register_blueprint(project_bp, url_prefix='/project')
+CORS(app)  
 
-@app.route('/health', methods=['GET'])
-def health_check():
-    return jsonify({"status": "API is connected"}), 200
+app.register_blueprint(students_bp, url_prefix='/student')
+app.register_blueprint(announcements_bp, url_prefix='/announcement')
+app.register_blueprint(projects_bp, url_prefix='/project')
 
-if __name__ == "__main__":
+if __name__== "__main__":
     app.run(debug=True, port=8000)

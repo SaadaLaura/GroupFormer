@@ -2,7 +2,14 @@
 <br>
 <h2 class="title-page">Recherche de groupe</h2>
 
-<div class="filters">
+<div *ngIf="isLoading" class="loading-message">
+  <span class="material-symbols-outlined rotating-icon">
+    autorenew
+  </span>
+  <p>Chargement des annonces</p>
+</div>
+
+<div *ngIf="!isLoading" class="filters">
   <select class="filter-select" [(ngModel)]="selectedSpecialty" (change)="applyFilters()">
     <option value="">Toutes les spécialités</option>
     <option *ngFor="let specialty of specialties" [value]="specialty">{{ specialty }}</option>
@@ -18,14 +25,14 @@
   <input class="search-bar" type="text" placeholder="Recherche" [(ngModel)]="searchTerm" (input)="applyFilters()" />
 </div>
 
-<div *ngIf="filteredProjectDetails.length === 0" class="no-results">
+<div *ngIf="!isLoading && filteredProjectDetails.length === 0" class="no-results">
   <span class="material-symbols-outlined">
     search_off
   </span>
   <p>Aucune annonce n'a été trouvée</p>
 </div>
 
-<table *ngIf="filteredProjectDetails.length > 0" class="styled-table">
+<table *ngIf="!isLoading && filteredProjectDetails.length > 0" class="styled-table">
   <thead>
     <tr>
       <th>Nom du projet</th>

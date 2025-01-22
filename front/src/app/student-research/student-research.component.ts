@@ -18,13 +18,16 @@ export class StudentResearchComponent implements OnInit {
   searchTerm: string = '';
   keywords: string = '';
   major: string = '';
+  isLoading: boolean = true;
 
-  constructor(private StudentService: StudentService) {}
+  constructor(private studentService: StudentService) {}
 
   ngOnInit(): void {
-    this.StudentService.getStudents().subscribe((students: Student[]) => {
+    this.isLoading = true;
+    this.studentService.getStudents().subscribe((students: Student[]) => {
       this.students = students.filter(student => !student.id_project);
       this.filteredStudents = [...this.students];
+      this.isLoading = false; 
     });
   }
 

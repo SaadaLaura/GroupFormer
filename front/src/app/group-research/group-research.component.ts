@@ -25,10 +25,12 @@ export class GroupResearchComponent implements OnInit {
   selectedSpecialty: string = '';
   selectedMissingStudents: string = '';
   keywords: string = '';
+  isLoading: boolean = true;
 
   constructor(private projectService: ProjectService, private announcementService: AnnouncementService) {}
 
   ngOnInit(): void {
+    this.isLoading = true;
     this.projectService.getProjects().subscribe((projects: Project[]) => {
       this.projects = projects;
       this.loadAnnouncements();
@@ -39,6 +41,7 @@ export class GroupResearchComponent implements OnInit {
     this.announcementService.getAnnouncements().subscribe((announcements: Announcement[]) => {
       this.announcements = announcements;
       this.calculateProjectDetails();
+      this.isLoading = false; // Mettre à jour isLoading ici
     });
   }
 
@@ -77,12 +80,6 @@ export class GroupResearchComponent implements OnInit {
     this.loadMissingStudentsRange();
   }
 
-  /**
-   * Cette fonction calcule la plage de valeurs pour le nombre d'étudiants manquants.
-   * Elle trouve le nombre maximum d'étudiants manquants parmi tous les projets,
-   * puis crée un tableau de valeurs allant de 1 à ce nombre maximum.
-   * Ce tableau est utilisé pour remplir le menu déroulant des filtres.
-   */
   loadMissingStudentsRange(): void {
     const maxMissingStudents = Math.max(...this.projectDetails.map(detail => detail.missingStudents));
     this.missingStudentsRange = Array.from({ length: maxMissingStudents }, (_, i) => i + 1);

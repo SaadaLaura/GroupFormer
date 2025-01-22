@@ -39,6 +39,7 @@
   font-size: large;
 }
 
+//Array style
 .styled-table {
   width: 100%;
   border-collapse: collapse;
@@ -56,4 +57,24 @@
 
 .styled-table tr:nth-child(even) {
   background-color: #f9f9f9;
+}
+
+// Loading message 
+.loading-message {
+  color: #333; /* Gris foncé */
+  font-style: italic;
+  text-align: left;
+  display: flex;
+  align-items: center;
+}
+
+.rotating-icon {
+  animation: rotate 2s linear infinite;
+  margin-right: 10px;
+}
+
+@keyframes rotate {
+  100% {
+    transform: rotate(360deg);
+  }
 }

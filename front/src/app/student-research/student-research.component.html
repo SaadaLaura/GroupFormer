@@ -2,20 +2,28 @@
 <br>
 <h2 class="title-page">Liste des étudiants libres : </h2>
 
-<div class="filters">
+<div *ngIf="isLoading" class="loading-message">
+  <span class="material-symbols-outlined rotating-icon">
+    autorenew
+  </span>
+  <p>Chargement des annonces</p>
+</div>
+
+
+<div *ngIf="!isLoading" class="filters">
   <input class="keyword-input" type="text" placeholder="Mots-clés" [(ngModel)]="keywords" (input)="applyFilters()" />
   <input class="search-bar" type="text" placeholder="Recherche" [(ngModel)]="searchTerm" (input)="applyFilters()" />
   <input class="major-input" type="text" placeholder="Majeure" [(ngModel)]="major" (input)="applyFilters()" />
 </div>
 
-<div *ngIf="filteredStudents.length === 0" class="no-results">
+<div *ngIf="!isLoading && filteredStudents.length === 0" class="no-results">
   <span class="material-symbols-outlined">
     search_off
   </span>
   <p>Aucun étudiant n'a été trouvé</p>
 </div>
 
-<table *ngIf="filteredStudents.length > 0" class="styled-table">
+<table *ngIf="!isLoading && filteredStudents.length > 0" class="styled-table">
   <thead>
     <tr>
       <th>Nom</th>
