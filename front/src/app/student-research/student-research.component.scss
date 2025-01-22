@@ -1,4 +1,60 @@
-.title-page {
-    text-align: center;
-    margin: 20px 0;
+.filters {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-bottom: 20px;
+  margin-top: 25px;
+}
+
+.keyword-input,
+.search-bar,
+.major-input {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-right: 10px;
+}
+
+.search-bar,
+.keyword-input,
+.major-input {
+  width: 160px;
+}
+
+.no-results {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 50vh; 
+  text-align: center;
+  margin-top: 20px;
+}
+
+.no-results .material-symbols-outlined {
+  font-size: 72px; 
+  color: #000;
+}
+
+.no-results p {
+  font-size: large;
+}
+
+.styled-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.styled-table th, .styled-table td {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+
+.styled-table th {
+  background-color: #f2f2f2;
+}
+
+.styled-table tr:nth-child(even) {
+  background-color: #f9f9f9;
 }
