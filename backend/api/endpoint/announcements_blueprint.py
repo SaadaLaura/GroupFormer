@@ -12,7 +12,7 @@ def get_announcements():
     try:
         connection = db_connect()
         cursor = connection.cursor()
-        rows = cursor.execute("SELECT * FROM announcements").fetchall()
+        rows = cursor.execute("SELECT * FROM announcement").fetchall()
         connection.close()
 
         return QueryResultMapper.map_multiple_rows(cursor, rows, 'No announcements found')
@@ -26,7 +26,7 @@ def get_announcement(announcement_id):
     try:
         connection = db_connect()
         cursor = connection.cursor()
-        row = cursor.execute('SELECT * FROM announcements WHERE id_announcement = ?', (announcement_id,)).fetchone()
+        row = cursor.execute('SELECT * FROM announcement WHERE id_announcement = ?', (announcement_id,)).fetchone()
         connection.close()
 
         return QueryResultMapper.map_single_row(cursor, row, 'Announcement not found')

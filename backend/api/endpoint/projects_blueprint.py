@@ -12,7 +12,7 @@ def get_projects():
     try:
         connection = db_connect()
         cursor = connection.cursor()
-        rows = cursor.execute("SELECT * FROM projects").fetchall()
+        rows = cursor.execute("SELECT * FROM project").fetchall()
         connection.close()
 
         return QueryResultMapper.map_multiple_rows(cursor, rows, 'No projects found')
@@ -26,7 +26,7 @@ def get_project(project_id):
     try:
         connection = db_connect()
         cursor = connection.cursor()
-        row = cursor.execute('SELECT * FROM projects WHERE id_project = ?', (project_id,)).fetchone()
+        row = cursor.execute('SELECT * FROM project WHERE id_project = ?', (project_id,)).fetchone()
         connection.close()
 
         return QueryResultMapper.map_single_row(cursor, row, 'Project not found')
@@ -41,9 +41,9 @@ def get_project_announcement(project_id):
         connection = db_connect()
         cursor = connection.cursor()
         row = cursor.execute('''
-            SELECT announcements.* FROM announcements
-            JOIN projects ON announcements.id_project = projects.id_project
-            WHERE projects.id_project = ?
+            SELECT announcement.* FROM announcement
+            JOIN project ON announcement.id_project = project.id_project
+            WHERE project.id_project = ?
             ''', (project_id,)).fetchall()
 
         connection.close()

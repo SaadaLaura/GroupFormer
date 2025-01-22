@@ -15,7 +15,7 @@ def get_students():
         # TODO: crypté password
         rows = cursor.execute('''
             SELECT person.* FROM person
-            JOIN students ON person.id_user = students.id_user
+            JOIN student ON person.id_user = student.id_user
             ''').fetchall()
         connection.close()
 
@@ -85,9 +85,9 @@ def get_student_group(student_id):
         cursor = connection.cursor()
         # TODO: d'abord vérifier que l'étudiant à un groupe
         row = cursor.execute('''
-            SELECT projects.* FROM projects
-            JOIN students ON projects.id_project = students.id_project
-            WHERE students.id_user = ?
+            SELECT project.* FROM project
+            JOIN student ON project.id_project = student.id_project
+            WHERE student.id_user = ?
             ''', (student_id,)).fetchone()
 
         connection.close()
