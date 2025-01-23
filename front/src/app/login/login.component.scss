@@ -20,14 +20,14 @@
 .login-container {
   max-width: 430px;
   margin: 50px auto;
-  padding: 100px 20px;
+  padding: 60px 20px;
   background-color: #fff;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 h1 {
-  margin : -75px 0 40px; 
+  margin : -40px 0 40px; 
 }
 
 p {
@@ -48,12 +48,23 @@ p {
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 4px;
+  box-sizing: border-box; /* Assurez-vous que le padding est inclus dans la largeur totale */
 }
+
 .password-container {
   margin-top: 15px;
+  position: relative; /* Position relative pour le conteneur de la zone de texte du mot de passe */
+}
+
+.password-input-container {
+  position: relative; /* Position relative pour le conteneur de la zone de texte du mot de passe */
 }
 
 .show-password-btn {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
   background: none;
   border: none;
   color: #007bff;
@@ -79,6 +90,7 @@ p {
   color: red;
   font-size: 14px;
 }
+
 .info-message {
   background-color: #e7f3fe;
   color: #31708f;
@@ -87,6 +99,3 @@ p {
   border-radius: 4px;
   margin-bottom: 5px;
 }
-
-
-
