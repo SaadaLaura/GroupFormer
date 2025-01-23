@@ -66,6 +66,7 @@ export class LoginComponent {
           } else {
             console.error('First name or last name is undefined');
           }
+          this.stateService.setUserId(student.id_user);
           this.router.navigate(['/profil']);
         } else {
           this.loginError = true;

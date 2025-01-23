@@ -6,6 +6,7 @@ export class Student {
     public skills: string,
     public researchCenter: string,
     public major: string,
-    public id_project: number | null
+    public id_project: number | null,
+    public password: string 
   ){}
 }

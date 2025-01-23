@@ -4,21 +4,15 @@
 <div class="profil-info">
   <div class="info-group">
     <label for="password">Mot de passe :</label>
-    <ng-container *ngIf="!editMode['password']; else editPassword">
-      <span>{{ password ? '••••••••' : 'vide' }}</span>
-    </ng-container>
-    <ng-template #editPassword>
-      <input [type]="showPassword ? 'text' : 'password'" id="password" name="password" [(ngModel)]="password">
-    </ng-template>
-    <button class="icone" type="button" (click)="toggleEditMode('password')">
-      <span class="material-symbols-outlined">{{ editMode['password'] ? 'check' : 'edit' }}</span>
+    <span>{{ showPassword ? password : '••••••••' }}</span>
+    <button class="icone visibility-button" type="button" (click)="togglePasswordVisibility()">
+      <span class="material-symbols-outlined">{{ showPassword ? 'visibility_off' : 'visibility' }}</span>
     </button>
-    <button *ngIf="editMode['password']" type="button" (click)="togglePasswordVisibility()">{{ showPassword ? 'Masquer' : 'Afficher' }}</button>
   </div>
   <div class="info-group">
     <label for="interests">Centre d'intérêt <span class="required">*</span> :</label>
     <ng-container *ngIf="!editMode['interests']; else editInterests">
-      <ul *ngIf="interests.length; else noInterests">
+      <ul *ngIf="interests.length; else noInterests" class="list-inline">
         <li *ngFor="let interest of interests" class="list-item">
           {{ interest }}
           <button class="icone" type="button" (click)="removeInterest(interest)">
@@ -26,7 +20,7 @@
           </button>
         </li>
       </ul>
-      <ng-template #noInterests><em>vide</em></ng-template>
+      <ng-template #noInterests><em class="no-items">vide</em></ng-template>
     </ng-container>
     <ng-template #editInterests>
       <input type="text" id="newInterest" name="newInterest" [(ngModel)]="newInterest">
@@ -38,7 +32,7 @@
   <div class="info-group">
     <label for="skills">Skills <span class="required">*</span> :</label>
     <ng-container *ngIf="!editMode['skills']; else editSkills">
-      <ul *ngIf="skills.length; else noSkills">
+      <ul *ngIf="skills.length; else noSkills" class="list-inline">
         <li *ngFor="let skill of skills" class="list-item">
           {{ skill }}
           <button class="icone" type="button" (click)="removeSkill(skill)">
@@ -46,7 +40,7 @@
           </button>
         </li>
       </ul>
-      <ng-template #noSkills><em>vide</em></ng-template>
+      <ng-template #noSkills><em class="no-items">vide</em></ng-template>
     </ng-container>
     <ng-template #editSkills>
       <input type="text" id="newSkill" name="newSkill" [(ngModel)]="newSkill">

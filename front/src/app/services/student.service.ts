@@ -8,11 +8,19 @@ import { BASE_URL } from './api.service';
   providedIn: 'root'
 })
 export class StudentService {
-  private baseUrl = BASE_URL; // Utilisation de la base URL depuis config.ts
+  private baseUrl = BASE_URL; 
 
   constructor(private http: HttpClient) {}
 
   getStudents(): Observable<Student[]> {
     return this.http.get<Student[]>(`${this.baseUrl}/student`);
+  }
+
+  getStudentById(studentId: number): Observable<Student> {
+    return this.http.get<Student>(`${this.baseUrl}/student/${studentId}`);
+  }
+
+  getStudentSkills(studentId: number): Observable<string[]> {
+    return this.http.get<string[]>(`${this.baseUrl}/student/${studentId}/skills`);
   }
 }
