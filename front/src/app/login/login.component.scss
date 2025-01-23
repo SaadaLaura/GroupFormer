@@ -1,58 +1,92 @@
+.navbar {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.logo {
+  width: 55px;
+  height: 55px;
+  margin-right: 10px;
+}
+
+.project-name {
+  font-size: x-large;
+  font-weight: bold;
+}
+
 .login-container {
-    max-width: 400px;
-    margin: 50px auto;
-    padding: 20px;
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    text-align: center;
+  max-width: 430px;
+  margin: 50px auto;
+  padding: 100px 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+  margin : -75px 0 40px; 
+}
+
+p {
+  margin-bottom: 10px; 
+}
+
+//choix étudiant ou admin
+.user-type-selection {
+  display: flex;
+  justify-content: center; 
+  gap: 20px; 
+  margin-bottom: 50px;
+}
+
+//zone de texte de l'email et mdp
+.input-box {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+.password-container {
+  margin-top: 15px;
+}
+
+.show-password-btn {
+  background: none;
+  border: none;
+  color: #007bff;
+  cursor: pointer;
+}
+
+.login-btn {
+  margin-top: 10px;
+  width: 100%;
+  padding: 10px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+
+  &:disabled{
+    background-color: #ccc;
   }
-  
-  .input-box {
-    width: 100%;
-    padding: 10px;
-    margin: 10px 0;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-  }
-  
-  .input-box.error {
-    border-color: red;
-  }
-  
-  .password-container {
-    position: relative;
-  }
-  
-  .show-password-btn {
-    position: absolute;
-    right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    background: none;
-    border: none;
-    color: #007bff;
-    cursor: pointer;
-  }
-  
-  .login-btn {
-    width: auto;
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 20px; /* Bouton ovale */
-    cursor: pointer;
-    transition: background-color 0.3s;
-  }
-  
-  .login-btn:hover {
-    background-color: #0056b3;
-  }
-  
-  .error-message {
-    color: red;
-    font-size: 0.9em;
-    margin-top: -10px;
-    margin-bottom: 10px;
-  }
+}
+
+.error-message {
+  color: red;
+  font-size: 14px;
+}
+.info-message {
+  background-color: #e7f3fe;
+  color: #31708f;
+  border: 1px solid #bce8f1;
+  padding: 5%;
+  border-radius: 4px;
+  margin-bottom: 5px;
+}
+
+
+

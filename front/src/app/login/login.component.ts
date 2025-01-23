@@ -2,13 +2,14 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { StudentService } from '../services/student.service';
 
 @Component({
   selector: 'app-login',
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './login.component.html',
-  styleUrl: './login.component.scss'
+  styleUrls: ['./login.component.scss']
 })
 export class LoginComponent {
   email: string = '';
@@ -16,8 +17,11 @@ export class LoginComponent {
   emailError: boolean = false;
   passwordError: boolean = false;
   loginError: boolean = false;
+  emailNotFoundError: boolean = false;
+  showPasswordInput: boolean = false;
+  userType: string = '';
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private studentService: StudentService) {}
 
   togglePasswordVisibility() {
     const passwordInput = document.getElementById('password') as HTMLInputElement;
@@ -28,20 +32,40 @@ export class LoginComponent {
     }
   }
 
-  login() {
+  nextStep() {
     this.emailError = !this.email;
+    this.emailNotFoundError = false;
+
+    if (this.email) {
+      if (this.userType === 'student') {
+        this.studentService.getStudents().subscribe((students: any[]) => {
+          const student = students.find(s => s.email === this.email);
+          if (student) {
+            this.showPasswordInput = true;
+          } else {
+            this.emailNotFoundError = true;
+          }
+        });
+      } 
+    }
+  }
+
+  login() {
     this.passwordError = !this.password;
     this.loginError = false;
 
     if (this.email && this.password) {
-      if (this.email === 'laura.saada@efrei.net' && this.password === 'GroupFormer') {
-        // Logique de connexion réussie
-        localStorage.setItem('isLoggedIn', 'true');
-        this.router.navigate(['/']);
-      } else {
-        this.loginError = true;
-        this.password = ''; // Réinitialiser le champ de mot de passe
-      }
+      this.studentService.getStudents().subscribe((students: any[]) => {
+        const student = students.find(s => s.email === this.email);
+        if (student && student.password === this.password) {
+          // Logique de connexion réussie
+          localStorage.setItem('isLoggedIn', 'true');
+          this.router.navigate(['/profil']);
+        } else {
+          this.loginError = true;
+          this.password = ''; // Réinitialiser le champ de mot de passe
+        }
+      });
     }
   }
 }
