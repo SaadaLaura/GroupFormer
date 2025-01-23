@@ -11,7 +11,7 @@
   </nav>
   <div class="navbar-profil">
     <ng-container *ngIf="isLoggedIn; else notLoggedIn">
-      <div class="initials" (click)="toggleDropdown()">GF</div>
+      <div class="initials" (click)="toggleDropdown()">{{ initials }}</div>
       <div class="dropdown-menu" *ngIf="dropdownOpen">
         <a (click)="navigateTo('profil')">Profil</a>
         <a (click)="logout()">Déconnexion</a>

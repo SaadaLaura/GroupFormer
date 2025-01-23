@@ -12,31 +12,35 @@ import { StateService } from '../services/state.service';
 })
 export class NavbarComponent implements OnInit {
   isLoggedIn: boolean = false;
+  initials: string = '';
   dropdownOpen: boolean = false;
   hasGroup: string | null = null;
 
-  constructor(private router: Router, private stateService: StateService) {
-    this.isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
-  }
+  constructor(private router: Router, private stateService: StateService) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
+    this.isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+    this.stateService.initials$.subscribe(initials => {
+      this.initials = initials || '';
+    });
+
     this.stateService.hasGroup$.subscribe(hasGroup => {
       this.hasGroup = hasGroup;
     });
   }
 
-  navigateTo(route: string) {
-    this.router.navigate([route]);
+  navigateTo(route: string): void {
+    this.router.navigate([`/${route}`]);
   }
 
-  toggleDropdown() {
+  toggleDropdown(): void {
     this.dropdownOpen = !this.dropdownOpen;
   }
 
-  logout() {
-    localStorage.removeItem('isLoggedIn');
+  logout(): void {
+    localStorage.clear();
     this.isLoggedIn = false;
     this.dropdownOpen = false;
-    this.router.navigate(['/']);
+    this.router.navigate(['/login']);
   }
 }
