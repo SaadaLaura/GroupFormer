@@ -53,6 +53,11 @@ export class ProfilComponent implements OnInit {
           this.skills = skills;
           this.stateService.setSkills(skills);
         });
+
+        this.studentService.getStudentInterests(userId).subscribe(interests => {
+          this.interests = interests;
+          this.stateService.setInterests(interests);
+        });
       }
     });
 
@@ -65,6 +70,12 @@ export class ProfilComponent implements OnInit {
     this.stateService.skills$.subscribe(skills => {
       if (skills !== null) {
         this.skills = skills;
+      }
+    });
+
+    this.stateService.interests$.subscribe(interests => {
+      if (interests !== null) {
+        this.interests = interests;
       }
     });
   }
@@ -84,6 +95,7 @@ export class ProfilComponent implements OnInit {
     if (this.editMode['interests']) {
       const newInterests = this.newInterest.split(',').map(interest => interest.trim()).filter(interest => interest);
       this.interests.push(...newInterests);
+      this.stateService.setInterests(this.interests); // Enregistrer les centres d'intérêt dans le localStorage
       this.newInterest = '';
       this.toggleEditMode('interests');
     } else {
@@ -95,6 +107,7 @@ export class ProfilComponent implements OnInit {
     if (this.editMode['skills']) {
       const newSkills = this.newSkill.split(',').map(skill => skill.trim()).filter(skill => skill);
       this.skills.push(...newSkills);
+      this.stateService.setSkills(this.skills); // Enregistrer les compétences dans le localStorage
       this.newSkill = '';
       this.toggleEditMode('skills');
     } else {
@@ -121,9 +134,11 @@ export class ProfilComponent implements OnInit {
 
   removeInterest(interest: string) {
     this.interests = this.interests.filter(i => i !== interest);
+    this.stateService.setInterests(this.interests); // Enregistrer les centres d'intérêt mis à jour dans le localStorage
   }
 
   removeSkill(skill: string) {
     this.skills = this.skills.filter(s => s !== skill);
+    this.stateService.setSkills(this.skills); // Enregistrer les compétences mises à jour dans le localStorage
   }
 }

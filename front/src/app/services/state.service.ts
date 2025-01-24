@@ -20,6 +20,9 @@ export class StateService {
   private skillsSubject = new BehaviorSubject<string[] | null>(this.getSkillsFromLocalStorage());
   skills$ = this.skillsSubject.asObservable();
 
+  private interestsSubject = new BehaviorSubject<string[] | null>(this.getInterestsFromLocalStorage());
+  interests$ = this.interestsSubject.asObservable();
+
   setHasGroup(hasGroup: string) {
     localStorage.setItem('hasGroup', hasGroup);
     this.hasGroupSubject.next(hasGroup);
@@ -50,6 +53,11 @@ export class StateService {
     this.skillsSubject.next(skills);
   }
 
+  setInterests(interests: string[]) {
+    localStorage.setItem('interests', JSON.stringify(interests));
+    this.interestsSubject.next(interests);
+  }
+
   private getInitialsFromLocalStorage(): string | null {
     const firstName = localStorage.getItem('firstname');
     const lastName = localStorage.getItem('lastname');
@@ -59,5 +67,10 @@ export class StateService {
   private getSkillsFromLocalStorage(): string[] | null {
     const skills = localStorage.getItem('skills');
     return skills ? JSON.parse(skills) : null;
+  }
+
+  private getInterestsFromLocalStorage(): string[] | null {
+    const interests = localStorage.getItem('interests');
+    return interests ? JSON.parse(interests) : null;
   }
 }

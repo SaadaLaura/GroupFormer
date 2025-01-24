@@ -9,12 +9,7 @@
   <p>Chargement des annonces</p>
 </div>
 
-<div *ngIf="!isLoading" class="filters">
-  <select class="filter-select" [(ngModel)]="selectedSpecialty" (change)="applyFilters()">
-    <option value="">Toutes les spécialités</option>
-    <option *ngFor="let specialty of specialties" [value]="specialty">{{ specialty }}</option>
-  </select>
-
+<div *ngIf="!isLoading && isDataLoaded" class="filters">
   <select class="filter-select" [(ngModel)]="selectedMissingStudents" (change)="applyFilters()">
     <option value="">Tous les étudiants manquants</option>
     <option *ngFor="let i of missingStudentsRange" [value]="i">{{ i }}</option>
@@ -25,31 +20,33 @@
   <input class="search-bar" type="text" placeholder="Recherche" [(ngModel)]="searchTerm" (input)="applyFilters()" />
 </div>
 
-<div *ngIf="!isLoading && filteredProjectDetails.length === 0" class="no-results">
+<div *ngIf="!isLoading && isDataLoaded && areFiltersApplied && filteredProjectDetails.length === 0" class="no-results">
   <span class="material-symbols-outlined">
     search_off
   </span>
   <p>Aucune annonce n'a été trouvée</p>
 </div>
 
-<table *ngIf="!isLoading && filteredProjectDetails.length > 0" class="styled-table">
+<table *ngIf="!isLoading && isDataLoaded && filteredProjectDetails.length > 0" class="styled-table">
   <thead>
     <tr>
       <th>Nom du projet</th>
+      <th>Description de l'annonce</th>
+      <th>Compétence recherchée</th>
+      <th>Centres d'intérêt</th>
       <th>Description du projet</th>
       <th>Nombre d'étudiants manquants</th>
-      <th>Compétence recherchée</th>
-      <th>Description de l'annonce</th>
       <th>Date de publication</th>
     </tr>
   </thead>
   <tbody>
     <tr *ngFor="let detail of filteredProjectDetails">
       <td>{{ detail.projectName }}</td>
+      <td>{{ detail.announcementDescription }}</td>
+      <td>{{ detail.skills }}</td>
+      <td>{{ detail.specialties.join(', ') }}</td>
       <td>{{ detail.projectDescription }}</td>
       <td>{{ detail.missingStudents }}</td>
-      <td>{{ detail.skills }}</td>
-      <td>{{ detail.announcementDescription }}</td>
       <td>{{ detail.publicationDate }}</td>
     </tr>
   </tbody>

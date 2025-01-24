@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Project, ProjectDetail } from '../class/Project';
 import { Announcement } from '../class/Announcement';
+import { StateService } from '../services/state.service';
 
 @Component({
   selector: 'app-group-research',
@@ -19,18 +20,40 @@ export class GroupResearchComponent implements OnInit {
   announcements: Announcement[] = [];
   projectDetails: ProjectDetail[] = [];
   filteredProjectDetails: ProjectDetail[] = [];
-  specialties: string[] = [];
   missingStudentsRange: number[] = [];
   searchTerm: string = '';
-  selectedSpecialty: string = '';
   selectedMissingStudents: string = '';
   keywords: string = '';
   isLoading: boolean = true;
+  isDataLoaded: boolean = false;
+  areFiltersApplied: boolean = false;
+  userSkills: string[] = [];
+  userInterests: string[] = [];
 
-  constructor(private projectService: ProjectService, private announcementService: AnnouncementService) {}
+  constructor(
+    private projectService: ProjectService,
+    private announcementService: AnnouncementService,
+    private stateService: StateService
+  ) {}
 
   ngOnInit(): void {
     this.isLoading = true;
+    this.stateService.skills$.subscribe(skills => {
+      if (skills !== null) {
+        this.userSkills = skills;
+        this.loadProjects();
+      }
+    });
+
+    this.stateService.interests$.subscribe(interests => {
+      if (interests !== null) {
+        this.userInterests = interests;
+        this.loadProjects();
+      }
+    });
+  }
+
+  loadProjects(): void {
     this.projectService.getProjects().subscribe((projects: Project[]) => {
       this.projects = projects;
       this.loadAnnouncements();
@@ -41,7 +64,6 @@ export class GroupResearchComponent implements OnInit {
     this.announcementService.getAnnouncements().subscribe((announcements: Announcement[]) => {
       this.announcements = announcements;
       this.calculateProjectDetails();
-      this.isLoading = false; // Mettre à jour isLoading ici
     });
   }
 
@@ -61,23 +83,41 @@ export class GroupResearchComponent implements OnInit {
       );
     });
 
+    let detailsLoaded = 0;
     this.projectDetails.forEach((detail, index) => {
       this.announcementService.getAnnouncementSearch(this.announcements[index].id_announcement).subscribe((data: string[]) => {
         detail.skills = data.join(', ');
+        detailsLoaded++;
+        this.checkDetailsLoaded(detailsLoaded);
       });
 
       this.announcementService.getAnnouncementAbout(this.announcements[index].id_announcement).subscribe((data: string[]) => {
         detail.specialties = data;
-        data.forEach((subject: string) => {
-          if (!this.specialties.includes(subject)) {
-            this.specialties.push(subject);
-          }
-        });
+        detailsLoaded++;
+        this.checkDetailsLoaded(detailsLoaded);
       });
     });
 
-    this.filteredProjectDetails = [...this.projectDetails];
     this.loadMissingStudentsRange();
+  }
+
+  checkDetailsLoaded(detailsLoaded: number): void {
+    if (detailsLoaded === this.projectDetails.length * 2) {
+      this.applyInitialFilter();
+      this.isLoading = false;
+      this.isDataLoaded = true;
+      this.areFiltersApplied = true;
+    }
+  }
+
+  applyInitialFilter(): void {
+    this.filteredProjectDetails = this.projectDetails.filter(detail => {
+      const detailSkills = detail.skills.split(', ').map(skill => skill.toLowerCase());
+      const matchesSkills = this.userSkills.some(skill => detailSkills.includes(skill.toLowerCase()));
+      const detailInterests = detail.specialties.map(interest => interest.toLowerCase());
+      const matchesInterests = this.userInterests.some(interest => detailInterests.includes(interest.toLowerCase()));
+      return matchesSkills && matchesInterests;
+    });
   }
 
   loadMissingStudentsRange(): void {
@@ -90,11 +130,14 @@ export class GroupResearchComponent implements OnInit {
       const matchesSearchTerm = detail.projectName.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
                                 detail.projectDescription.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
                                 detail.announcementDescription.toLowerCase().includes(this.searchTerm.toLowerCase());
-      const matchesSpecialty = this.selectedSpecialty ? detail.specialties.includes(this.selectedSpecialty) : true;
       const matchesMissingStudents = this.selectedMissingStudents ? detail.missingStudents === +this.selectedMissingStudents : true;
       const matchesKeywords = this.keywords ? detail.projectName.toLowerCase().includes(this.keywords.toLowerCase()) ||
                                               detail.projectDescription.toLowerCase().includes(this.keywords.toLowerCase()) : true;
-      return matchesSearchTerm && matchesSpecialty && matchesMissingStudents && matchesKeywords;
+      const detailSkills = detail.skills.split(', ').map(skill => skill.toLowerCase());
+      const matchesUserSkills = this.userSkills.some(skill => detailSkills.includes(skill.toLowerCase()));
+      const detailInterests = detail.specialties.map(interest => interest.toLowerCase());
+      const matchesUserInterests = this.userInterests.some(interest => detailInterests.includes(interest.toLowerCase()));
+      return matchesSearchTerm && matchesMissingStudents && matchesKeywords && matchesUserSkills && matchesUserInterests;
     });
   }
 

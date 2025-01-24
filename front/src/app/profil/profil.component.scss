@@ -21,7 +21,7 @@
 .info-group select,
 .info-group span {
   max-width: 115px;
-  padding: 8px;
+  padding: 6px;
   margin: 0; 
 }
 
@@ -69,7 +69,7 @@
 .list-item {
   display: flex; /* Afficher les éléments en bloc */
   align-items: center;  
-  margin-top: 3px;
+  margin-bottom: -8px;
 }
 
 .list-item .icone {

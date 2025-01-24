@@ -23,4 +23,8 @@ export class StudentService {
   getStudentSkills(studentId: number): Observable<string[]> {
     return this.http.get<string[]>(`${this.baseUrl}/student/${studentId}/skills`);
   }
+
+  getStudentInterests(studentId: number): Observable<string[]> {
+    return this.http.get<string[]>(`${this.baseUrl}/student/${studentId}/subjects`);
+  }
 }
