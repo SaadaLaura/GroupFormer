@@ -67,12 +67,15 @@ export class LoginComponent {
             console.error('First name or last name is undefined');
           }
           this.stateService.setUserId(student.id_user);
-          this.router.navigate(['/profil']);
-        } else {
+          this.router.navigate(['/profil', student.id_user]);
           this.loginError = true;
           this.password = ''; // Réinitialiser le champ de mot de passe
         }
       });
     }
+  }
+
+  navigateTo(route: string) {
+    this.router.navigate([`/${route}`]);
   }
 }

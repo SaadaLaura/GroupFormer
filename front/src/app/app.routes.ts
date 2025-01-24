@@ -11,7 +11,7 @@ export const routes: Routes = [
     { path: 'home', component: HomeComponent },
     { path: 'login', component: LoginComponent },
     { path: 'register', component: RegisterComponent },
-    { path: 'profil', component: ProfilComponent },
+    { path: 'profil/:id', component: ProfilComponent },
     { path: 'student-research', component: StudentResearchComponent},
     { path: 'group-research', component: GroupResearchComponent}
 ];

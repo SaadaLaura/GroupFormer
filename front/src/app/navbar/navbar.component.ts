@@ -15,6 +15,7 @@ export class NavbarComponent implements OnInit {
   initials: string = '';
   dropdownOpen: boolean = false;
   hasGroup: string | null = null;
+  userId: number | null = null;
 
   constructor(private router: Router, private stateService: StateService) {}
 
@@ -27,10 +28,18 @@ export class NavbarComponent implements OnInit {
     this.stateService.hasGroup$.subscribe(hasGroup => {
       this.hasGroup = hasGroup;
     });
+
+    this.stateService.userId$.subscribe(userId => {
+      this.userId = userId;
+    });
   }
 
   navigateTo(route: string): void {
-    this.router.navigate([`/${route}`]);
+    if (route === 'profil' && this.userId !== null) {
+      this.router.navigate([`/${route}`, this.userId]);
+    } else {
+      this.router.navigate([`/${route}`]);
+    }
   }
 
   toggleDropdown(): void {

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { NavbarComponent } from '../navbar/navbar.component';
 import { StateService } from '../services/state.service';
 import { StudentService } from '../services/student.service';
@@ -31,6 +32,7 @@ export class ProfilComponent implements OnInit {
   };
 
   constructor(
+    private route: ActivatedRoute,
     private stateService: StateService,
     private studentService: StudentService
   ) {}
@@ -42,8 +44,9 @@ export class ProfilComponent implements OnInit {
       }
     });
 
-    this.stateService.userId$.subscribe(userId => {
-      if (userId !== null) {
+    this.route.params.subscribe(params => {
+      const userId = +params['id'];
+      if (userId) {
         this.studentService.getStudentById(userId).subscribe(student => {
           this.password = student.password;
           this.stateService.setPassword(student.password);

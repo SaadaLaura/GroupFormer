@@ -11,7 +11,7 @@ export class StateService {
   private initialsSubject = new BehaviorSubject<string | null>(this.getInitialsFromLocalStorage());
   initials$ = this.initialsSubject.asObservable();
 
-  private userIdSubject = new BehaviorSubject<number | null>(null);
+  private userIdSubject = new BehaviorSubject<number | null>(this.getUserIdFromLocalStorage());
   userId$ = this.userIdSubject.asObservable();
 
   private passwordSubject = new BehaviorSubject<string | null>(localStorage.getItem('password'));
@@ -40,6 +40,7 @@ export class StateService {
   }
 
   setUserId(userId: number) {
+    localStorage.setItem('userId', userId.toString());
     this.userIdSubject.next(userId);
   }
 
@@ -62,6 +63,11 @@ export class StateService {
     const firstName = localStorage.getItem('firstname');
     const lastName = localStorage.getItem('lastname');
     return firstName && lastName ? `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase() : null;
+  }
+
+  private getUserIdFromLocalStorage(): number | null {
+    const userId = localStorage.getItem('userId');
+    return userId ? parseInt(userId, 10) : null;
   }
 
   private getSkillsFromLocalStorage(): string[] | null {

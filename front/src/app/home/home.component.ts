@@ -1,25 +1,26 @@
-import { Component } from '@angular/core';
-import { Router } from '@angular/router';
-import { NavbarComponent } from '../navbar/navbar.component';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
+import { StateService } from '../services/state.service';
+import { NavbarComponent } from '../navbar/navbar.component';
 
 @Component({
   selector: 'app-home',
   standalone: true,
   imports: [CommonModule, NavbarComponent],
   templateUrl: './home.component.html',
-  styleUrl: './home.component.scss'
+  styleUrls: ['./home.component.scss']
 })
-export class HomeComponent {
+export class HomeComponent implements OnInit {
   isLoggedIn: boolean = false;
-  dropdownOpen: boolean = false;
 
-  constructor(private router: Router) {
+  constructor(private router: Router, private stateService: StateService) {}
+
+  ngOnInit(): void {
     this.isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
   }
 
-  navigateTo(route: string) {
-    this.router.navigate([route]);
+  navigateTo(route: string): void {
+    this.router.navigate([`/${route}`]);
   }
-
 }

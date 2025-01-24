@@ -16,6 +16,15 @@
             </p>
         </div>
     </section>
-    <h2 class="help-title">Comment pouvons nous vous aidez ?</h2>
-    <button (click)="navigateTo('register')" class="signup-btn">S'inscrire maintenant</button>
+    <ng-container *ngIf="isLoggedIn; else notLoggedInContent">
+        <h2 class="help-title">Comment pouvons-nous vous aider ?</h2>
+        <div class="faq-buttons">
+            <button href="#" class="faq-btn">Je cherche un groupe de projet</button>
+            <button href="#" class="faq-btn">Je cherche des membres pour compléter mon équipe</button>
+            <button href="#" class="faq-btn">Je cherche une idée de projets pertinente</button>
+        </div>
+    </ng-container>
+    <ng-template #notLoggedInContent>
+        <button (click)="navigateTo('register')" class="signup-btn">S'inscrire maintenant</button>
+    </ng-template>
 </main>
