@@ -24,6 +24,7 @@ export class GroupResearchComponent implements OnInit {
   searchTerm: string = '';
   selectedMissingStudents: string = '';
   keywords: string = '';
+  selectedAdaptedFilter: string = 'sans';
   isLoading: boolean = true;
   isDataLoaded: boolean = false;
   areFiltersApplied: boolean = false;
@@ -103,21 +104,11 @@ export class GroupResearchComponent implements OnInit {
 
   checkDetailsLoaded(detailsLoaded: number): void {
     if (detailsLoaded === this.projectDetails.length * 2) {
-      this.applyInitialFilter();
+      this.applyFilters(); // Appliquer les filtres par défaut
       this.isLoading = false;
       this.isDataLoaded = true;
       this.areFiltersApplied = true;
     }
-  }
-
-  applyInitialFilter(): void {
-    this.filteredProjectDetails = this.projectDetails.filter(detail => {
-      const detailSkills = detail.skills.split(', ').map(skill => skill.toLowerCase());
-      const matchesSkills = this.userSkills.some(skill => detailSkills.includes(skill.toLowerCase()));
-      const detailInterests = detail.specialties.map(interest => interest.toLowerCase());
-      const matchesInterests = this.userInterests.some(interest => detailInterests.includes(interest.toLowerCase()));
-      return matchesSkills && matchesInterests;
-    });
   }
 
   loadMissingStudentsRange(): void {
@@ -134,9 +125,9 @@ export class GroupResearchComponent implements OnInit {
       const matchesKeywords = this.keywords ? detail.projectName.toLowerCase().includes(this.keywords.toLowerCase()) ||
                                               detail.projectDescription.toLowerCase().includes(this.keywords.toLowerCase()) : true;
       const detailSkills = detail.skills.split(', ').map(skill => skill.toLowerCase());
-      const matchesUserSkills = this.userSkills.some(skill => detailSkills.includes(skill.toLowerCase()));
+      const matchesUserSkills = this.selectedAdaptedFilter === 'avec' ? this.userSkills.some(skill => detailSkills.includes(skill.toLowerCase())) : true;
       const detailInterests = detail.specialties.map(interest => interest.toLowerCase());
-      const matchesUserInterests = this.userInterests.some(interest => detailInterests.includes(interest.toLowerCase()));
+      const matchesUserInterests = this.selectedAdaptedFilter === 'avec' ? this.userInterests.some(interest => detailInterests.includes(interest.toLowerCase())) : true;
       return matchesSearchTerm && matchesMissingStudents && matchesKeywords && matchesUserSkills && matchesUserInterests;
     });
   }

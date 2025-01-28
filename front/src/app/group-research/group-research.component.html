@@ -18,6 +18,11 @@
   <input class="keyword-input" type="text" placeholder="Mots-clés" [(ngModel)]="keywords" (input)="applyFilters()" />
 
   <input class="search-bar" type="text" placeholder="Recherche" [(ngModel)]="searchTerm" (input)="applyFilters()" />
+
+  <select class="filter-select" [(ngModel)]="selectedAdaptedFilter" (change)="applyFilters()">
+    <option value="sans">Sans filtre adaptée</option>
+    <option value="avec">Avec filtre adaptée</option>
+  </select>
 </div>
 
 <div *ngIf="!isLoading && isDataLoaded && areFiltersApplied && filteredProjectDetails.length === 0" class="no-results">
