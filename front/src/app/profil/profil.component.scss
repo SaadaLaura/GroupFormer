@@ -57,7 +57,42 @@
 }
 
 .info-group button.icone:hover {
-  color: #007bff; /* Couleur de l'icône au survol */
+  color: #007bff; 
+}
+
+.inline-container {
+  display: flex;
+  align-items: center;
+}
+
+.dropdown-container {
+  position: relative;
+}
+
+.dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: -7px;
+  background-color: #F5F5F5	; 
+  border: 1px solid #ccc;
+  padding: 5px;
+  z-index: 1; /* Assurez-vous que le menu déroulant est au-dessus des autres éléments */
+}
+
+.dropdown ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.dropdown ul li {
+  padding: 5px;
+  cursor: pointer;
+}
+
+.dropdown ul li:hover {
+  background-color: #f0f0f0;
 }
 
 .list-inline {
@@ -73,7 +108,7 @@
 }
 
 .list-item .icone {
-  font-size: 6px; /* Taille de l'icône de suppression */
+  font-size: 6px; 
   margin-left: 5px;
 }
 

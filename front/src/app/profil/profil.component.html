@@ -3,65 +3,6 @@
 <h2 class="title-page">Informations sur le profil</h2>
 <div class="profil-info">
   <div class="info-group">
-    <label for="password">Mot de passe :</label>
-    <span>{{ showPassword ? password : '••••••••' }}</span>
-    <button class="icone visibility-button" type="button" (click)="togglePasswordVisibility()">
-      <span class="material-symbols-outlined">{{ showPassword ? 'visibility_off' : 'visibility' }}</span>
-    </button>
-  </div>
-  <div class="info-group">
-    <label for="interests">Centre d'intérêt <span class="required">*</span> :</label>
-    <ng-container *ngIf="!editMode['interests']; else editInterests">
-      <ul *ngIf="interests.length; else noInterests" class="list-inline">
-        <li *ngFor="let interest of interests" class="list-item">
-          {{ interest }}
-          <button class="icone" type="button" (click)="removeInterest(interest)">
-            <span class="material-symbols-outlined">delete</span>
-          </button>
-        </li>
-      </ul>
-      <ng-template #noInterests><em class="no-items">vide</em></ng-template>
-    </ng-container>
-    <ng-template #editInterests>
-      <input type="text" id="newInterest" name="newInterest" [(ngModel)]="newInterest">
-    </ng-template>
-    <button class="icone" type="button" (click)="addInterest()">
-      <span class="material-symbols-outlined">{{ editMode['interests'] ? 'check' : 'edit' }}</span>
-    </button>
-  </div>
-  <div class="info-group">
-    <label for="skills">Skills <span class="required">*</span> :</label>
-    <ng-container *ngIf="!editMode['skills']; else editSkills">
-      <ul *ngIf="skills.length; else noSkills" class="list-inline">
-        <li *ngFor="let skill of skills" class="list-item">
-          {{ skill }}
-          <button class="icone" type="button" (click)="removeSkill(skill)">
-            <span class="material-symbols-outlined">delete</span>
-          </button>
-        </li>
-      </ul>
-      <ng-template #noSkills><em class="no-items">vide</em></ng-template>
-    </ng-container>
-    <ng-template #editSkills>
-      <input type="text" id="newSkill" name="newSkill" [(ngModel)]="newSkill">
-    </ng-template>
-    <button class="icone" type="button" (click)="addSkill()">
-      <span class="material-symbols-outlined">{{ editMode['skills'] ? 'check' : 'edit' }}</span>
-    </button>
-  </div>
-  <div class="info-group">
-    <label for="major">Majeur :</label>
-    <ng-container *ngIf="!editMode['major']; else editMajor">
-      <span>{{ major ? major : 'vide' }}</span>
-    </ng-container>
-    <ng-template #editMajor>
-      <input type="text" id="newMajor" name="newMajor" [(ngModel)]="newMajor">
-    </ng-template>
-    <button class="icone" type="button" (click)="addMajor()">
-      <span class="material-symbols-outlined">{{ editMode['major'] ? 'check' : 'edit' }}</span>
-    </button>
-  </div>
-  <div class="info-group">
     <label for="hasGroup">Avez-vous un groupe ? <span class="required">*</span> :</label>
     <select id="hasGroup" name="hasGroup" [(ngModel)]="hasGroup" (change)="onGroupChange()">
       <option value="">Sélectionnez</option>
@@ -76,6 +17,66 @@
       <option value="oui">Oui</option>
       <option value="non">Non</option>
     </select>
+  </div>
+  <div class="info-group">
+    <label for="interests">Centre d'intérêt <span class="required">*</span> :</label>
+    <div class="inline-container">
+      <ul *ngIf="interests.length; else noInterests" class="list-inline">
+        <li *ngFor="let interest of interests" class="list-item">
+          {{ interest }}
+          <button class="icone" type="button" (click)="removeInterest(interest)">
+            <span class="material-symbols-outlined">delete</span>
+          </button>
+        </li>
+      </ul>
+      <ng-template #noInterests><em class="no-items">vide</em></ng-template>
+      <div class="dropdown-container">
+        <button class="icone" type="button" (click)="toggleDropdown('interests')">
+          <span class="material-symbols-outlined">add</span>
+        </button>
+        <div *ngIf="showDropdown['interests']" class="dropdown">
+          <ul>
+            <li *ngFor="let interest of availableInterests" (click)="addInterest(interest)">{{ interest }}</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="info-group">
+    <label for="skills">Compétences <span class="required">*</span> :</label>
+    <div class="inline-container">
+      <ul *ngIf="skills.length; else noSkills" class="list-inline">
+        <li *ngFor="let skill of skills" class="list-item">
+          {{ skill }}
+          <button class="icone" type="button" (click)="removeSkill(skill)">
+            <span class="material-symbols-outlined">delete</span>
+          </button>
+        </li>
+      </ul>
+      <ng-template #noSkills><em class="no-items">vide</em></ng-template>
+      <div class="dropdown-container">
+        <button class="icone" type="button" (click)="toggleDropdown('skills')">
+          <span class="material-symbols-outlined">add</span>
+        </button>
+        <div *ngIf="showDropdown['skills']" class="dropdown">
+          <ul>
+            <li *ngFor="let skill of availableSkills" (click)="addSkill(skill)">{{ skill }}</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="info-group">
+    <label for="major">Majeur :</label>
+    <ng-container *ngIf="!editMode['major']; else editMajor">
+      <span>{{ major ? major : 'vide' }}</span>
+    </ng-container>
+    <ng-template #editMajor>
+      <input type="text" id="newMajor" name="newMajor" [(ngModel)]="newMajor">
+    </ng-template>
+    <button class="icone" type="button" (click)="addMajor()">
+      <span class="material-symbols-outlined">{{ editMode['major'] ? 'check' : 'edit' }}</span>
+    </button>
   </div>
 </div>
 <p class="legend"><em>* : important à remplir</em></p>

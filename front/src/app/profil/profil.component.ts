@@ -14,7 +14,6 @@ import { StudentService } from '../services/student.service';
   styleUrls: ['./profil.component.scss']
 })
 export class ProfilComponent implements OnInit {
-  password: string = '';
   interests: string[] = [];
   skills: string[] = [];
   major: string = '';
@@ -23,13 +22,17 @@ export class ProfilComponent implements OnInit {
   newMajor: string = '';
   hasGroup: string = ''; // Valeur par défaut
   hasProjectTopic: string = '';
-  showPassword: boolean = false;
   editMode: { [key: string]: boolean } = {
-    password: false,
     interests: false,
     skills: false,
     major: false
   };
+  showDropdown: { [key: string]: boolean } = {
+    interests: false,
+    skills: false
+  };
+  availableInterests: string[] = ['frontend', 'backend', 'VR'];
+  availableSkills: string[] = ['IT', 'Data', 'IA'];
 
   constructor(
     private route: ActivatedRoute,
@@ -47,11 +50,6 @@ export class ProfilComponent implements OnInit {
     this.route.params.subscribe(params => {
       const userId = +params['id'];
       if (userId) {
-        this.studentService.getStudentById(userId).subscribe(student => {
-          this.password = student.password;
-          this.stateService.setPassword(student.password);
-        });
-
         this.studentService.getStudentSkills(userId).subscribe(skills => {
           this.skills = skills;
           this.stateService.setSkills(skills);
@@ -61,12 +59,6 @@ export class ProfilComponent implements OnInit {
           this.interests = interests;
           this.stateService.setInterests(interests);
         });
-      }
-    });
-
-    this.stateService.password$.subscribe(password => {
-      if (password !== null) {
-        this.password = password;
       }
     });
 
@@ -83,39 +75,24 @@ export class ProfilComponent implements OnInit {
     });
   }
 
-  togglePasswordVisibility() {
-    this.showPassword = !this.showPassword;
+  toggleDropdown(field: string) {
+    this.showDropdown[field] = !this.showDropdown[field];
   }
 
-  toggleEditMode(field: string) {
-    if (field === 'major' && !this.editMode['major']) {
-      this.newMajor = this.major; // Copier la valeur actuelle de major dans newMajor
-    }
-    this.editMode[field] = !this.editMode[field];
-  }
-
-  addInterest() {
-    if (this.editMode['interests']) {
-      const newInterests = this.newInterest.split(',').map(interest => interest.trim()).filter(interest => interest);
-      this.interests.push(...newInterests);
+  addInterest(interest: string) {
+    if (interest && !this.interests.includes(interest)) {
+      this.interests.push(interest);
       this.stateService.setInterests(this.interests); // Enregistrer les centres d'intérêt dans le localStorage
-      this.newInterest = '';
-      this.toggleEditMode('interests');
-    } else {
-      this.toggleEditMode('interests');
     }
+    this.showDropdown['interests'] = false;
   }
 
-  addSkill() {
-    if (this.editMode['skills']) {
-      const newSkills = this.newSkill.split(',').map(skill => skill.trim()).filter(skill => skill);
-      this.skills.push(...newSkills);
+  addSkill(skill: string) {
+    if (skill && !this.skills.includes(skill)) {
+      this.skills.push(skill);
       this.stateService.setSkills(this.skills); // Enregistrer les compétences dans le localStorage
-      this.newSkill = '';
-      this.toggleEditMode('skills');
-    } else {
-      this.toggleEditMode('skills');
     }
+    this.showDropdown['skills'] = false;
   }
 
   addMajor() {
@@ -126,6 +103,10 @@ export class ProfilComponent implements OnInit {
     } else {
       this.toggleEditMode('major');
     }
+  }
+
+  toggleEditMode(field: string) {
+    this.editMode[field] = !this.editMode[field];
   }
 
   onGroupChange() {
