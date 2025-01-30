@@ -1,15 +1,16 @@
 from flasgger import Swagger
 from flask import Flask
 
+from backend.api.database import db
 from backend.api.endpoint.announcements_blueprint import announcements_bp
 from backend.api.endpoint.projects_blueprint import projects_bp
 from backend.api.endpoint.students_blueprint import students_bp
-from backend.api.database import db
 
 
 def create_app():
     app = Flask(__name__)
-    # app.config.from_object('backend.api.endpoint.config')
+    app.config.from_object('backend.api.config')
+    app.config['JSON_AS_ASCII'] = False
 
     db.init_app(app)
     Swagger(app)

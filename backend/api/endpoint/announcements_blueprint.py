@@ -1,73 +1,55 @@
 from flasgger import swag_from
 from flask import Blueprint, jsonify
 
-from backend.api.utils.db_connection import db_connect
-from backend.api.utils.query_result_mapper import QueryResultMapper
+from backend.api.database import db
+from backend.api.model import Announcement, Search, Subject, Skill, IsAbout
 
 announcements_bp = Blueprint('announcements', __name__)
 
-@announcements_bp.route('/', methods=['GET'])
+# GET all announcements
+@announcements_bp.route('', methods=['GET'])
 @swag_from('swagger/announcements/announcements.yaml')
-def get_announcements():
-    try:
-        connection = db_connect()
-        cursor = connection.cursor()
-        rows = cursor.execute("SELECT * FROM announcement").fetchall()
-        connection.close()
+def get_all_announcements():
+    announcements = Announcement.query.all()
+    return jsonify([{
+        'id': announcement.id_announcement,
+        'title': announcement.title,
+        'description': announcement.description,
+        'publication': announcement.publication,
+        'id_project': announcement.id_project
+    } for announcement in announcements]), 200
 
-        return QueryResultMapper.map_multiple_rows(cursor, rows, 'No announcements found')
-
-    except Exception as e:
-        return jsonify({'message': str(e)}), 500
-
-@announcements_bp.route('/<announcement_id>', methods=['GET'])
+# GET an announcement by ID
+@announcements_bp.route('/<int:announcement_id>', methods=['GET'])
 @swag_from('swagger/announcements/announcements_by_id.yaml')
 def get_announcement(announcement_id):
-    try:
-        connection = db_connect()
-        cursor = connection.cursor()
-        row = cursor.execute('SELECT * FROM announcement WHERE id_announcement = ?', (announcement_id,)).fetchone()
-        connection.close()
+    announcement = Announcement.query.get(announcement_id)
+    if not announcement:
+        return jsonify({'error': 'Announcement not found'}), 404
+    return jsonify({
+        'id': announcement.id_announcement,
+        'title': announcement.title,
+        'description': announcement.description,
+        'publication': announcement.publication,
+        'id_project': announcement.id_project
+    }), 200
 
-        return QueryResultMapper.map_single_row(cursor, row, 'Announcement not found')
-
-    except Exception as e:
-        return jsonify({'message': str(e)}), 500
-
-@announcements_bp.route('/<announcement_id>/research', methods=['GET'])
+# GET skills searched by an announcement
+@announcements_bp.route('/<int:announcement_id>/research', methods=['GET'])
 @swag_from('swagger/announcements/announcements_research.yaml')
 def get_announcement_search(announcement_id):
-    try:
-        connection = db_connect()
-        cursor = connection.cursor()
-        rows = cursor.execute('''
-            SELECT name FROM skill
-            JOIN searches ON skill.id_skill = searches.id_skill
-            WHERE id_announcement = ?
-            ''', (announcement_id,)).fetchall()
+    skills = db.session.query(Skill).join(Search).filter(Search.id_announcement == announcement_id).all()
+    return jsonify([{
+        'id': skill.id_skill,
+        'name': skill.name
+    } for skill in skills]), 200
 
-        connection.close()
-        # TODO: vérifier l'id announcements d'abord
-        return QueryResultMapper.map_into_list(rows, 'No skills found for this announcements')
-
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-
-@announcements_bp.route('/<announcement_id>/about', methods=['GET'])
+# GET subjects included by an announcement
+@announcements_bp.route('/<int:announcement_id>/about', methods=['GET'])
 @swag_from('swagger/announcements/announcements_about.yaml')
 def get_announcement_about(announcement_id):
-    try:
-        connection = db_connect()
-        cursor = connection.cursor()
-        rows = cursor.execute('''
-            SELECT name FROM subject
-            JOIN is_about ON subject.id_subject = is_about.id_subject
-            WHERE id_announcement = ?
-            ''', (announcement_id,)).fetchall()
-
-        connection.close()
-        # TODO: vérifier l'id announcements d'abord
-        return QueryResultMapper.map_into_list(rows, 'No subjects found for this announcements')
-
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
+    subjects = db.session.query(Subject).join(IsAbout).filter(IsAbout.id_announcement == announcement_id).all()
+    return jsonify([{
+        'id': subject.id_subject,
+        'name': subjects.name
+    } for subject in subjects]), 200

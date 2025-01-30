@@ -70,10 +70,10 @@ CREATE TABLE master(
 
 CREATE TABLE search(
     id_skill INT,
-    id_announcement_ INT,
-    PRIMARY KEY(id_skill, id_announcement_),
+    id_announcement INT,
+    PRIMARY KEY(id_skill, id_announcement),
     FOREIGN KEY(id_skill) REFERENCES skill (id_skill),
-    FOREIGN KEY(id_announcement_) REFERENCES announcement (id_announcement)
+    FOREIGN KEY(id_announcement) REFERENCES announcement (id_announcement)
 );
 
 CREATE TABLE like(
@@ -85,9 +85,9 @@ CREATE TABLE like(
 );
 
 CREATE TABLE is_about(
-    id_announcement_ INT,
+    id_announcement INT,
     id_subject INT,
-    PRIMARY KEY(id_announcement_, id_subject),
-    FOREIGN KEY(id_announcement_) REFERENCES announcement (id_announcement),
+    PRIMARY KEY(id_announcement, id_subject),
+    FOREIGN KEY(id_announcement) REFERENCES announcement (id_announcement),
     FOREIGN KEY(id_subject) REFERENCES subject (id_subject)
 );
