@@ -123,7 +123,8 @@ export class GroupResearchComponent implements OnInit {
                                 detail.announcementDescription.toLowerCase().includes(this.searchTerm.toLowerCase());
       const matchesMissingStudents = this.selectedMissingStudents ? detail.missingStudents === +this.selectedMissingStudents : true;
       const matchesKeywords = this.keywords ? detail.projectName.toLowerCase().includes(this.keywords.toLowerCase()) ||
-                                              detail.projectDescription.toLowerCase().includes(this.keywords.toLowerCase()) : true;
+                                              detail.projectDescription.toLowerCase().includes(this.keywords.toLowerCase()) ||
+                                              detail.announcementDescription.toLowerCase().includes(this.keywords.toLowerCase()) : true;
       const detailSkills = detail.skills.split(', ').map(skill => skill.toLowerCase());
       const matchesUserSkills = this.selectedAdaptedFilter === 'avec' ? this.userSkills.some(skill => detailSkills.includes(skill.toLowerCase())) : true;
       const detailInterests = detail.specialties.map(interest => interest.toLowerCase());

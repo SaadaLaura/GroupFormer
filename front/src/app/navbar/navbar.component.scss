@@ -4,6 +4,12 @@
   align-items: center;
   padding: 5px 10px;
   background-color: #f8f9fa;
+  position: fixed; /* Rendre la barre de navigation fixe */
+  top: 0; /* Positionner en haut de la page */
+  width: 100%; /* Prendre toute la largeur de la page */
+  z-index: 1000; /* Assurer que la barre de navigation est au-dessus des autres éléments */
+  background-color: #f8f9fa;
+
 }
 
 .navbar-logo {
@@ -21,30 +27,31 @@
   display: flex;
   justify-content: space-between;
   gap: 10px;
+  margin: 0 130px;
 }
 
 .navbar-menu a {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-grow: 1;
-  text-align: center;
-}
-
-.navbar-menu a span {
-  display: inline-block;
+  align-items: flex-end;
   padding: 5px 10px;
-  font-size: 0.9em;
+  text-align: center;
+  text-decoration: none;
   color: black;
   border-radius: 10px;
   transition: background-color 0.3s;
   cursor: pointer;
 }
 
-.navbar-menu a span:hover,
-.navbar-profil a:hover,
-.dropdown-menu a:hover,
-.initials:hover {
+.navbar-menu a .material-symbols-outlined {
+  font-size: 20px;
+  margin-right: 5px;
+}
+
+.navbar-menu a span {
+  line-height: 1;
+}
+
+.navbar-menu a:hover {
   background-color: #e9ecef;
 }
 
@@ -53,16 +60,37 @@
   justify-content: flex-end;
   gap: 10px;
   position: relative;
+  width: auto;
+  margin-right: 10px;
 }
 
-.navbar-profil a {
+.navbar-profil a,
+.ng-template a {
+  display: flex;
+  align-items: flex-end;
   padding: 5px 10px;
-  font-size: 0.9em;
-  color: black;
+  text-align: center;
   text-decoration: none;
+  color: black;
   border-radius: 10px;
   transition: background-color 0.3s;
   cursor: pointer;
+}
+
+.navbar-profil a .material-symbols-outlined,
+.ng-template a .material-symbols-outlined {
+  font-size: 20px;
+  margin-right: 5px;
+}
+
+.navbar-profil a span,
+.ng-template a span {
+  line-height: 1;
+}
+
+.navbar-profil a:hover,
+.ng-template a:hover {
+  background-color: #e9ecef;
 }
 
 .initials {
@@ -92,7 +120,8 @@
 }
 
 .dropdown-menu a {
-  display: block;
+  display: flex;
+  align-items: center;
   width: 100%;
   padding: 5px 10px;
   color: black;
@@ -102,6 +131,12 @@
   transition: background-color 0.3s;
   margin-bottom: 5px;
 }
+
+.dropdown-menu a .material-symbols-outlined {
+  font-size: 20px;
+  margin-right: 8px;
+}
+
 .content {
   text-align: left;
   padding: 20px;

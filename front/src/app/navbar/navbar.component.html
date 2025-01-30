@@ -3,22 +3,46 @@
     <img src="assets/img/logo_groupFormer.png" alt="GroupFormer Logo" class="project-logo">
   </div>
   <nav class="navbar-menu">
-    <a (click)="navigateTo('home')"><span>Accueil</span></a>
-    <a *ngIf="hasGroup === 'non'" (click)="navigateTo('group-research')"><span>Recherche de groupe</span></a>
-    <a *ngIf="hasGroup === 'oui'" (click)="navigateTo('student-research')"><span>Recherche d'étudiant</span></a>
-    <a (click)="navigateTo('home')"><span>Sujet</span></a>
-    <a (click)="navigateTo('home')"><span>Statistique</span></a>
+    <a (click)="navigateTo('home')">
+      <span class="material-symbols-outlined">home</span>
+      <span>Accueil</span>
+    </a>
+    <a *ngIf="hasGroup === 'non'" (click)="navigateTo('group-research')">
+      <span class="material-symbols-outlined">group_search</span>
+      <span>Groupes disponibles</span>
+    </a>
+    <a *ngIf="hasGroup === 'oui'" (click)="navigateTo('student-research')">
+      <span class="material-symbols-outlined">person_search</span>
+      <span>Étudiants sans groupe</span>
+    </a>
+    <a (click)="navigateTo('home')">
+      <span class="material-symbols-outlined">assignment</span>
+      <span>Projets libres</span>
+    </a>
+    <a (click)="navigateTo('home')">
+      <span class="material-symbols-outlined">dashboard</span>
+      <span>Tableau de Bord</span>
+    </a>
   </nav>
   <div class="navbar-profil">
     <ng-container *ngIf="isLoggedIn; else notLoggedIn">
       <div class="initials" (click)="toggleDropdown()">{{ initials }}</div>
       <div class="dropdown-menu" *ngIf="dropdownOpen">
-        <a (click)="navigateTo('profil')">Profil</a>
-        <a (click)="logout()">Déconnexion</a>
+        <a (click)="navigateTo('profil')">
+          <span class="material-symbols-outlined">person</span>
+          <span>Profil</span>
+        </a>
+        <a (click)="logout()">
+          <span class="material-symbols-outlined">logout</span>
+          <span>Déconnexion</span>
+        </a>
       </div>
     </ng-container>
     <ng-template #notLoggedIn>
-      <a (click)="navigateTo('login')">Connexion</a>
+      <a (click)="navigateTo('login')">
+        <span class="material-symbols-outlined">login</span>
+        <span>Connexion</span>
+      </a>
     </ng-template>
   </div>
 </header>

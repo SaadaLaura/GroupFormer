@@ -31,8 +31,8 @@ export class ProfilComponent implements OnInit {
     interests: false,
     skills: false
   };
-  availableInterests: string[] = ['frontend', 'backend', 'VR'];
-  availableSkills: string[] = ['IT', 'Data', 'IA'];
+  availableSkills: string[] = ['frontend', 'backend', 'VR'];
+  availableInterests: string[] = ['IT', 'Data', 'IA'];
 
   constructor(
     private route: ActivatedRoute,
@@ -73,6 +73,17 @@ export class ProfilComponent implements OnInit {
         this.interests = interests;
       }
     });
+
+    // Charger les compétences et centres d'intérêt depuis le localStorage
+    const storedSkills = this.stateService.getSkillsFromLocalStorage();
+    if (storedSkills) {
+      this.skills = storedSkills;
+    }
+
+    const storedInterests = this.stateService.getInterestsFromLocalStorage();
+    if (storedInterests) {
+      this.interests = storedInterests;
+    }
   }
 
   toggleDropdown(field: string) {

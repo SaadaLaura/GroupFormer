@@ -70,12 +70,12 @@ export class StateService {
     return userId ? parseInt(userId, 10) : null;
   }
 
-  private getSkillsFromLocalStorage(): string[] | null {
+  getSkillsFromLocalStorage(): string[] | null {
     const skills = localStorage.getItem('skills');
     return skills ? JSON.parse(skills) : null;
   }
 
-  private getInterestsFromLocalStorage(): string[] | null {
+  getInterestsFromLocalStorage(): string[] | null {
     const interests = localStorage.getItem('interests');
     return interests ? JSON.parse(interests) : null;
   }
