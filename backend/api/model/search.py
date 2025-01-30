@@ -1,8 +1,10 @@
-from sqlalchemy import Model, Column, Integer, ForeignKey
+from sqlalchemy import Column, Integer, ForeignKey
 from sqlalchemy.orm import relationship
 
+from backend.api.database import db
 
-class Search(Model):
+
+class Search(db.Model):
     __tablename__ = 'search'
 
     id_skill = Column(Integer, ForeignKey('skill.id_skill'), primary_key=True)

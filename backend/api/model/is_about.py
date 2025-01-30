@@ -1,8 +1,10 @@
-from sqlalchemy import Model, Column, Integer, ForeignKey
+from sqlalchemy import Column, Integer, ForeignKey
 from sqlalchemy.orm import relationship
 
+from backend.api.database import db
 
-class IsAbout(Model):
+
+class IsAbout(db.Model):
     __tablename__ = 'is_about'
 
     id_announcement = Column(Integer, ForeignKey('announcement.id_announcement'), primary_key=True)

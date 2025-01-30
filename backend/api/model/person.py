@@ -1,14 +1,16 @@
 import enum
 
-from sqlalchemy import Model, Column, Integer, String, Enum, Boolean, ForeignKey
+from sqlalchemy import Column, Integer, String, Enum, Boolean, ForeignKey
 from sqlalchemy.orm import relationship
+
+from backend.api.database import db
 
 
 class Role(enum.Enum):
     ADMIN = "admin"
     STUDENT = "student"
 
-class Person(Model):
+class Person(db.Model):
     __tablename__ = 'person'
 
     id_user = Column(Integer, primary_key=True)

@@ -1,8 +1,10 @@
-from sqlalchemy import Model, Column, Integer, String
+from sqlalchemy import Column, Integer, String
 from sqlalchemy.orm import relationship
 
+from backend.api.database import db
 
-class Skill(Model):
+
+class Skill(db.Model):
     __tablename__ = 'skill'
 
     id_skill = Column(Integer, primary_key=True)

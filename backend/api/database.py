@@ -1,9 +1,7 @@
-import sqlite3
-
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
-from backend.api.config import DB_PATH, SQLALCHEMY_DATABASE_URI
+from backend.api.config import SQLALCHEMY_DATABASE_URI
 
 db = SQLAlchemy()
 
@@ -13,8 +11,3 @@ def init_app():
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     db.init_app(app)
     return app
-
-
-def db_connect():
-    connection = sqlite3.connect(DB_PATH)
-    return connection

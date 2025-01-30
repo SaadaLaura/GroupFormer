@@ -1,7 +1,7 @@
 INSERT INTO person VALUES
-                       (684135, 'Guillaume', 'CLAVIER', 'guillaume.clavier@efrei.net', 'efrei2025', 'STUDENT', false, 111),
-                       (346845, 'Laura', 'SADAA', 'laura.saada@efrei.net', 'efrei2025', 'ADMIN', false, null),
-                       (795135, 'Clément', 'GUILLAUX', 'clement.guillaux@efrei.net', 'efrei2025', 'STUDENT', false, null);
+                       (684135, 'Guillaume', 'CLAVIER', 'guillaume.clavier@efrei.net', 'efrei2025', 'STUDENT', 0, 111),
+                       (346845, 'Laura', 'SADAA', 'laura.saada@efrei.net', 'efrei2025', 'ADMIN', 0, null),
+                       (795135, 'Clément', 'GUILLAUX', 'clement.guillaux@efrei.net', 'efrei2025', 'STUDENT', 0, null);
 
 INSERT INTO skill VALUES
                       (1, 'backend'),
