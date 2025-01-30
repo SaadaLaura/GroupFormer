@@ -1,98 +1,77 @@
 from flasgger import swag_from
 from flask import Blueprint, jsonify
 
-from backend.api.utils.db_connection import db_connect
-from backend.api.utils.query_result_mapper import QueryResultMapper
+from backend.api.database import db
+from backend.api.model.like import Like
+from backend.api.model.master import Master
+from backend.api.model.person import Person, Role
+from backend.api.model.project import Project
+from backend.api.model.skill import Skill
+from backend.api.model.subject import Subject
 
 students_bp = Blueprint('students', __name__)
 
-@students_bp.route('/', methods=['GET'])
+# GET all students
+@students_bp.route('', methods=['GET'])
 @swag_from('swagger/students/students.yaml')
-def get_students():
-    try:
-        connection = db_connect()
-        cursor = connection.cursor()
-        # TODO: crypté password
-        rows = cursor.execute('''
-            SELECT person.* FROM person
-            JOIN student ON person.id_user = student.id_user
-            ''').fetchall()
-        connection.close()
+def get_all_students():
+    students = Person.query.filter_by(role=Role.STUDENT).all()
+    return jsonify([{
+        'id': student.id_user,
+        'firstname': student.firstname,
+        'lastname': student.lastname,
+        'email': student.email
+    } for student in students]), 200
 
-        return QueryResultMapper.map_multiple_rows(cursor, rows, 'No students found')
-
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-
-@students_bp.route('/<student_id>', methods=['GET'])
+# GET a student by ID
+@students_bp.route('/<int:student_id>', methods=['GET'])
 @swag_from('swagger/students/students_by_id.yaml')
 def get_student(student_id):
-    try:
-        connection = db_connect()
-        cursor = connection.cursor()
-        # TODO: Use parameterized query to avoid SQL injection
-        row = cursor.execute('SELECT * FROM person WHERE id_user = ?',(student_id,)).fetchone()
-        connection.close()
+    student = Person.query.filter_by(id_user=student_id, role=Role.STUDENT).first()
+    if not student:
+        return jsonify({'error': 'Student not found'}), 404
+    return jsonify({
+        'id': student.id_user,
+        'firstname': student.firstname,
+        'lastname': student.lastname,
+        'email': student.email
+    }), 200
 
-        return QueryResultMapper.map_single_row(cursor, row, 'Student not found')
-
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-
-@students_bp.route('/<student_id>/skills', methods=['GET'])
+# GET skills of a student
+@students_bp.route('/<int:student_id>/skills', methods=['GET'])
 @swag_from('swagger/students/students_skills.yaml')
-def get_student_skill(student_id):
-    try:
-        connection = db_connect()
-        cursor = connection.cursor()
-        rows = cursor.execute('''
-            SELECT name FROM skill
-            JOIN master ON skill.id_skill = master.id_skill
-            WHERE id_user = ?
-            ''', (student_id,)).fetchall()
+def get_student_skills(student_id):
+    skills = db.session.query(Skill).join(Master).filter(Master.id_user == student_id).all()
+    return jsonify([{
+        'id': skill.id_skill,
+        'name': skill.name
+    } for skill in skills]), 200
 
-        connection.close()
-        # TODO: vérifier l'id students d'abord
-        return QueryResultMapper.map_into_list(rows, 'No skills found for the students')
-
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-
-@students_bp.route('/<student_id>/subjects', methods=['GET'])
+# GET subjects liked by a student
+@students_bp.route('/<int:student_id>/subjects', methods=['GET'])
 @swag_from('swagger/students/students_subjects.yaml')
-def get_student_subject(student_id):
-    try:
-        connection = db_connect()
-        cursor = connection.cursor()
-        rows = cursor.execute('''
-            SELECT name FROM subject
-            JOIN likes ON subject.id_subject = likes.id_subject
-            WHERE id_user = ?
-            ''', (student_id,)).fetchall()
+def get_student_subjects(student_id):
+    subjects = db.session.query(Subject).join(Like).filter(Like.id_user == student_id).all()
+    return jsonify([{
+        'id': subject.id_subject,
+        'name': subject.name
+    } for subject in subjects]), 200
 
-        connection.close()
-        # TODO: vérifier l'id students d'abord
-        return QueryResultMapper.map_into_list(rows, 'No subjects found for the students')
-
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-
-@students_bp.route('/<student_id>/project', methods=['GET'])
+# GET project of a student
+@students_bp.route('/<int:student_id>/project', methods=['GET'])
 @swag_from('swagger/students/students_project.yaml')
-def get_student_group(student_id):
-    try:
-        connection = db_connect()
-        cursor = connection.cursor()
-        # TODO: d'abord vérifier que l'étudiant à un groupe
-        row = cursor.execute('''
-            SELECT project.* FROM project
-            JOIN student ON project.id_project = student.id_project
-            WHERE student.id_user = ?
-            ''', (student_id,)).fetchone()
+def get_student_project(student_id):
+    student = Person.query.filter_by(id_user=student_id, role=Role.STUDENT).first()
+    if not student:
+        return jsonify({'error': 'Student not found'}), 404
+    if not student.id_project:
+        return jsonify({'null': 'Student has no project'}), 200
 
-        connection.close()
-
-        return QueryResultMapper.map_single_row(cursor, row, 'Not found')
-
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
+    project = Project.query.get(student.id_project)
+    return jsonify({
+        'id': project.id_project,
+        'name': project.name,
+        'description': project.description,
+        'size': project.size,
+        'deadline': project.deadline.strftime('%Y-%m-%d') if project.deadline else None
+    }), 200
