@@ -8,6 +8,7 @@ class Announcement(db.Model):
     __tablename__ = 'announcement'
 
     id_announcement = Column(Integer, primary_key=True)
+    title = Column(String(50), nullable=False)
     description = Column(String(50), nullable=False)
     publication = Column(Date)
     id_project = Column(Integer, ForeignKey('project.id_project'), nullable=False)

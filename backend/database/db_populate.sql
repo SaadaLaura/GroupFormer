@@ -14,7 +14,7 @@ INSERT INTO subject VALUES
                         (3, 'IA');
 
 INSERT INTO project VALUES
-    (111, 'GroupFormer', '05/02/2025', 'Aide à créer des groupes de projet', 6);
+    (111, 'GroupFormer', '2025-02-05', 'Aide à créer des groupes de projet', 6);
 
 INSERT INTO master VALUES
                        (684135, 1),
@@ -25,7 +25,7 @@ INSERT INTO like VALUES
                       (795135, 2);
 
 INSERT INTO announcement VALUES
-    (1234, 'Recherche étudiant en Data', '03/12/2024', 111);
+    (1234, 'GroupFormer Data', 'Recherche étudiant en Data', '2024-12-03', 111);
 
 INSERT INTO search VALUES (2, 1234);
 
