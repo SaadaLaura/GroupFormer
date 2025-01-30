@@ -1,13 +1,7 @@
 INSERT INTO person VALUES
-                       (684135, 'Guillaume', 'CLAVIER', 'guillaume.clavier@efrei.net', 'efrei2025'),
-                       (346845, 'Laura', 'SADAA', 'laura.saada@efrei.net', 'efrei2025'),
-                       (795135, 'Clément', 'GUILLAUX', 'clement.guillaux@efrei.net', 'efrei2025');
-
-INSERT INTO admin VALUES (346845);
-
-INSERT INTO student VALUES
-                        (684135, 111),
-                        (795135, null);
+                       (684135, 'Guillaume', 'CLAVIER', 'guillaume.clavier@efrei.net', 'efrei2025', 'STUDENT', false, 111),
+                       (346845, 'Laura', 'SADAA', 'laura.saada@efrei.net', 'efrei2025', 'ADMIN', false, null),
+                       (795135, 'Clément', 'GUILLAUX', 'clement.guillaux@efrei.net', 'efrei2025', 'STUDENT', false, null);
 
 INSERT INTO skill VALUES
                       (1, 'backend'),
@@ -26,13 +20,13 @@ INSERT INTO master VALUES
                        (684135, 1),
                        (795135, 2);
 
-INSERT INTO likes VALUES
+INSERT INTO like VALUES
                       (684135, 1),
                       (795135, 2);
 
 INSERT INTO announcement VALUES
     (1234, 'Recherche étudiant en Data', '03/12/2024', 111);
 
-INSERT INTO searches VALUES (2, 1234);
+INSERT INTO search VALUES (2, 1234);
 
 INSERT INTO is_about VALUES (1234, 2);
