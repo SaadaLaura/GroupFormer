@@ -1,4 +1,4 @@
-from backend.api.endpoint import create_app
+from backend.api.routes import create_app
 
 # TODO: encodage de la base de donnée (éèà...)
 

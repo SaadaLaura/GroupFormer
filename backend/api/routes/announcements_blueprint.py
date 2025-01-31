@@ -2,7 +2,7 @@ from flasgger import swag_from
 from flask import Blueprint, jsonify
 
 from backend.api.database import db
-from backend.api.model import Announcement, Search, Subject, Skill, IsAbout
+from backend.api.models import Announcement, Search, Subject, Skill, IsAbout
 
 announcements_bp = Blueprint('announcements', __name__)
 

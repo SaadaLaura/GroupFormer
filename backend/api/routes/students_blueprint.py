@@ -1,13 +1,14 @@
 from flasgger import swag_from
-from flask import Blueprint, jsonify
+from flask import Blueprint, jsonify, request, g
 
 from backend.api.database import db
-from backend.api.model.like import Like
-from backend.api.model.master import Master
-from backend.api.model.person import Person, Role
-from backend.api.model.project import Project
-from backend.api.model.skill import Skill
-from backend.api.model.subject import Subject
+from backend.api.models.like import Like
+from backend.api.models.master import Master
+from backend.api.models.person import Person, Role
+from backend.api.models.project import Project
+from backend.api.models.skill import Skill
+from backend.api.models.subject import Subject
+from backend.api.utils.jwt_utils import token_required
 
 students_bp = Blueprint('students', __name__)
 
