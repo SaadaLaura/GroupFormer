@@ -5,6 +5,7 @@ from flask import Blueprint, jsonify, request
 
 from backend.api.database import db
 from backend.api.models import Announcement, Search, Subject, Skill, IsAbout, Project
+from backend.api.models.person import Role
 from backend.api.utils.jwt_utils import token_required
 
 announcements_bp = Blueprint('announcements', __name__)
@@ -45,6 +46,37 @@ def create_announcement():
             'id_project': announcement.id_project
         }
     }), 201
+
+# Update an announcement by ID
+@announcements_bp.route('/<int:id_announcement>', methods=['PUT'])
+@token_required(Role.ADMIN.value)
+def update_announcement(id_announcement):
+    announcement = Announcement.query.get(id_announcement)
+
+    if not announcement:
+        return jsonify({'error': 'Announcement not found'}), 404
+
+    data = request.json
+    announcement.title = data.get('title') if data.get('title') else announcement.title
+    announcement.description = data.get('description') if data.get('description') else announcement.description
+
+    db.session.commit()
+
+    return jsonify({'message': 'Announcement updated successfully'}), 200
+
+# DELETE an announcement by ID
+@announcements_bp.route('/<int:id_announcement>', methods=['DELETE'])
+@token_required(Role.ADMIN.value)
+def delete_announcement(id_announcement):
+    announcement = Announcement.query.get(id_announcement)
+
+    if not announcement:
+        return jsonify({'error': 'Announcement not found'}), 404
+
+    db.session.delete(announcement)
+    db.session.commit()
+
+    return jsonify({'message': 'Announcement deleted successfully'}), 200
 
 # GET all announcements
 @announcements_bp.route('', methods=['GET'])
