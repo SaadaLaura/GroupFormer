@@ -10,7 +10,7 @@ class Project(db.Model):
     id_project = Column(Integer, primary_key=True)
     name = Column(String(50), nullable=False)
     deadline = Column(Date)
-    description = Column(String(50))
+    description = Column(String(250), nullable=False)
     size = Column(Integer)
 
     students = relationship('Person', back_populates='project')

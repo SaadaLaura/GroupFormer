@@ -22,17 +22,17 @@ CREATE TABLE project
     id_project INT,
     name VARCHAR(50) NOT NULL,
     deadline DATE,
-    description VARCHAR(50),
-    size INT,
+    description VARCHAR(250) NOT NULL,
+    size INT NOT NULL,
     PRIMARY KEY(id_project)
 );
 
 CREATE TABLE announcement
 (
     id_announcement INT,
-    title VARCHAR(50),
-    description VARCHAR(50),
-    publication DATE,
+    title VARCHAR(50) NOT NULL,
+    description VARCHAR(250),
+    publication DATE NOT NULL,
     id_project INT NOT NULL,
     PRIMARY KEY(id_announcement),
     FOREIGN KEY(id_project) REFERENCES project (id_project)
@@ -51,7 +51,7 @@ CREATE TABLE person
     firstname VARCHAR(50) NOT NULL,
     lastname VARCHAR(50) NOT NULL,
     email VARCHAR(50) NOT NULL,
-    password VARCHAR(50) NOT NULL,
+    password VARCHAR(250) NOT NULL,
     role VARCHAR(50) NOT NULL,
     first_connexion BOOLEAN NOT NULL,
     id_project INT,

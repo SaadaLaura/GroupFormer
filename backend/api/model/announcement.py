@@ -9,8 +9,8 @@ class Announcement(db.Model):
 
     id_announcement = Column(Integer, primary_key=True)
     title = Column(String(50), nullable=False)
-    description = Column(String(50), nullable=False)
-    publication = Column(Date)
+    description = Column(String(250))
+    publication = Column(Date, nullable=False)
     id_project = Column(Integer, ForeignKey('project.id_project'), nullable=False)
 
     search_for = relationship('Search', back_populates='announcement')

@@ -17,7 +17,7 @@ class Person(db.Model):
     firstname = Column(String(50), nullable=False)
     lastname = Column(String(50), nullable=False)
     email = Column(String(50), nullable=False)
-    password = Column(String(50), nullable=False)
+    password = Column(String(250), nullable=False)
     role = Column(Enum(Role), nullable=False)
     first_connexion = Column(Boolean, nullable=False)
     id_project = Column(Integer, ForeignKey('project.id_project'))
