@@ -1,12 +1,49 @@
 from datetime import datetime
 
 from flasgger import swag_from
-from flask import Blueprint, jsonify
+from flask import Blueprint, jsonify, request
 
+from backend.api.database import db
 from backend.api.models import Announcement
 from backend.api.models.project import Project
+from backend.api.utils.jwt_utils import token_required
 
 projects_bp = Blueprint('projects', __name__)
+
+# POST a project
+@projects_bp.route('/add', methods=['POST'])
+@token_required
+def create_project():
+    data = request.json
+    name = data.get('name')
+    description = data.get('description')
+    size = data.get('size')
+    deadline = data.get('deadline')  # Format: "YYYY-MM-DD"
+
+    if not name or not size or not description:
+        return jsonify({'error': 'Name and size are required'}), 400
+
+    # Convert deadline to Date format if provided
+    project = Project(
+        name=name,
+        description=description,
+        size=size,
+        deadline=datetime.strptime(deadline, "%Y-%m-%d") if deadline else None
+    )
+
+    db.session.add(project)
+    db.session.commit()
+
+    return jsonify({
+        'message': 'Project created successfully',
+        'project': {
+            'id': project.id_project,
+            'name': project.name,
+            'description': project.description,
+            'size': project.size,
+            'deadline': project.deadline.strftime('%Y-%m-%d') if project.deadline else None
+        }
+    }), 201
 
 # GET all projects
 @projects_bp.route('', methods=['GET'])
