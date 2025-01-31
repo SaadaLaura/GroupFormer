@@ -2,17 +2,25 @@ from flasgger import Swagger
 from flask import Flask, jsonify
 from flask_cors import CORS
 
+from backend.api.database import db
 from backend.api.endpoint.announcements_blueprint import announcements_bp
 from backend.api.endpoint.projects_blueprint import projects_bp
 from backend.api.endpoint.students_blueprint import students_bp
 
-app = Flask(__name__)
-swagger = Swagger(app)
-CORS(app)  
 
-app.register_blueprint(students_bp, url_prefix='/student')
-app.register_blueprint(announcements_bp, url_prefix='/announcement')
-app.register_blueprint(projects_bp, url_prefix='/project')
+def create_app():
+    app = Flask(__name__)
+    app.config.from_object('backend.api.config')
+    app.config['JSON_AS_ASCII'] = False
 
-if __name__== "__main__":
-    app.run(debug=True, port=8000)
+    db.init_app(app)
+    Swagger(app)
+
+    app.register_blueprint(students_bp, url_prefix='/students')
+    app.register_blueprint(announcements_bp, url_prefix='/announcements')
+    app.register_blueprint(projects_bp, url_prefix='/projects')
+
+    with app.app_context():
+        db.create_all()
+
+    return app

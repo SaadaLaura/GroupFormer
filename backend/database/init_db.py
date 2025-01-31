@@ -1,18 +1,13 @@
 import sqlite3
 
 connection = sqlite3.connect('groupformer.db')
+connection.execute('PRAGMA encoding="UTF-8"')
 
-with open('db_schema.sql') as f:
+with open('db_schema.sql', 'r', encoding='utf-8') as f:
     connection.executescript(f.read())
 
-with open('db_populate.sql') as p:
+with open('db_populate.sql', 'r', encoding='utf-8') as p:
     connection.executescript(p.read())
-
-cursor = connection.cursor()
-
-# cur.execute("INSERT INTO person (id_user, firstname, lastname, email) VALUES (?, ?, ?, ?)",
-#             (1, 'Bob', 'P', 'bob.p@efrei.net')
-#             )
 
 connection.commit()
 connection.close()

@@ -6,8 +6,8 @@ DROP TABLE IF EXISTS person;
 DROP TABLE IF EXISTS admin;
 DROP TABLE IF EXISTS student;
 DROP TABLE IF EXISTS master;
-DROP TABLE IF EXISTS searches;
-DROP TABLE IF EXISTS likes;
+DROP TABLE IF EXISTS search;
+DROP TABLE IF EXISTS like;
 DROP TABLE IF EXISTS is_about;
 
 CREATE TABLE skill
@@ -30,6 +30,7 @@ CREATE TABLE project
 CREATE TABLE announcement
 (
     id_announcement INT,
+    title VARCHAR(50),
     description VARCHAR(50),
     publication DATE,
     id_project INT NOT NULL,
@@ -51,52 +52,42 @@ CREATE TABLE person
     lastname VARCHAR(50) NOT NULL,
     email VARCHAR(50) NOT NULL,
     password VARCHAR(50) NOT NULL,
-    PRIMARY KEY(id_user)
-);
-
-CREATE TABLE admin
-(
-    id_user INT,
-    PRIMARY KEY(id_user),
-    FOREIGN KEY(id_user) REFERENCES person (id_user)
-);
-
-CREATE TABLE student(
-    id_user INT,
+    role VARCHAR(50) NOT NULL,
+    first_connexion BOOLEAN NOT NULL,
     id_project INT,
     PRIMARY KEY(id_user),
-    FOREIGN KEY(id_user) REFERENCES person (id_user),
     FOREIGN KEY(id_project) REFERENCES project (id_project)
+
 );
 
 CREATE TABLE master(
     id_user INT,
     id_skill INT,
     PRIMARY KEY(id_user, id_skill),
-    FOREIGN KEY(id_user) REFERENCES student(id_user),
+    FOREIGN KEY(id_user) REFERENCES person (id_user),
     FOREIGN KEY(id_skill) REFERENCES skill (id_skill)
 );
 
-CREATE TABLE searches(
+CREATE TABLE search(
     id_skill INT,
-    id_announcement_ INT,
-    PRIMARY KEY(id_skill, id_announcement_),
+    id_announcement INT,
+    PRIMARY KEY(id_skill, id_announcement),
     FOREIGN KEY(id_skill) REFERENCES skill (id_skill),
-    FOREIGN KEY(id_announcement_) REFERENCES announcement (id_announcement)
+    FOREIGN KEY(id_announcement) REFERENCES announcement (id_announcement)
 );
 
-CREATE TABLE likes(
+CREATE TABLE like(
     id_user INT,
     id_subject INT,
     PRIMARY KEY(id_user, id_subject),
-    FOREIGN KEY(id_user) REFERENCES student(id_user),
+    FOREIGN KEY(id_user) REFERENCES person (id_user),
     FOREIGN KEY(id_subject) REFERENCES subject (id_subject)
 );
 
 CREATE TABLE is_about(
-    id_announcement_ INT,
+    id_announcement INT,
     id_subject INT,
-    PRIMARY KEY(id_announcement_, id_subject),
-    FOREIGN KEY(id_announcement_) REFERENCES announcement(id_announcement),
+    PRIMARY KEY(id_announcement, id_subject),
+    FOREIGN KEY(id_announcement) REFERENCES announcement (id_announcement),
     FOREIGN KEY(id_subject) REFERENCES subject (id_subject)
 );
