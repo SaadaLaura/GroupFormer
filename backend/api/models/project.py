@@ -14,3 +14,4 @@ class Project(db.Model):
     size = Column(Integer)
 
     students = relationship('Person', back_populates='project')
+    announcements = relationship('Announcement', back_populates='project')

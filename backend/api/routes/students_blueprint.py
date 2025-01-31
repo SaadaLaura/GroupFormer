@@ -19,7 +19,8 @@ def get_all_students():
         'id': student.id_user,
         'firstname': student.firstname,
         'lastname': student.lastname,
-        'email': student.email
+        'email': student.email,
+        'id_project': student.id_project
     } for student in students]), 200
 
 # GET a student by ID

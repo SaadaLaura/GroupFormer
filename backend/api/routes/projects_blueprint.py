@@ -4,7 +4,7 @@ from flasgger import swag_from
 from flask import Blueprint, jsonify, request
 
 from backend.api.database import db
-from backend.api.models import Announcement
+from backend.api.models import Announcement, IsAbout, Search
 from backend.api.models.person import Role, Person
 from backend.api.models.project import Project
 from backend.api.utils.jwt_utils import token_required
@@ -72,6 +72,13 @@ def delete_project(id_project):
 
     if not project:
         return jsonify({'error': 'Project not found'}), 404
+
+    for announcement in project.announcements:
+        db.session.query(IsAbout).filter_by(id_announcement=announcement.id_announcement).delete()
+        db.session.query(Search).filter_by(id_announcement=announcement.id_announcement).delete()
+
+    db.session.query(Announcement).filter_by(id_project=id_project).delete()
+    db.session.query(Person).filter_by(id_project=id_project).update({"id_project": None})
 
     db.session.delete(project)
     db.session.commit()

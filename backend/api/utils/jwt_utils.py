@@ -32,6 +32,9 @@ def token_required(required_roles=None):
                 data = jwt.decode(token.split(" ")[1], SECRET_KEY, algorithms=["HS256"])
                 user = Person.query.get(data.get('id'))
 
+                if not user:
+                    return jsonify({'error': 'Token is invalid!'}), 401
+
                 if required_roles and data.get('role') not in required_roles:
                     return jsonify({'error': 'Access forbidden: Insufficient permissions'}), 403
 

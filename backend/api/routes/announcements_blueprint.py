@@ -36,6 +36,24 @@ def create_announcement():
     db.session.add(announcement)
     db.session.commit()
 
+    if 'skills' in data:
+        for skill_id in data.get('skills'):
+            skill = Skill.query.get(skill_id)
+            if skill:
+                db.session.add(Search(id_skill=skill.id_skill, id_announcement=announcement.id_announcement))
+            else:
+                return jsonify({'error': f'Skill ID {skill_id} not found'}), 400
+
+    if 'subjects' in data:
+        for subject_id in data.get('subjects'):
+            subject = Subject.query.get(subject_id)
+            if subject:
+                db.session.add(IsAbout(id_subject=subject.id_subject, id_announcement=announcement.id_announcement))
+            else:
+                return jsonify({'error': f'Subject ID {subject_id} not found'}), 400
+
+    db.session.commit()
+
     return jsonify({
         'message': 'Announcement created successfully',
         'announcement': {
@@ -43,7 +61,9 @@ def create_announcement():
             'title': announcement.title,
             'description': announcement.description,
             'publication': announcement.publication.strftime('%Y-%m-%d'),
-            'id_project': announcement.id_project
+            'id_project': announcement.id_project,
+            'skills': [search.skill.name for search in announcement.search_for],
+            'subjects': [about.subject.name for about in announcement.is_about]
         }
     }), 201
 
@@ -60,6 +80,26 @@ def update_announcement(id_announcement):
     announcement.title = data.get('title') if data.get('title') else announcement.title
     announcement.description = data.get('description') if data.get('description') else announcement.description
 
+    # Replace skills
+    if 'skills' in data:
+        Search.query.filter_by(id_announcement=id_announcement).delete()
+
+        for skill_id in data.get('skills'):
+            skill = Skill.query.get(skill_id)
+            if not skill:
+                return jsonify({'error': f'Skill ID {skill_id} not found'}), 400
+            db.session.add(Search(id_skill=skill.id_skill, id_announcement=id_announcement))
+
+    # Replace subjects
+    if 'subjects' in data:
+        IsAbout.query.filter_by(id_announcement=id_announcement).delete()
+
+        for subject_id in data.get('subjects'):
+            subject = Subject.query.get(subject_id)
+            if not subject:
+                return jsonify({'error': f'Subject ID {subject_id} not found'}), 400
+            db.session.add(IsAbout(id_subject=subject.id_subject, id_announcement=id_announcement))
+
     db.session.commit()
 
     return jsonify({'message': 'Announcement updated successfully'}), 200
@@ -72,6 +112,9 @@ def delete_announcement(id_announcement):
 
     if not announcement:
         return jsonify({'error': 'Announcement not found'}), 404
+
+    db.session.query(IsAbout).filter_by(id_announcement=announcement.id_announcement).delete()
+    db.session.query(Search).filter_by(id_announcement=announcement.id_announcement).delete()
 
     db.session.delete(announcement)
     db.session.commit()
@@ -88,7 +131,9 @@ def get_all_announcements():
         'title': announcement.title,
         'description': announcement.description,
         'publication': announcement.publication,
-        'id_project': announcement.id_project
+        'id_project': announcement.id_project,
+        'skills': [search.skill.name for search in announcement.search_for],
+        'subjects': [about.subject.name for about in announcement.is_about]
     } for announcement in announcements]), 200
 
 # GET an announcement by ID
@@ -103,7 +148,9 @@ def get_announcement(announcement_id):
         'title': announcement.title,
         'description': announcement.description,
         'publication': announcement.publication,
-        'id_project': announcement.id_project
+        'id_project': announcement.id_project,
+        'skills': [search.skill.name for search in announcement.search_for],
+        'subjects': [about.subject.name for about in announcement.is_about]
     }), 200
 
 # GET skills searched by an announcement
