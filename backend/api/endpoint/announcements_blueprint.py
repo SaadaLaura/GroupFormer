@@ -51,5 +51,5 @@ def get_announcement_about(announcement_id):
     subjects = db.session.query(Subject).join(IsAbout).filter(IsAbout.id_announcement == announcement_id).all()
     return jsonify([{
         'id': subject.id_subject,
-        'name': subjects.name
+        'name': subject.name
     } for subject in subjects]), 200

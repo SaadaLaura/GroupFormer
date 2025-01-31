@@ -17,7 +17,6 @@ import { StateService } from '../services/state.service';
 })
 export class GroupResearchComponent implements OnInit {
   projects: Project[] = [];
-  announcements: Announcement[] = [];
   projectDetails: ProjectDetail[] = [];
   filteredProjectDetails: ProjectDetail[] = [];
   missingStudentsRange: number[] = [];
@@ -57,53 +56,55 @@ export class GroupResearchComponent implements OnInit {
   loadProjects(): void {
     this.projectService.getProjects().subscribe((projects: Project[]) => {
       this.projects = projects;
-      this.loadAnnouncements();
+      this.loadProjectDetails();
     });
   }
 
-  loadAnnouncements(): void {
-    this.announcementService.getAnnouncements().subscribe((announcements: Announcement[]) => {
-      this.announcements = announcements;
-      this.calculateProjectDetails();
-    });
-  }
-
-  calculateProjectDetails(): void {
-    this.projectDetails = this.announcements.map(announcement => {
-      const project = this.projects.find(p => p.id_project === announcement.id_project);
-      const missingStudents = project ? this.getMissingStudents(project) : 0;
-      return new ProjectDetail(
-        this.decodeUTF8(project?.name || ''),
-        this.decodeUTF8(project?.description || ''),
-        missingStudents,
-        '',
-        this.decodeUTF8(announcement.description || ''),
-        announcement.publication || '',
-        announcement.id_announcement,
-        []
-      );
-    });
-
+  loadProjectDetails(): void {
     let detailsLoaded = 0;
-    this.projectDetails.forEach((detail, index) => {
-      this.announcementService.getAnnouncementSearch(this.announcements[index].id_announcement).subscribe((data: string[]) => {
-        detail.skills = data.join(', ');
-        detailsLoaded++;
-        this.checkDetailsLoaded(detailsLoaded);
-      });
-
-      this.announcementService.getAnnouncementAbout(this.announcements[index].id_announcement).subscribe((data: string[]) => {
-        detail.specialties = data;
-        detailsLoaded++;
-        this.checkDetailsLoaded(detailsLoaded);
+    const totalDetailsToLoad = this.projects.length * 2; // Each project has two details to load (skills and specialties)
+  
+    this.projects.forEach(project => {
+      this.projectService.getProjectAnnouncements(project.id).subscribe((announcements: Announcement[]) => {
+        announcements.forEach(announcement => {
+          const missingStudents = this.getMissingStudents(project, announcements);
+          const existingDetail = this.projectDetails.find(detail => detail.announcementId === announcement.id);
+  
+          if (!existingDetail) {
+            const projectDetail = new ProjectDetail(
+              project.name,
+              project.description,
+              missingStudents,
+              '',
+              announcement.description,
+              announcement.publication,
+              announcement.id,
+              []
+            );
+  
+            this.projectDetails.push(projectDetail);
+  
+            this.announcementService.getAnnouncementSearch(announcement.id).subscribe((data: { id: number, name: string }[]) => {
+              projectDetail.skills = data.map(skill => skill.name).join(', ');
+              detailsLoaded++;
+              this.checkDetailsLoaded(detailsLoaded, totalDetailsToLoad);
+            });
+  
+            this.announcementService.getAnnouncementAbout(announcement.id).subscribe((data: { id: number, name: string }[]) => {
+              projectDetail.specialties = data.map(subject => subject.name);
+              detailsLoaded++;
+              this.checkDetailsLoaded(detailsLoaded, totalDetailsToLoad);
+            });
+          }
+        });
       });
     });
-
+  
     this.loadMissingStudentsRange();
   }
-
-  checkDetailsLoaded(detailsLoaded: number): void {
-    if (detailsLoaded === this.projectDetails.length * 2) {
+  
+  checkDetailsLoaded(detailsLoaded: number, totalDetailsToLoad: number): void {
+    if (detailsLoaded === totalDetailsToLoad) {
       this.applyFilters(); // Appliquer les filtres par défaut
       this.isLoading = false;
       this.isDataLoaded = true;
@@ -133,13 +134,9 @@ export class GroupResearchComponent implements OnInit {
     });
   }
 
-  getMissingStudents(project: Project): number {
+  getMissingStudents(project: Project, announcements: Announcement[]): number {
     const projectSize = project.size;
-    const studentCount = this.announcements.filter(a => a.id_project === project.id_project).length;
+    const studentCount = announcements.length;
     return projectSize - studentCount;
-  }
-
-  decodeUTF8(str: string | undefined): string {
-    return str ? decodeURIComponent(escape(str)) : '';
   }
 }

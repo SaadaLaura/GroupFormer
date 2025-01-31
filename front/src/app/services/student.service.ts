@@ -13,18 +13,18 @@ export class StudentService {
   constructor(private http: HttpClient) {}
 
   getStudents(): Observable<Student[]> {
-    return this.http.get<Student[]>(`${this.baseUrl}/student`);
+    return this.http.get<Student[]>(`${this.baseUrl}/students`);
   }
 
   getStudentById(studentId: number): Observable<Student> {
-    return this.http.get<Student>(`${this.baseUrl}/student/${studentId}`);
+    return this.http.get<Student>(`${this.baseUrl}/students/${studentId}`);
   }
 
   getStudentSkills(studentId: number): Observable<string[]> {
-    return this.http.get<string[]>(`${this.baseUrl}/student/${studentId}/skills`);
+    return this.http.get<string[]>(`${this.baseUrl}/students/${studentId}/skills`);
   }
 
   getStudentInterests(studentId: number): Observable<string[]> {
-    return this.http.get<string[]>(`${this.baseUrl}/student/${studentId}/subjects`);
+    return this.http.get<string[]>(`${this.baseUrl}/students/${studentId}/subjects`);
   }
 }
