@@ -7,7 +7,7 @@ from backend.api.database import db
 class Skill(db.Model):
     __tablename__ = 'skill'
 
-    id_skill = Column(Integer, primary_key=True)
+    id_skill = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String(50), nullable=False)
 
     mastered_by = relationship('Master', back_populates='skill')
