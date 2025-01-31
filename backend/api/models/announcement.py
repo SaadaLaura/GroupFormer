@@ -7,7 +7,7 @@ from backend.api.database import db
 class Announcement(db.Model):
     __tablename__ = 'announcement'
 
-    id_announcement = Column(Integer, primary_key=True)
+    id_announcement = Column(Integer, primary_key=True, autoincrement=True)
     title = Column(String(50), nullable=False)
     description = Column(String(250))
     publication = Column(Date, nullable=False)

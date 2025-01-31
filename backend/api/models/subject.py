@@ -7,7 +7,7 @@ from backend.api.database import db
 class Subject(db.Model):
     __tablename__ = 'subject'
 
-    id_subject = Column(Integer, primary_key=True)
+    id_subject = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String(50), nullable=False)
 
     liked_by = relationship('Like', back_populates='subject')

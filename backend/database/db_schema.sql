@@ -12,14 +12,14 @@ DROP TABLE IF EXISTS is_about;
 
 CREATE TABLE skill
 (
-    id_skill INT,
+    id_skill INT AUTO_INCREMENT,
     name VARCHAR(50) NOT NULL,
     PRIMARY KEY(id_skill)
 );
 
 CREATE TABLE project
 (
-    id_project INT,
+    id_project INT AUTO_INCREMENT,
     name VARCHAR(50) NOT NULL,
     deadline DATE,
     description VARCHAR(250) NOT NULL,
@@ -29,7 +29,7 @@ CREATE TABLE project
 
 CREATE TABLE announcement
 (
-    id_announcement INT,
+    id_announcement INT AUTO_INCREMENT,
     title VARCHAR(50) NOT NULL,
     description VARCHAR(250),
     publication DATE NOT NULL,
@@ -40,20 +40,20 @@ CREATE TABLE announcement
 
 CREATE TABLE subject
 (
-    id_subject INT,
+    id_subject INT AUTO_INCREMENT,
     name VARCHAR(50) NOT NULL,
     PRIMARY KEY(id_subject)
 );
 
 CREATE TABLE person
 (
-    id_user INT,
+    id_user INT AUTO_INCREMENT,
     firstname VARCHAR(50) NOT NULL,
     lastname VARCHAR(50) NOT NULL,
     email VARCHAR(50) NOT NULL,
     password VARCHAR(250) NOT NULL,
     role VARCHAR(50) NOT NULL,
-    first_connexion BOOLEAN NOT NULL,
+    first_connection BOOLEAN NOT NULL,
     id_project INT,
     PRIMARY KEY(id_user),
     FOREIGN KEY(id_project) REFERENCES project (id_project)
