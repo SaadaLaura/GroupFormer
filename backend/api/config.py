@@ -8,3 +8,6 @@ SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 SECRET_KEY = os.getenv('SECRET_KEY', 'group_former_secret_key')
 JWT_EXPIRATION_TIME_HOURS = 24
+
+ALLOWED_EXTENSIONS = {'xlsx'}
+UPLOAD_FOLDER = 'uploads'
