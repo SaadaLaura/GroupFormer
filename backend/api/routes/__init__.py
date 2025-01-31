@@ -3,9 +3,10 @@ from flask import Flask, jsonify
 from flask_cors import CORS
 
 from backend.api.database import db
-from backend.api.endpoint.announcements_blueprint import announcements_bp
-from backend.api.endpoint.projects_blueprint import projects_bp
-from backend.api.endpoint.students_blueprint import students_bp
+from backend.api.routes.announcements_blueprint import announcements_bp
+from backend.api.routes.projects_blueprint import projects_bp
+from backend.api.routes.students_blueprint import students_bp
+from backend.api.routes.authentication_blueprint import authentication_bp
 
 
 def create_app():
@@ -19,6 +20,7 @@ def create_app():
     app.register_blueprint(students_bp, url_prefix='/students')
     app.register_blueprint(announcements_bp, url_prefix='/announcements')
     app.register_blueprint(projects_bp, url_prefix='/projects')
+    app.register_blueprint(authentication_bp)
 
     with app.app_context():
         db.create_all()

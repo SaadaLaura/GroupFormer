@@ -1,4 +1,4 @@
-from backend.api.endpoint import create_app
+from backend.api.routes import create_app
 from flask_cors import CORS
 
 # TODO: encodage de la base de donnée (éèà...)

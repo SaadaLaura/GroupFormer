@@ -1,13 +1,14 @@
 from flasgger import swag_from
-from flask import Blueprint, jsonify
+from flask import Blueprint, jsonify, request, g
 
 from backend.api.database import db
-from backend.api.model.like import Like
-from backend.api.model.master import Master
-from backend.api.model.person import Person, Role
-from backend.api.model.project import Project
-from backend.api.model.skill import Skill
-from backend.api.model.subject import Subject
+from backend.api.models.like import Like
+from backend.api.models.master import Master
+from backend.api.models.person import Person, Role
+from backend.api.models.project import Project
+from backend.api.models.skill import Skill
+from backend.api.models.subject import Subject
+from backend.api.utils.jwt_utils import token_required
 
 students_bp = Blueprint('students', __name__)
 
@@ -74,4 +75,20 @@ def get_student_project(student_id):
         'description': project.description,
         'size': project.size,
         'deadline': project.deadline.strftime('%Y-%m-%d') if project.deadline else None
+    }), 200
+
+@students_bp.route('/me', methods=['GET'])
+@token_required
+def get_logged_in_student():
+    student = Person.query.get(g.user_id)
+
+    if not student:
+        return jsonify({'error': 'User not found'}), 404
+
+    return jsonify({
+        'id': student.id_user,
+        'firstname': student.firstname,
+        'lastname': student.lastname,
+        'email': student.email,
+        'project': student.id_project
     }), 200

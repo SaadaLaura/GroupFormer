@@ -3,8 +3,8 @@ from datetime import datetime
 from flasgger import swag_from
 from flask import Blueprint, jsonify
 
-from backend.api.model import Announcement
-from backend.api.model.project import Project
+from backend.api.models import Announcement
+from backend.api.models.project import Project
 
 projects_bp = Blueprint('projects', __name__)
 
