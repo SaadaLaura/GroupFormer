@@ -1,14 +1,12 @@
 from flasgger import swag_from
-from flask import Blueprint, jsonify, request, g
+from flask import Blueprint, jsonify
 
 from backend.api.database import db
 from backend.api.models.like import Like
 from backend.api.models.master import Master
 from backend.api.models.person import Person, Role
-from backend.api.models.project import Project
 from backend.api.models.skill import Skill
 from backend.api.models.subject import Subject
-from backend.api.utils.jwt_utils import token_required
 
 students_bp = Blueprint('students', __name__)
 
@@ -68,7 +66,7 @@ def get_student_project(student_id):
     if not student.id_project:
         return jsonify({'null': 'Student has no project'}), 200
 
-    project = Project.query.get(student.id_project)
+    project = student.project
     return jsonify({
         'id': project.id_project,
         'name': project.name,
