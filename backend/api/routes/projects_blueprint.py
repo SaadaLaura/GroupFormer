@@ -5,6 +5,7 @@ from flask import Blueprint, jsonify, request
 
 from backend.api.database import db
 from backend.api.models import Announcement
+from backend.api.models.person import Role
 from backend.api.models.project import Project
 from backend.api.utils.jwt_utils import token_required
 
@@ -12,7 +13,7 @@ projects_bp = Blueprint('projects', __name__)
 
 # POST a project
 @projects_bp.route('/add', methods=['POST'])
-@token_required
+@token_required(Role.ADMIN.value)
 def create_project():
     data = request.json
     name = data.get('name')
@@ -23,7 +24,6 @@ def create_project():
     if not name or not size or not description:
         return jsonify({'error': 'Name and size are required'}), 400
 
-    # Convert deadline to Date format if provided
     project = Project(
         name=name,
         description=description,

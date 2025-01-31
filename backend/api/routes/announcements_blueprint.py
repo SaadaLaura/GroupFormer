@@ -11,7 +11,7 @@ announcements_bp = Blueprint('announcements', __name__)
 
 # POST an announcement
 @announcements_bp.route('/add', methods=['POST'])
-@token_required
+@token_required()
 def create_announcement():
     data = request.json
     title = data.get('title')

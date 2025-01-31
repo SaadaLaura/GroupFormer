@@ -1,33 +1,20 @@
 import os
-from datetime import datetime, timedelta
 
-import jwt
 import pandas as pd
 from email_validator import validate_email, EmailNotValidError
 from flask import Blueprint, request, jsonify, g
 from werkzeug.utils import secure_filename
 
-from backend.api.config import JWT_EXPIRATION_TIME_HOURS, SECRET_KEY, ALLOWED_EXTENSIONS, UPLOAD_FOLDER
+from backend.api.config import ALLOWED_EXTENSIONS, UPLOAD_FOLDER
 from backend.api.database import db
 from backend.api.models import Person
 from backend.api.models.person import Role
-from backend.api.utils.jwt_utils import token_required
+from backend.api.utils.jwt_utils import token_required, generate_token
 
 users_bp = Blueprint('user', __name__)
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-
-# Generate JWT token
-def generate_token(user):
-    payload = {
-        'id': user.id_user,
-        'email': user.email,
-        'role': user.role.value,
-        'first_connection': user.first_connection,
-        'exp': datetime.now() + timedelta(hours=JWT_EXPIRATION_TIME_HOURS)
-    }
-    return jwt.encode(payload, SECRET_KEY, algorithm='HS256')
 
 # Login route
 @users_bp.route('/login', methods=['POST'])
@@ -48,7 +35,7 @@ def login():
 
 # Change password
 @users_bp.route('/change-password', methods=['PUT'])
-@token_required
+@token_required()
 def change_password():
     data = request.json
     old_password = data.get('old_password')
@@ -105,6 +92,7 @@ def register_user():
 
 # Upload students from a file
 @users_bp.route('/upload-students', methods=['POST'])
+@token_required('admin')
 def upload_students():
     if 'file' not in request.files:
         return jsonify({'error': 'No file part'}), 400
@@ -151,7 +139,7 @@ def upload_students():
 
 # GET logged-in user information
 @users_bp.route('/me', methods=['GET'])
-@token_required
+@token_required()
 def get_logged_in_user():
     user = g.user
 
