@@ -5,7 +5,7 @@ from flask import Blueprint, jsonify, request
 
 from backend.api.database import db
 from backend.api.models import Announcement
-from backend.api.models.person import Role
+from backend.api.models.person import Role, Person
 from backend.api.models.project import Project
 from backend.api.utils.jwt_utils import token_required
 
@@ -45,9 +45,41 @@ def create_project():
         }
     }), 201
 
+# Update a project by ID
+@projects_bp.route('/<int:id_project>', methods=['PUT'])
+@token_required(Role.ADMIN.value)
+def update_project(id_project):
+    project = Project.query.get(id_project)
+
+    if not project:
+        return jsonify({'error': 'Project not found'}), 404
+
+    data = request.json
+    project.name = data.get('name') if data.get('name') else project.name
+    project.deadline = datetime.strptime(data.get('deadline'), "%Y-%m-%d") if data.get('deadline') else project.deadline
+    project.description = data.get('description') if data.get('description') else project.description
+    project.size = data.get('size') if data.get('size') else project.size
+
+    db.session.commit()
+
+    return jsonify({'message': 'Project updated successfully'}), 200
+
+# DELETE a project by ID
+@projects_bp.route('/<int:id_project>', methods=['DELETE'])
+@token_required(Role.ADMIN.value)
+def delete_project(id_project):
+    project = Project.query.get(id_project)
+
+    if not project:
+        return jsonify({'error': 'Project not found'}), 404
+
+    db.session.delete(project)
+    db.session.commit()
+
+    return jsonify({'message': 'Project deleted successfully'}), 200
+
 # GET all projects
 @projects_bp.route('', methods=['GET'])
-@swag_from('swagger/projects/projects.yaml')
 def get_all_projects():
     projects = Project.query.all()
     return jsonify([{

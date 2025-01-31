@@ -92,7 +92,7 @@ def register_user():
 
 # Upload students from a file
 @users_bp.route('/upload-students', methods=['POST'])
-@token_required('admin')
+@token_required(Role.ADMIN.value)
 def upload_students():
     if 'file' not in request.files:
         return jsonify({'error': 'No file part'}), 400
