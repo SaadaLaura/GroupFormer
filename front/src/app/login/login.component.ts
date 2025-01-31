@@ -20,7 +20,6 @@ export class LoginComponent {
   loginError: boolean = false;
   emailNotFoundError: boolean = false;
   showPasswordInput: boolean = false;
-  userType: string = '';
 
   constructor(private router: Router, private studentService: StudentService, private stateService: StateService) {}
 
@@ -38,16 +37,14 @@ export class LoginComponent {
     this.emailNotFoundError = false;
 
     if (this.email) {
-      if (this.userType === 'student') {
-        this.studentService.getStudents().subscribe((students: any[]) => {
-          const student = students.find(s => s.email === this.email);
-          if (student) {
-            this.showPasswordInput = true;
-          } else {
-            this.emailNotFoundError = true;
-          }
-        });
-      } 
+      this.studentService.getStudents().subscribe((students: any[]) => {
+        const student = students.find(s => s.email === this.email);
+        if (student) {
+          this.showPasswordInput = true;
+        } else {
+          this.emailNotFoundError = true;
+        }
+      });
     }
   }
 
@@ -70,6 +67,8 @@ export class LoginComponent {
           this.router.navigate(['/profil', student.id_user]);
           this.loginError = true;
           this.password = ''; // Réinitialiser le champ de mot de passe
+        } else {
+          this.loginError = true;
         }
       });
     }
