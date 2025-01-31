@@ -1,10 +1,50 @@
+from datetime import datetime
+
 from flasgger import swag_from
-from flask import Blueprint, jsonify
+from flask import Blueprint, jsonify, request
 
 from backend.api.database import db
-from backend.api.models import Announcement, Search, Subject, Skill, IsAbout
+from backend.api.models import Announcement, Search, Subject, Skill, IsAbout, Project
+from backend.api.utils.jwt_utils import token_required
 
 announcements_bp = Blueprint('announcements', __name__)
+
+# POST an announcement
+@announcements_bp.route('/add', methods=['POST'])
+@token_required
+def create_announcement():
+    data = request.json
+    title = data.get('title')
+    description = data.get('description')
+    id_project = data.get('id_project')
+
+    if not title or not id_project:
+        return jsonify({'error': 'Title and project ID are required'}), 400
+
+    project = Project.query.get(id_project)
+    if not project:
+        return jsonify({'error': 'Project not found'}), 404
+
+    announcement = Announcement(
+        title=title,
+        description=description,
+        publication=datetime.now(),
+        id_project=id_project
+    )
+
+    db.session.add(announcement)
+    db.session.commit()
+
+    return jsonify({
+        'message': 'Announcement created successfully',
+        'announcement': {
+            'id': announcement.id_announcement,
+            'title': announcement.title,
+            'description': announcement.description,
+            'publication': announcement.publication.strftime('%Y-%m-%d'),
+            'id_project': announcement.id_project
+        }
+    }), 201
 
 # GET all announcements
 @announcements_bp.route('', methods=['GET'])
