@@ -77,7 +77,7 @@ export class GroupResearchComponent implements OnInit {
               missingStudents,
               '',
               announcement.description,
-              announcement.publication,
+              this.formatDate(announcement.publication),
               announcement.id,
               []
             );
@@ -101,6 +101,14 @@ export class GroupResearchComponent implements OnInit {
     });
   
     this.loadMissingStudentsRange();
+  }
+
+  formatDate(dateString: string): string {
+    const date = new Date(dateString);
+    const day = date.getDate().toString().padStart(2, '0');
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
   }
   
   checkDetailsLoaded(detailsLoaded: number, totalDetailsToLoad: number): void {
