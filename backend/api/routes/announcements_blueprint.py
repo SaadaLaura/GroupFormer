@@ -66,7 +66,7 @@ def create_announcement():
 
 # Update an announcement by ID
 @announcements_bp.route('/<int:id_announcement>', methods=['PUT'])
-@token_required(Role.ADMIN.value)
+@token_required()
 def update_announcement(id_announcement):
     announcement = Announcement.query.get(id_announcement)
 
@@ -104,7 +104,7 @@ def update_announcement(id_announcement):
 
 # DELETE an announcement by ID
 @announcements_bp.route('/<int:id_announcement>', methods=['DELETE'])
-@token_required(Role.ADMIN.value)
+@token_required()
 def delete_announcement(id_announcement):
     announcement = Announcement.query.get(id_announcement)
 
