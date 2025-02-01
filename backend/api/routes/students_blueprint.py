@@ -129,6 +129,7 @@ def remove_subjects_from_student():
 # GET all students
 @students_bp.route('', methods=['GET'])
 @swag_from('swagger/students/students.yaml')
+@token_required()
 def get_all_students():
     students = Person.query.filter_by(role=Role.STUDENT).all()
     return jsonify([
@@ -139,6 +140,7 @@ def get_all_students():
 # GET a student by ID
 @students_bp.route('/<int:student_id>', methods=['GET'])
 @swag_from('swagger/students/students_by_id.yaml')
+@token_required()
 def get_student(student_id):
     student = Person.query.filter_by(id_user=student_id, role=Role.STUDENT).first()
     if not student:
@@ -149,6 +151,7 @@ def get_student(student_id):
 # GET skills of a student
 @students_bp.route('/<int:student_id>/skills', methods=['GET'])
 @swag_from('swagger/students/students_skills.yaml')
+@token_required()
 def get_student_skills(student_id):
     skills = db.session.query(Skill).join(Master).filter(Master.id_user == student_id).all()
     return jsonify([SkillDTO.to_dict(skill) for skill in skills]), 200
@@ -157,6 +160,7 @@ def get_student_skills(student_id):
 # GET subjects liked by a student
 @students_bp.route('/<int:student_id>/subjects', methods=['GET'])
 @swag_from('swagger/students/students_subjects.yaml')
+@token_required()
 def get_student_subjects(student_id):
     subjects = db.session.query(Subject).join(Like).filter(Like.id_user == student_id).all()
     return jsonify([SubjectDTO.to_dict(subject) for subject in subjects]), 200
@@ -165,6 +169,7 @@ def get_student_subjects(student_id):
 # GET project of a student
 @students_bp.route('/<int:student_id>/project', methods=['GET'])
 @swag_from('swagger/students/students_project.yaml')
+@token_required()
 def get_student_project(student_id):
     student = Person.query.filter_by(id_user=student_id, role=Role.STUDENT).first()
     if not student:
