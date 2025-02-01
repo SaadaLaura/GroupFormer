@@ -1,7 +1,9 @@
 <app-navbar></app-navbar>
 <br>
-<h2 class="title-page">Informations sur le profil</h2>
-<div class="profil-info">
+<h2 *ngIf="user" class="title-page">Bienvenue {{ user.firstname }} {{ user.lastname }}</h2>
+
+<div *ngIf="user && user.role === 'student'" class="profil-info">
+  <!-- Contenu pour les étudiants -->
   <div class="info-group">
     <label for="hasGroup">Avez-vous un groupe ? <span class="required">*</span> :</label>
     <select id="hasGroup" name="hasGroup" [(ngModel)]="hasGroup" (change)="onGroupChange()">
@@ -23,7 +25,7 @@
     <div class="inline-container">
       <ul *ngIf="interests.length; else noInterests" class="list-inline">
         <li *ngFor="let interest of interests" class="list-item">
-          {{ interest }}
+          {{ interest.name }}
           <button class="icone" type="button" (click)="removeInterest(interest)">
             <span class="material-symbols-outlined">delete</span>
           </button>
@@ -47,7 +49,7 @@
     <div class="inline-container">
       <ul *ngIf="skills.length; else noSkills" class="list-inline">
         <li *ngFor="let skill of skills" class="list-item">
-          {{ skill }}
+          {{ skill.name }}
           <button class="icone" type="button" (click)="removeSkill(skill)">
             <span class="material-symbols-outlined">delete</span>
           </button>
@@ -78,5 +80,41 @@
       <span class="material-symbols-outlined">{{ editMode['major'] ? 'check' : 'edit' }}</span>
     </button>
   </div>
+  <p class="legend"><em>* : important à remplir</em></p>
+  <p> <em>A faire : création d'annonces en cas de groupe</em></p>
 </div>
-<p class="legend"><em>* : important à remplir</em></p>
+
+<div *ngIf="user && user.role === 'admin'" class="admin-info">
+  <p>Pour permettre à vos étudiants d'accéder à l'outil, veuillez déposer votre fichier Excel en respectant le format de l'exemple ci-dessous :</p>
+  <img src="assets/img/Exemple_excel.png" alt="Exemple de fichier Excel" class="example-image">
+  <div class="upload-container">
+    <label for="fileUpload" class="upload-label">
+      <span class="material-symbols-outlined">upload</span>
+      <span *ngIf="!selectedFile; else fileSelected"><em>Sélectionner un fichier</em></span>
+      <ng-template #fileSelected>
+        {{ selectedFile?.name }}
+        <button class="icone" type="button" (click)="removeSelectedFile($event)">
+          <span class="material-symbols-outlined delete">delete</span>
+        </button>
+      </ng-template>
+    </label>
+    <input type="file" id="fileUpload" (change)="onFileSelected($event)" accept=".xls,.xlsx,.csv" hidden>
+    <p *ngIf="!selectedFile"><em>ou déposer un fichier ici</em></p>
+  </div>
+  <div *ngIf="isLoading" class="loading-message">
+    <span class="material-symbols-outlined rotating-icon">autorenew</span>
+    <p>Importation en cours dans la base de données</p>
+  </div>
+  <div *ngIf="importMessage" [ngClass]="{'success-message': importSuccess, 'error-message': !importSuccess}">
+    <span>{{ importMessage }}</span>
+    <span *ngIf="importSuccess" class="material-symbols-outlined">check_circle</span>
+    <span *ngIf="!importSuccess" class="material-symbols-outlined">error</span>
+  </div>
+</div>
+<div *ngIf="showAlert" class="alert">
+  <span class="alert-message">Voulez-vous vraiment ajouter les étudiants dans la base de données ?</span>
+  <div class="alert-buttons">
+    <button class="alert-button" (click)="confirmAlert()">Confirmer</button>
+    <button class="alert-button" (click)="cancelAlert()">Annuler</button>
+  </div>
+</div>

@@ -2,14 +2,15 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { Student } from '../class/Users';
-import { BASE_URL } from './api.service';
+import { Student, Interest, Skill } from '../class/Users';
 import { LoginResponse, ChangePasswordResponse } from '../class/Login';
+import { BASE_URL } from './api.service';
+import { jwtDecode } from 'jwt-decode';
 
 @Injectable({
   providedIn: 'root'
 })
-export class StudentService {
+export class UsersService {
   private baseUrl = BASE_URL; 
 
   constructor(private http: HttpClient) {}
@@ -31,37 +32,45 @@ export class StudentService {
     );
   }
 
-  getUserInfo(token: string): Observable<any> {
-    return this.http.get(`${this.baseUrl}/users/me`, 
+  getUserInfo(token: string): Observable<Student> {
+    return this.http.get<Student>(`${this.baseUrl}/users/me`, 
       { headers: { Authorization: `Bearer ${token}` } }
     ).pipe(
       catchError(this.handleError)
     );
   }
 
-  // Student
-  getStudents(): Observable<Student[]> {
-    return this.http.get<Student[]>(`${this.baseUrl}/students`).pipe(
+  uploadStudents(file: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    return this.http.post<any>(`${this.baseUrl}/users/upload-students`, formData)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  getStudentInterests(token: string): Observable<Interest[]> {
+    const userId = this.getUserIdFromToken(token);
+    return this.http.get<Interest[]>(`${this.baseUrl}/students/${userId}/subjects`, 
+      { headers: { Authorization: `Bearer ${token}` } }
+    ).pipe(
       catchError(this.handleError)
     );
   }
 
-  getStudentById(studentId: number): Observable<Student> {
-    return this.http.get<Student>(`${this.baseUrl}/students/${studentId}`).pipe(
+  getStudentSkills(token: string): Observable<Skill[]> {
+    const userId = this.getUserIdFromToken(token);
+    return this.http.get<Skill[]>(`${this.baseUrl}/students/${userId}/skills`, 
+      { headers: { Authorization: `Bearer ${token}` } }
+    ).pipe(
       catchError(this.handleError)
     );
   }
 
-  getStudentSkills(studentId: number): Observable<string[]> {
-    return this.http.get<string[]>(`${this.baseUrl}/students/${studentId}/skills`).pipe(
-      catchError(this.handleError)
-    );
-  }
-
-  getStudentInterests(studentId: number): Observable<string[]> {
-    return this.http.get<string[]>(`${this.baseUrl}/students/${studentId}/subjects`).pipe(
-      catchError(this.handleError)
-    );
+  private getUserIdFromToken(token: string): number {
+    const decoded: any = jwtDecode(token);
+    return decoded.id;
   }
 
   private handleError(error: HttpErrorResponse): Observable<never> {

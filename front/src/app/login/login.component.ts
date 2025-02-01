@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { StudentService } from '../services/users.service';
+import { UsersService } from '../services/users.service';
 import { StateService } from '../services/state.service';
 import { LoginResponse, ChangePasswordResponse } from '../class/Login';
 
@@ -27,7 +27,7 @@ export class LoginComponent {
   changePasswordError: boolean = false;
   showSuccessMessage: boolean = false;
 
-  constructor(private router: Router, private studentService: StudentService, private stateService: StateService) {}
+  constructor(private router: Router, private usersService: UsersService, private stateService: StateService) {}
 
   togglePasswordVisibility(fieldId: string) {
     const passwordInput = document.getElementById(fieldId) as HTMLInputElement;
@@ -45,7 +45,7 @@ export class LoginComponent {
     this.emailNotFoundError = false;
 
     if (this.email && this.password) {
-      this.studentService.login(this.email, this.password).subscribe({
+      this.usersService.login(this.email, this.password).subscribe({
         next: (response: LoginResponse) => {
           localStorage.setItem('token', response.token);
           localStorage.setItem('isLoggedIn', 'true');
@@ -69,7 +69,7 @@ export class LoginComponent {
     this.changePasswordError = false;
 
     if (!this.passwordError) {
-      this.studentService.changePassword(this.oldPassword, this.newPassword, this.confirmPassword).subscribe({
+      this.usersService.changePassword(this.oldPassword, this.newPassword, this.confirmPassword).subscribe({
         next: (response: ChangePasswordResponse) => {
           this.showSuccessMessage = true;
           setTimeout(() => {

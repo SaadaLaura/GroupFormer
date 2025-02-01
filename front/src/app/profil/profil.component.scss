@@ -24,6 +24,7 @@
   padding: 6px;
   margin: 0;
 }
+
 .info-group button.icone .material-symbols-outlined.add-icon {
   margin-left: -10px; 
 }
@@ -128,7 +129,129 @@
 }
 
 .legend {
-  margin-top: 20px;
+  margin-top: 10px;
   font-size: 0.9em;
   color: red;
+}
+
+//Admin Info
+.admin-info {
+  .example-image {
+    max-width: 35%;
+    height: auto;
+    display: block;
+    margin: 10px 0;
+  }
+
+  .icone{
+    border: none;
+    background: none;
+    cursor: pointer;
+  }
+
+  .upload-container {
+    border: 2px dashed #ccc;
+    padding: 10px;
+    text-align: center;
+    background-color: #f9f9f9;
+    margin-top: 20px;
+    max-width: 500px; 
+  }
+
+  .upload-label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 1em;
+  }
+
+  .upload-label .material-symbols-outlined {
+    margin-right: 5px;    
+    margin-bottom: 5px;
+  }
+}
+
+//Alert
+.alert {
+  position: fixed;
+  top: 10px;
+  left: 30%;
+  right: 30%;
+  background-color: #e2e3e5; 
+  padding: 15px;
+  text-align: center;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column; 
+  justify-content: center;
+  align-items: center;
+  border: 1px solid #d6d8db; 
+  border-radius: 4px; 
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
+}
+
+.alert-message {
+  margin-bottom: 10px; 
+}
+
+.alert-buttons {
+  display: flex;
+  gap: 10px; 
+}
+
+.alert-button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.alert-button:hover {
+  background-color: #0056b3;
+}
+
+// Success message
+.success-message {
+  color: #155724; 
+  padding: 10px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  gap: 10px; 
+}
+
+// Error message
+.error-message {
+  color: #721c24; 
+  padding: 10px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  gap: 10px; 
+}
+
+// Loading message 
+.loading-message {
+  text-align: left;
+  display: flex;
+  align-items: center;
+}
+
+.loading-message p {
+  margin-left: -6px;
+}
+
+
+.rotating-icon {
+  animation: rotate 2s linear infinite;
+  margin-right: 10px;
+}
+
+@keyframes rotate {
+  100% {
+    transform: rotate(360deg);
+  }
 }
