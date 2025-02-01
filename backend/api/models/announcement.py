@@ -13,5 +13,6 @@ class Announcement(db.Model):
     publication = Column(Date, nullable=False)
     id_project = Column(Integer, ForeignKey('project.id_project'), nullable=False)
 
+    project = relationship('Project', back_populates='announcements')
     search_for = relationship('Search', back_populates='announcement')
     is_about = relationship('IsAbout', back_populates='announcement')

@@ -23,7 +23,7 @@ def create_app():
     app.register_blueprint(users_bp, url_prefix='/users')
 
     with app.app_context():
-        # db.drop_all()
+        # db.drop_all() # Need to be launched each time your reset the database
         db.create_all()
 
     return app
