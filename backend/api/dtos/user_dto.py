@@ -28,7 +28,7 @@ class UserDTO:
                 'missing': student.project.size - len(student.project.students),
                 'members': [UserDTO.to_dict(student) for student in student.project.students],
                 'deadline': student.project.deadline.strftime('%Y-%m-%d') if student.project.deadline else None
-            },
+            } if student.project else None,
             'skills': [SkillDTO.to_dict(master.skill) for master in student.masters],
             'subject': [SubjectDTO.to_dict(like.subject) for like in student.likes]
         }

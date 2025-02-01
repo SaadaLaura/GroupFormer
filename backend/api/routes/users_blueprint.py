@@ -153,4 +153,7 @@ def get_logged_in_user():
     if not user:
         return jsonify({'error': 'User not found'}), 404
 
-    return jsonify(UserDTO.to_dict(user)), 200
+    if user.role == Role.ADMIN.value:
+        return jsonify(UserDTO.to_dict(user)), 200
+    else:
+        return jsonify(UserDTO.student_to_dict(user)), 200
