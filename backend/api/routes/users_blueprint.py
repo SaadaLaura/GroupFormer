@@ -7,14 +7,17 @@ from werkzeug.utils import secure_filename
 
 from backend.api.config import ALLOWED_EXTENSIONS, UPLOAD_FOLDER
 from backend.api.database import db
+from backend.api.dtos.user_dto import UserDTO
 from backend.api.models import Person
 from backend.api.models.person import Role
 from backend.api.utils.jwt_utils import token_required, generate_token
 
 users_bp = Blueprint('user', __name__)
 
+
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
 
 # Login route
 @users_bp.route('/login', methods=['POST'])
@@ -32,6 +35,7 @@ def login():
         'token': token,
         'first_connection': user.first_connection
     }), 200
+
 
 # Change password
 @users_bp.route('/change-password', methods=['PUT'])
@@ -55,6 +59,7 @@ def change_password():
     db.session.commit()
 
     return jsonify({'message': 'Password updated successfully'}), 200
+
 
 # Register route
 @users_bp.route('/register', methods=['POST'])
@@ -89,6 +94,7 @@ def register_user():
     db.session.commit()
 
     return jsonify({'message': 'User registered successfully'}), 201
+
 
 # Upload students from a file
 @users_bp.route('/upload-students', methods=['POST'])
@@ -137,6 +143,7 @@ def upload_students():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
+
 # GET logged-in user information
 @users_bp.route('/me', methods=['GET'])
 @token_required()
@@ -146,11 +153,4 @@ def get_logged_in_user():
     if not user:
         return jsonify({'error': 'User not found'}), 404
 
-    return jsonify({
-        'id': user.id_user,
-        'firstname': user.firstname,
-        'lastname': user.lastname,
-        'email': user.email,
-        'role': user.role.value,
-        'project': user.id_project
-    }), 200
+    return jsonify(UserDTO.to_dict(user)), 200
