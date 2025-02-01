@@ -3,22 +3,54 @@
   <a (click)="navigateTo('home')" class="project-name">GroupFormer</a>
 </div>
 
-<div class="login-container">
+<div class="login-container" *ngIf="!showChangePasswordForm">
   <h1>Connexion à votre compte</h1>
   <p>Saisissez votre e-mail universitaire</p>
-  <div *ngIf="emailNotFoundError" class="info-message">Cet e-mail est introuvable, veuillez contacter l'administration de votre école</div>
-  <input type="email" placeholder="Exemple@ecole.com" class="input-box" [(ngModel)]="email" [ngClass]="{'error': emailError || loginError}" (keydown.enter)="nextStep()">
+  <div *ngIf="loginError" class="info-message">Email ou mot de passe invalide</div>
+  <input type="email" placeholder="Exemple@ecole.com" class="input-box" [(ngModel)]="email" [ngClass]="{'error': emailError || loginError}" (keydown.enter)="login()">
   <div *ngIf="emailError" class="error-message">Veuillez saisir votre email universitaire</div>
 
-  <div *ngIf="showPasswordInput" class="password-container">
+  <div class="password-container">
     <div class="password-input-container">
       <input type="password" placeholder="Mot de passe" class="input-box" id="password" [(ngModel)]="password" [ngClass]="{'error': passwordError || loginError}" (keydown.enter)="login()">
-      <button type="button" class="show-password-btn" (click)="togglePasswordVisibility()">Afficher</button>
+      <button type="button" class="show-password-btn" (click)="togglePasswordVisibility('password')">Afficher</button>
     </div>
     <div *ngIf="passwordError" class="error-message">Veuillez saisir votre mot de passe</div>
-    <div *ngIf="loginError" class="error-message">Mot de passe erroné, veuillez réessayer</div>
   </div>
 
-  <button *ngIf="!showPasswordInput" (click)="nextStep()" class="login-btn">Suivant</button>
-  <button *ngIf="showPasswordInput" (click)="login()" class="login-btn">Connexion</button>
+  <button (click)="login()" class="login-btn">Connexion</button>
+</div>
+
+<div class="change-password-popup" *ngIf="showChangePasswordForm">
+  <div class="change-password-box">
+    <h1>Veuillez changer votre mot de passe</h1>
+    <div class="password-container">
+      <div class="password-input-container">
+        <input type="password" placeholder="Ancien mot de passe" [(ngModel)]="oldPassword" class="input-box" id="oldPassword">
+        <button type="button" class="show-password-btn" (click)="togglePasswordVisibility('oldPassword')">Afficher</button>
+      </div>
+    </div>
+    <div class="password-container">
+      <div class="password-input-container">
+        <input type="password" placeholder="Nouveau mot de passe" [(ngModel)]="newPassword" class="input-box" id="newPassword">
+        <button type="button" class="show-password-btn" (click)="togglePasswordVisibility('newPassword')">Afficher</button>
+      </div>
+    </div>
+    <div class="password-container">
+      <div class="password-input-container">
+        <input type="password" placeholder="Confirmer le nouveau mot de passe" [(ngModel)]="confirmPassword" class="input-box" id="confirmPassword">
+        <button type="button" class="show-password-btn" (click)="togglePasswordVisibility('confirmPassword')">Afficher</button>
+      </div>
+    </div>
+    <div *ngIf="passwordError" class="popup-error-message">Les mots de passe ne correspondent pas</div>
+    <div *ngIf="changePasswordError" class="popup-error-message">Erreur lors du changement de mot de passe</div>
+    <div class="popup-button-container">
+      <button (click)="cancelChangePassword()" class="popup-cancel-btn">Annuler</button>
+      <button (click)="changePassword()" class="popup-change-password-btn" [disabled]="!areAllFieldsFilled()">Valider</button>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="showSuccessMessage" class="success-message">
+  Mot de passe changé
 </div>

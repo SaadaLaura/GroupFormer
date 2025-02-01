@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 import { NavbarComponent } from '../navbar/navbar.component';
 import { StateService } from '../services/state.service';
-import { StudentService } from '../services/student.service';
+import { StudentService } from '../services/users.service';
 
 @Component({
   selector: 'app-profil',
@@ -14,6 +14,7 @@ import { StudentService } from '../services/student.service';
   styleUrls: ['./profil.component.scss']
 })
 export class ProfilComponent implements OnInit {
+  user: any;
   interests: string[] = [];
   skills: string[] = [];
   major: string = '';
@@ -35,30 +36,34 @@ export class ProfilComponent implements OnInit {
   availableInterests: string[] = ['IT', 'Data', 'IA'];
 
   constructor(
-    private route: ActivatedRoute,
+    private router: Router,
     private stateService: StateService,
     private studentService: StudentService
   ) {}
 
   ngOnInit() {
+    const token = localStorage.getItem('token');
+    if (token) {
+      this.studentService.getUserInfo(token).subscribe(
+        (response: any) => {
+          this.user = response;
+          this.skills = response.skills || [];
+          this.interests = response.interests || [];
+          this.stateService.setSkills(this.skills);
+          this.stateService.setInterests(this.interests);
+        },
+        (error) => {
+          console.error('An error occurred:', error);
+          this.router.navigate(['/login']);
+        }
+      );
+    } else {
+      this.router.navigate(['/login']);
+    }
+
     this.stateService.hasGroup$.subscribe(hasGroup => {
       if (hasGroup !== null) {
         this.hasGroup = hasGroup;
-      }
-    });
-
-    this.route.params.subscribe(params => {
-      const userId = +params['id'];
-      if (userId) {
-        this.studentService.getStudentSkills(userId).subscribe(skills => {
-          this.skills = skills;
-          this.stateService.setSkills(skills);
-        });
-
-        this.studentService.getStudentInterests(userId).subscribe(interests => {
-          this.interests = interests;
-          this.stateService.setInterests(interests);
-        });
       }
     });
 

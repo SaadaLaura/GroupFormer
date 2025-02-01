@@ -8,5 +8,5 @@ export class Student {
     public major: string,
     public id_project: number | null,
     public password: string 
-  ){}
+  ) {}
 }

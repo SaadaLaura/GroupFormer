@@ -37,7 +37,7 @@ def login():
     password = data.get('password')
 
     user = Person.query.filter_by(email=email).first()
-    if not user or not user.check_password(password):
+    if not user or user.password != password:
         return jsonify({'error': 'Invalid email or password'}), 401
 
     token = generate_token(user)

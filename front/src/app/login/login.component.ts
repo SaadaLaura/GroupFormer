@@ -2,8 +2,9 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { StudentService } from '../services/student.service';
+import { StudentService } from '../services/users.service';
 import { StateService } from '../services/state.service';
+import { LoginResponse, ChangePasswordResponse } from '../class/Login';
 
 @Component({
   selector: 'app-login',
@@ -15,16 +16,21 @@ import { StateService } from '../services/state.service';
 export class LoginComponent {
   email: string = '';
   password: string = '';
+  oldPassword: string = '';
+  newPassword: string = '';
+  confirmPassword: string = '';
   emailError: boolean = false;
   passwordError: boolean = false;
   loginError: boolean = false;
   emailNotFoundError: boolean = false;
-  showPasswordInput: boolean = false;
+  showChangePasswordForm: boolean = false;
+  changePasswordError: boolean = false;
+  showSuccessMessage: boolean = false;
 
   constructor(private router: Router, private studentService: StudentService, private stateService: StateService) {}
 
-  togglePasswordVisibility() {
-    const passwordInput = document.getElementById('password') as HTMLInputElement;
+  togglePasswordVisibility(fieldId: string) {
+    const passwordInput = document.getElementById(fieldId) as HTMLInputElement;
     if (passwordInput.type === 'password') {
       passwordInput.type = 'text';
     } else {
@@ -32,46 +38,61 @@ export class LoginComponent {
     }
   }
 
-  nextStep() {
+  login() {
     this.emailError = !this.email;
+    this.passwordError = !this.password;
+    this.loginError = false;
     this.emailNotFoundError = false;
 
-    if (this.email) {
-      this.studentService.getStudents().subscribe((students: any[]) => {
-        const student = students.find(s => s.email === this.email);
-        if (student) {
-          this.showPasswordInput = true;
-        } else {
-          this.emailNotFoundError = true;
+    if (this.email && this.password) {
+      this.studentService.login(this.email, this.password).subscribe({
+        next: (response: LoginResponse) => {
+          localStorage.setItem('token', response.token);
+          localStorage.setItem('isLoggedIn', 'true');
+          if (response.first_connection == "1") { 
+            this.showChangePasswordForm = true;
+          } else {
+            this.router.navigate(['/profil']);
+          }
+        },
+        error: () => {
+          this.loginError = true;
+        }
+      });
+    } else {
+      this.loginError = true;
+    }
+  }
+
+  changePassword() {
+    this.passwordError = this.newPassword !== this.confirmPassword;
+    this.changePasswordError = false;
+
+    if (!this.passwordError) {
+      this.studentService.changePassword(this.oldPassword, this.newPassword, this.confirmPassword).subscribe({
+        next: (response: ChangePasswordResponse) => {
+          this.showSuccessMessage = true;
+          setTimeout(() => {
+            this.showSuccessMessage = false;
+            this.router.navigate(['/profil']);
+          }, 3000);
+        },
+        error: () => {
+          this.changePasswordError = true;
         }
       });
     }
   }
 
-  login() {
-    this.passwordError = !this.password;
-    this.loginError = false;
+  cancelChangePassword() {
+    this.showChangePasswordForm = false;
+    this.oldPassword = '';
+    this.newPassword = '';
+    this.confirmPassword = '';
+  }
 
-    if (this.email && this.password) {
-      this.studentService.getStudents().subscribe((students: any[]) => {
-        const student = students.find(s => s.email === this.email);
-        if (student && student.password === this.password) {
-          // Logique de connexion réussie
-          localStorage.setItem('isLoggedIn', 'true');
-          if (student.firstname && student.lastname) {
-            this.stateService.setInitials(student.firstname, student.lastname);
-          } else {
-            console.error('First name or last name is undefined');
-          }
-          this.stateService.setUserId(student.id_user);
-          this.router.navigate(['/profil', student.id_user]);
-          this.loginError = true;
-          this.password = ''; // Réinitialiser le champ de mot de passe
-        } else {
-          this.loginError = true;
-        }
-      });
-    }
+  areAllFieldsFilled(): boolean {
+    return this.oldPassword !== '' && this.newPassword !== '' && this.confirmPassword !== '';
   }
 
   navigateTo(route: string) {

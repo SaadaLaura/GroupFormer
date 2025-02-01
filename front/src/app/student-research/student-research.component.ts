@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { NavbarComponent } from '../navbar/navbar.component';
-import { StudentService } from '../services/student.service';
+import { StudentService } from '../services/users.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Student } from '../class/Student';
+import { Student } from '../class/Users';
 
 @Component({
   selector: 'app-student-research',
