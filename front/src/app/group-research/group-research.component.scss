@@ -2,7 +2,6 @@
   text-align: center;
   font-size: 2rem;
   margin-bottom: 20px;
-  color: #333;
 }
 
 .filters {
@@ -81,7 +80,6 @@
 
 .styled-table th {
   background-color: #f2f2f2;
-  color: #333;
 }
 
 .styled-table tr:nth-child(even) {
@@ -90,7 +88,6 @@
 
 // Loading message 
 .loading-message {
-  color: #333; 
   font-style: italic;
   text-align: left;
   display: flex;
@@ -99,7 +96,7 @@
 
 .rotating-icon {
   animation: rotate 2s linear infinite;
-  margin-right: 10px;
+  margin-bottom: 3px;
 }
 
 @keyframes rotate {

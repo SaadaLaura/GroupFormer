@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { BASE_URL } from './api.service';
 import { Announcement } from '../class/Announcement';
@@ -12,15 +12,8 @@ export class AnnouncementService {
 
   constructor(private http: HttpClient) {}
 
-  getAnnouncements(): Observable<Announcement[]> {
-    return this.http.get<Announcement[]>(`${this.baseUrl}/announcements`);
-  }
-
-  getAnnouncementSearch(announcementId: number): Observable<{ id: number, name: string }[]> {
-    return this.http.get<{ id: number, name: string }[]>(`${this.baseUrl}/announcements/${announcementId}/research`);
-  }
-
-  getAnnouncementAbout(announcementId: number): Observable<{ id: number, name: string }[]> {
-    return this.http.get<{ id: number, name: string }[]>(`${this.baseUrl}/announcements/${announcementId}/about`);
+  getAnnouncements(token: string): Observable<Announcement[]> {
+    const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
+    return this.http.get<Announcement[]>(`${this.baseUrl}/announcements`, { headers });
   }
 }

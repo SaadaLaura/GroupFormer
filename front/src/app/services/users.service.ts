@@ -40,10 +40,17 @@ export class UsersService {
     );
   }
 
+  getStudentsWithoutProject(token: string): Observable<Student[]> {
+    return this.http.get<Student[]>(`${this.baseUrl}/students/alone`, 
+      { headers: { Authorization: `Bearer ${token}` } }
+    ).pipe(
+      catchError(this.handleError)
+    );
+  }
+
   uploadStudents(file: File): Observable<any> {
     const formData = new FormData();
     formData.append('file', file);
-
     return this.http.post<any>(`${this.baseUrl}/users/upload-students`, formData)
       .pipe(
         catchError(this.handleError)

@@ -1,10 +1,15 @@
+import { Announcement } from './Announcement';
+import { Member } from './Users';
+
 export class Project {
   constructor(
     public id: number,
     public name: string,
     public description: string,
     public size: number,
-    public deadline: string
+    public deadline: string,
+    public announcements: Announcement[],
+    public members: Member[]
   ) {}
 }
 

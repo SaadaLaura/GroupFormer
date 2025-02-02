@@ -9,11 +9,16 @@
   <p>Chargement des annonces</p>
 </div>
 
-
 <div *ngIf="!isLoading" class="filters">
-  <input class="keyword-input" type="text" placeholder="Mots-clés" [(ngModel)]="keywords" (input)="applyFilters()" />
-  <input class="search-bar" type="text" placeholder="Recherche" [(ngModel)]="searchTerm" (input)="applyFilters()" />
+  <input class="keyword-input" type="text" placeholder="Compétences" [(ngModel)]="keywords" (input)="applyFilters()" />
   <input class="major-input" type="text" placeholder="Majeure" [(ngModel)]="major" (input)="applyFilters()" />
+  <div class="filter-item">
+    <span class="material-symbols-outlined" [ngClass]="{'filter_alt_off': selectedAdaptedFilter === 'sans', 'filter_alt': selectedAdaptedFilter === 'avec'}"></span>
+    <select class="filter-select" [(ngModel)]="selectedAdaptedFilter" (change)="applyFilters()">
+      <option value="sans">Sans filtre personnalisé</option>
+      <option value="avec">Avec filtre personnalisé</option>
+    </select>
+  </div>
 </div>
 
 <div *ngIf="!isLoading && filteredStudents.length === 0" class="no-results">
@@ -37,7 +42,8 @@
     <tr *ngFor="let student of filteredStudents">
       <td>{{ student.lastname }}</td>
       <td>{{ student.firstname }}</td>
-      <td>{{ student.skills }}</td>
+      <td>{{ getSkills(student) }}</td>
+      <td>{{ getSubjects(student) }}</td>
       <td>{{ student.major }}</td>
     </tr>
   </tbody>

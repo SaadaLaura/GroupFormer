@@ -38,69 +38,54 @@ export class GroupResearchComponent implements OnInit {
 
   ngOnInit(): void {
     this.isLoading = true;
-    this.stateService.skills$.subscribe(skills => {
-      if (skills !== null) {
-        this.userSkills = skills;
-        this.loadProjects();
-      }
-    });
+    const token = localStorage.getItem('token');
+    if (token) {
+      this.stateService.skills$.subscribe(skills => {
+        if (skills !== null) {
+          this.userSkills = skills;
+          this.loadProjects(token);
+        }
+      });
 
-    this.stateService.interests$.subscribe(interests => {
-      if (interests !== null) {
-        this.userInterests = interests;
-        this.loadProjects();
-      }
-    });
+      this.stateService.interests$.subscribe(interests => {
+        if (interests !== null) {
+          this.userInterests = interests;
+          this.loadProjects(token);
+        }
+      });
+    }
   }
 
-  loadProjects(): void {
-    this.projectService.getProjects().subscribe((projects: Project[]) => {
+  loadProjects(token: string): void {
+    this.projectService.getProjects(token).subscribe((projects: Project[]) => {
       this.projects = projects;
       this.loadProjectDetails();
     });
   }
 
   loadProjectDetails(): void {
-    let detailsLoaded = 0;
-    const totalDetailsToLoad = this.projects.length * 2; // Each project has two details to load (skills and specialties)
-  
-    this.projects.forEach(project => {
-      this.projectService.getProjectAnnouncements(project.id).subscribe((announcements: Announcement[]) => {
-        announcements.forEach(announcement => {
-          const missingStudents = this.getMissingStudents(project, announcements);
-          const existingDetail = this.projectDetails.find(detail => detail.announcementId === announcement.id);
-  
-          if (!existingDetail) {
-            const projectDetail = new ProjectDetail(
-              project.name,
-              project.description,
-              missingStudents,
-              '',
-              announcement.description,
-              this.formatDate(announcement.publication),
-              announcement.id,
-              []
-            );
-  
-            this.projectDetails.push(projectDetail);
-  
-            this.announcementService.getAnnouncementSearch(announcement.id).subscribe((data: { id: number, name: string }[]) => {
-              projectDetail.skills = data.map(skill => skill.name).join(', ');
-              detailsLoaded++;
-              this.checkDetailsLoaded(detailsLoaded, totalDetailsToLoad);
-            });
-  
-            this.announcementService.getAnnouncementAbout(announcement.id).subscribe((data: { id: number, name: string }[]) => {
-              projectDetail.specialties = data.map(subject => subject.name);
-              detailsLoaded++;
-              this.checkDetailsLoaded(detailsLoaded, totalDetailsToLoad);
-            });
-          }
-        });
+    this.projectDetails = this.projects.map(project => {
+      const announcements = project.announcements;
+      return announcements.map(announcement => {
+        const missingStudents = project.size - project.members.length;
+        return new ProjectDetail(
+          project.name,
+          project.description,
+          missingStudents,
+          announcement.skills.map(skill => skill.name).join(', '),
+          announcement.description,
+          this.formatDate(announcement.publication),
+          announcement.id,
+          announcement.subjects.map(subject => subject.name)
+        );
       });
-    });
-  
+    }).flat();
+
     this.loadMissingStudentsRange();
+    this.applyFilters();
+    this.isLoading = false;
+    this.isDataLoaded = true;
+    this.areFiltersApplied = true;
   }
 
   formatDate(dateString: string): string {
@@ -109,15 +94,6 @@ export class GroupResearchComponent implements OnInit {
     const month = (date.getMonth() + 1).toString().padStart(2, '0');
     const year = date.getFullYear();
     return `${day}/${month}/${year}`;
-  }
-  
-  checkDetailsLoaded(detailsLoaded: number, totalDetailsToLoad: number): void {
-    if (detailsLoaded === totalDetailsToLoad) {
-      this.applyFilters(); // Appliquer les filtres par défaut
-      this.isLoading = false;
-      this.isDataLoaded = true;
-      this.areFiltersApplied = true;
-    }
   }
 
   loadMissingStudentsRange(): void {
@@ -140,11 +116,5 @@ export class GroupResearchComponent implements OnInit {
       const matchesUserInterests = this.selectedAdaptedFilter === 'avec' ? this.userInterests.some(interest => detailInterests.includes(interest.toLowerCase())) : true;
       return matchesSearchTerm && matchesMissingStudents && matchesKeywords && matchesUserSkills && matchesUserInterests;
     });
-  }
-
-  getMissingStudents(project: Project, announcements: Announcement[]): number {
-    const projectSize = project.size;
-    const studentCount = announcements.length;
-    return projectSize - studentCount;
   }
 }
