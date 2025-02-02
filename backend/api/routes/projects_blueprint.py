@@ -92,6 +92,17 @@ def get_all_projects():
     ]), 200
 
 
+# GET projects without students
+@projects_bp.route('/empty', methods=['GET'])
+@swag_from('swagger/projects/projects.yaml')
+def get_project_without_students():
+    empty_projects = Project.query.filter_by(students=None).all()
+
+    return jsonify([
+        ProjectDTO.to_dict(project) for project in empty_projects
+    ]), 200
+
+
 # GET a project by ID
 @projects_bp.route('/<int:id_project>', methods=['GET'])
 @swag_from('swagger/projects/projects_by_id.yaml')
