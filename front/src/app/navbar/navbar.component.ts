@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { StateService } from '../services/state.service';
+import { UsersService } from '../services/users.service';
 
 @Component({
   selector: 'app-navbar',
@@ -15,12 +16,20 @@ export class NavbarComponent implements OnInit {
   initials: string = '';
   dropdownOpen: boolean = false;
   hasGroup: string | null = null;
-  userId: number | null = null;
 
-  constructor(private router: Router, private stateService: StateService) {}
+  constructor(private router: Router, private stateService: StateService, private usersService: UsersService) {}
 
   ngOnInit(): void {
     this.isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+    const token = localStorage.getItem('token');
+
+    if (this.isLoggedIn && token) {
+      this.usersService.getUserInfo(token).subscribe(user => {
+        this.stateService.setInitials(user.firstname, user.lastname);
+        this.stateService.setHasGroup(user.project ? 'oui' : 'non');
+      });
+    }
+
     this.stateService.initials$.subscribe(initials => {
       this.initials = initials || '';
     });
@@ -28,18 +37,10 @@ export class NavbarComponent implements OnInit {
     this.stateService.hasGroup$.subscribe(hasGroup => {
       this.hasGroup = hasGroup;
     });
-
-    this.stateService.userId$.subscribe(userId => {
-      this.userId = userId;
-    });
   }
 
   navigateTo(route: string): void {
-    if (route === 'profil' && this.userId !== null) {
-      this.router.navigate([`/${route}`, this.userId]);
-    } else {
-      this.router.navigate([`/${route}`]);
-    }
+    this.router.navigate([`/${route}`]);
   }
 
   toggleDropdown(): void {

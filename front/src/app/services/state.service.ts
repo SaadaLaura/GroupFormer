@@ -64,7 +64,7 @@ export class StateService {
     const lastName = localStorage.getItem('lastname');
     return firstName && lastName ? `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase() : null;
   }
-
+  
   private getUserIdFromLocalStorage(): number | null {
     const userId = localStorage.getItem('userId');
     return userId ? parseInt(userId, 10) : null;
