@@ -40,6 +40,7 @@ export class ProfilComponent implements OnInit {
   showAlert: boolean = false; // Initialiser à false
   importMessage: string = '';
   importSuccess: boolean = false;
+  userRole: string = ''; 
 
   constructor(
     private router: Router,
@@ -53,32 +54,21 @@ export class ProfilComponent implements OnInit {
       this.usersService.getUserInfo(token).subscribe({
         next: (response: Student) => {
           this.user = response;
-          this.skills = response.skills ? response.skills.split(',').map(name => new Skill(0, name)) : [];
+          this.skills = response.skills.map(skill => new Skill(skill.id, skill.name));
+          this.interests = response.subject.map(subject => new Interest(subject.id, subject.name));
           this.stateService.setSkills(this.skills.map(skill => skill.name));
+          this.stateService.setInterests(this.interests.map(interest => interest.name));
+          // Extraire le rôle de l'utilisateur à partir des membres du projet
+          if (response.project && response.project.members) {
+            const member = response.project.members.find(m => m.id === response.id);
+            if (member) {
+              this.userRole = member.role;
+            }
+          }
         },
         error: (error) => {
           console.error('An error occurred:', error);
           this.router.navigate(['/login']);
-        }
-      });
-  
-      this.usersService.getStudentInterests(token).subscribe({
-        next: (interests: Interest[]) => {
-          this.interests = interests;
-          this.stateService.setInterests(this.interests.map(interest => interest.name));
-        },
-        error: (error) => {
-          console.error('An error occurred:', error);
-        }
-      });
-  
-      this.usersService.getStudentSkills(token).subscribe({
-        next: (skills: Skill[]) => {
-          this.skills = skills;
-          this.stateService.setSkills(this.skills.map(skill => skill.name));
-        },
-        error: (error) => {
-          console.error('An error occurred:', error);
         }
       });
     } else {
@@ -126,6 +116,7 @@ export class ProfilComponent implements OnInit {
       this.selectedFile = new File([], storedFileName);
     }
   }
+
   toggleDropdown(field: string) {
     this.showDropdown[field] = !this.showDropdown[field];
   }

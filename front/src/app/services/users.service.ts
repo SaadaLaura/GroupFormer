@@ -50,24 +50,6 @@ export class UsersService {
       );
   }
 
-  getStudentInterests(token: string): Observable<Interest[]> {
-    const userId = this.getUserIdFromToken(token);
-    return this.http.get<Interest[]>(`${this.baseUrl}/students/${userId}/subjects`, 
-      { headers: { Authorization: `Bearer ${token}` } }
-    ).pipe(
-      catchError(this.handleError)
-    );
-  }
-
-  getStudentSkills(token: string): Observable<Skill[]> {
-    const userId = this.getUserIdFromToken(token);
-    return this.http.get<Skill[]>(`${this.baseUrl}/students/${userId}/skills`, 
-      { headers: { Authorization: `Bearer ${token}` } }
-    ).pipe(
-      catchError(this.handleError)
-    );
-  }
-
   private getUserIdFromToken(token: string): number {
     const decoded: any = jwtDecode(token);
     return decoded.id;

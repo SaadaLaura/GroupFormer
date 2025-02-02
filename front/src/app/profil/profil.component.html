@@ -2,7 +2,7 @@
 <br>
 <h2 *ngIf="user" class="title-page">Bienvenue {{ user.firstname }} {{ user.lastname }}</h2>
 
-<div *ngIf="user && user.role === 'student'" class="profil-info">
+<div *ngIf="user && userRole === 'student'" class="profil-info">
   <!-- Contenu pour les étudiants -->
   <div class="info-group">
     <label for="hasGroup">Avez-vous un groupe ? <span class="required">*</span> :</label>
@@ -84,7 +84,7 @@
   <p> <em>A faire : création d'annonces en cas de groupe</em></p>
 </div>
 
-<div *ngIf="user && user.role === 'admin'" class="admin-info">
+<div *ngIf="user && userRole === 'admin'" class="admin-info">
   <p>Pour permettre à vos étudiants d'accéder à l'outil, veuillez déposer votre fichier Excel en respectant le format de l'exemple ci-dessous :</p>
   <img src="assets/img/Exemple_excel.png" alt="Exemple de fichier Excel" class="example-image">
   <div class="upload-container">

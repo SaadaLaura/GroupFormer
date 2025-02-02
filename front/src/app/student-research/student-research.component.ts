@@ -30,8 +30,11 @@ export class StudentResearchComponent implements OnInit {
     this.filteredStudents = this.students.filter(student => {
       const matchesSearchTerm = student.lastname.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
                                 student.firstname.toLowerCase().includes(this.searchTerm.toLowerCase());
-      const matchesKeywords = this.keywords ? student.skills.toLowerCase().includes(this.keywords.toLowerCase()) : true;
+      
+      const matchesKeywords = this.keywords ? student.skills.some(skill => skill.name.toLowerCase().includes(this.keywords.toLowerCase())) : true;
+      
       const matchesMajor = this.major ? student.major.toLowerCase().includes(this.major.toLowerCase()) : true;
+      
       return matchesSearchTerm && matchesKeywords && matchesMajor;
     });
   }
