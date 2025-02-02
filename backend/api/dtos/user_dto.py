@@ -20,6 +20,7 @@ class UserDTO:
             'firstname': student.firstname,
             'lastname': student.lastname,
             'email': student.email,
+            'role': student.role.value,
             'project': {
                 'id': student.project.id_project,
                 'name': student.project.name,

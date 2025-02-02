@@ -137,6 +137,16 @@ def get_all_students():
     ]), 200
 
 
+# GET students without project
+@students_bp.route('/alone', methods=['GET'])
+@token_required()
+def get_student_with_no_project():
+    alone_students = Person.query.filter_by(role=Role.STUDENT, id_project=None).all()
+    return jsonify([
+        UserDTO.student_to_dict(student) for student in alone_students
+    ]), 200
+
+
 # GET a student by ID
 @students_bp.route('/<int:student_id>', methods=['GET'])
 @swag_from('swagger/students/students_by_id.yaml')
