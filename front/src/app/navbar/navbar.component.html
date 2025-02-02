@@ -30,7 +30,7 @@
       <div class="dropdown-menu" *ngIf="dropdownOpen">
         <a (click)="navigateTo('profil')">
           <span class="material-symbols-outlined">person</span>
-          <span>Profil</span>
+          <span>{{ profilePageName }}</span>
         </a>
         <a (click)="logout()">
           <span class="material-symbols-outlined">logout</span>

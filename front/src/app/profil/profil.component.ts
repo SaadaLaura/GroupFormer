@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { NavbarComponent } from '../navbar/navbar.component';
 import { StateService } from '../services/state.service';
 import { UsersService } from '../services/users.service';
+import { AbilitiesService } from '../services/abilities.service';
 import { Interest, Student, Skill } from '../class/Users';
 
 @Component({
@@ -22,7 +23,7 @@ export class ProfilComponent implements OnInit {
   newInterest: string = '';
   newSkill: string = '';
   newMajor: string = '';
-  hasGroup: string = ''; // Valeur par défaut
+  hasGroup: string = ''; 
   hasProjectTopic: string = '';
   editMode: { [key: string]: boolean } = {
     interests: false,
@@ -33,11 +34,11 @@ export class ProfilComponent implements OnInit {
     interests: false,
     skills: false
   };
-  availableSkills: string[] = ['frontend', 'backend', 'VR'];
-  availableInterests: string[] = ['IT', 'Data', 'IA'];
+  availableSkills: string[] = [];
+  availableInterests: string[] = [];
   selectedFile: File | null = null;
   isLoading: boolean = false;
-  showAlert: boolean = false; // Initialiser à false
+  showAlert: boolean = false; 
   importMessage: string = '';
   importSuccess: boolean = false;
   userRole: string = ''; 
@@ -46,6 +47,7 @@ export class ProfilComponent implements OnInit {
     private router: Router,
     private stateService: StateService,
     private usersService: UsersService,
+    private abilitiesService: AbilitiesService
   ) {}
 
   ngOnInit() {
@@ -58,13 +60,26 @@ export class ProfilComponent implements OnInit {
           this.interests = response.subject.map(subject => new Interest(subject.id, subject.name));
           this.stateService.setSkills(this.skills.map(skill => skill.name));
           this.stateService.setInterests(this.interests.map(interest => interest.name));
-          // Extraire le rôle de l'utilisateur à partir des membres du projet
-          if (response.project && response.project.members) {
-            const member = response.project.members.find(m => m.id === response.id);
-            if (member) {
-              this.userRole = member.role;
+          this.userRole = response.role;
+
+          // Récupérer les compétences et centres d'intérêt disponibles
+          this.abilitiesService.getAllSkills(token).subscribe({
+            next: (skills: Skill[]) => {
+              this.availableSkills = skills.map(skill => skill.name);
+            },
+            error: (error) => {
+              console.error('An error occurred while fetching skills:', error);
             }
-          }
+          });
+
+          this.abilitiesService.getAllSubjects(token).subscribe({
+            next: (subjects: Interest[]) => {
+              this.availableInterests = subjects.map(subject => subject.name);
+            },
+            error: (error) => {
+              console.error('An error occurred while fetching subjects:', error);
+            }
+          });
         },
         error: (error) => {
           console.error('An error occurred:', error);

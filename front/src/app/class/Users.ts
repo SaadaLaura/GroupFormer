@@ -7,6 +7,7 @@ export class Student {
     public project: Project | null,
     public skills: Skill[],
     public subject: Interest[],
+    public role : string,
     public major: string
   ) {}
 }

@@ -16,6 +16,8 @@ export class NavbarComponent implements OnInit {
   initials: string = '';
   dropdownOpen: boolean = false;
   hasGroup: string | null = null;
+  userRole: string = '';
+  profilePageName: string = 'Profil';
 
   constructor(private router: Router, private stateService: StateService, private usersService: UsersService) {}
 
@@ -27,6 +29,8 @@ export class NavbarComponent implements OnInit {
       this.usersService.getUserInfo(token).subscribe(user => {
         this.stateService.setInitials(user.firstname, user.lastname);
         this.stateService.setHasGroup(user.project ? 'oui' : 'non');
+        this.userRole = user.role;
+        this.profilePageName = this.userRole === 'admin' ? 'Gestion étudiants' : 'Profil';
       });
     }
 
