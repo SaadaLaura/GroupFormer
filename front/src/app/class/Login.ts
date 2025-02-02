@@ -7,6 +7,7 @@ export class LoginResponse {
   
   export class ChangePasswordResponse {
     constructor(
-      public message: string
+      public message: string,
+      public token: string
     ) {}
   }

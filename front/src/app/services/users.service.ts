@@ -49,12 +49,7 @@ export class UsersService {
         catchError(this.handleError)
       );
   }
-
-  private getUserIdFromToken(token: string): number {
-    const decoded: any = jwtDecode(token);
-    return decoded.id;
-  }
-
+  
   private handleError(error: HttpErrorResponse): Observable<never> {
     // Handle the error without logging it to the console
     return throwError(() => error);

@@ -147,6 +147,10 @@ p {
   font-weight: bold;
 }
 
+.change-password-popup .password-container{
+  width: 300px;
+}
+
 .popup-input-box {
   width: 100%;
   padding: 10px;
@@ -205,7 +209,6 @@ p {
 
 .show-password-btn {
   position: absolute;
-  right: 10px;
   top: 50%;
   transform: translateY(-50%);
   background: none;

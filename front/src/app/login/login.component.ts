@@ -71,6 +71,7 @@ export class LoginComponent {
     if (!this.passwordError) {
       this.usersService.changePassword(this.oldPassword, this.newPassword, this.confirmPassword).subscribe({
         next: (response: ChangePasswordResponse) => {
+          localStorage.setItem('token', response.token); // Stocker le nouveau token
           this.showSuccessMessage = true;
           setTimeout(() => {
             this.showSuccessMessage = false;
