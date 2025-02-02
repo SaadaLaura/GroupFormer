@@ -84,6 +84,7 @@ def delete_project(id_project):
 
 # GET all projects
 @projects_bp.route('', methods=['GET'])
+@token_required()
 def get_all_projects():
     projects = Project.query.all()
     return jsonify([
@@ -92,18 +93,20 @@ def get_all_projects():
 
 
 # GET a project by ID
-@projects_bp.route('/<int:project_id>', methods=['GET'])
+@projects_bp.route('/<int:id_project>', methods=['GET'])
 @swag_from('swagger/projects/projects_by_id.yaml')
-def get_project(project_id):
-    project = Project.query.get(project_id)
+@token_required()
+def get_project(id_project):
+    project = Project.query.get(id_project)
     if not project:
         return jsonify({'error': 'Project not found'}), 404
     return jsonify(ProjectDTO.to_dict(project)), 200
 
 
 # GET project announcements
-@projects_bp.route('/<int:project_id>/announcements', methods=['GET'])
+@projects_bp.route('/<int:id_project>/announcements', methods=['GET'])
 @swag_from('swagger/projects/projects_announcements.yaml')
-def get_project_announcements(project_id):
-    announcements = Announcement.query.filter_by(id_project=project_id).all()
+@token_required()
+def get_project_announcements(id_project):
+    announcements = Announcement.query.filter_by(id_project=id_project).all()
     return jsonify([AnnouncementDTO.to_dict(announcement) for announcement in announcements]), 200

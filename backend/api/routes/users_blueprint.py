@@ -58,7 +58,11 @@ def change_password():
     user.first_connection = False
     db.session.commit()
 
-    return jsonify({'message': 'Password updated successfully'}), 200
+    token = generate_token(user)
+    return jsonify({
+        'message': 'Password updated successfully',
+        'token': token
+    }), 200
 
 
 # Register route

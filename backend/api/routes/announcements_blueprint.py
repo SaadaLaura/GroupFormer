@@ -8,7 +8,6 @@ from backend.api.dtos.announcement_dto import AnnouncementDTO
 from backend.api.dtos.skill_dto import SkillDTO
 from backend.api.dtos.subject_dto import SubjectDTO
 from backend.api.models import Announcement, Search, Subject, Skill, IsAbout, Project
-from backend.api.models.person import Role
 from backend.api.utils.jwt_utils import token_required
 
 announcements_bp = Blueprint('announcements', __name__)
@@ -66,7 +65,7 @@ def create_announcement():
 
 # Update an announcement by ID
 @announcements_bp.route('/<int:id_announcement>', methods=['PUT'])
-@token_required(Role.ADMIN.value)
+@token_required()
 def update_announcement(id_announcement):
     announcement = Announcement.query.get(id_announcement)
 
@@ -104,7 +103,7 @@ def update_announcement(id_announcement):
 
 # DELETE an announcement by ID
 @announcements_bp.route('/<int:id_announcement>', methods=['DELETE'])
-@token_required(Role.ADMIN.value)
+@token_required()
 def delete_announcement(id_announcement):
     announcement = Announcement.query.get(id_announcement)
 
@@ -123,6 +122,7 @@ def delete_announcement(id_announcement):
 # GET all announcements
 @announcements_bp.route('', methods=['GET'])
 @swag_from('swagger/announcements/announcements.yaml')
+@token_required()
 def get_all_announcements():
     announcements = Announcement.query.all()
     return jsonify([
@@ -131,30 +131,33 @@ def get_all_announcements():
 
 
 # GET an announcement by ID
-@announcements_bp.route('/<int:announcement_id>', methods=['GET'])
+@announcements_bp.route('/<int:id_announcement>', methods=['GET'])
 @swag_from('swagger/announcements/announcements_by_id.yaml')
-def get_announcement(announcement_id):
-    announcement = Announcement.query.get(announcement_id)
+@token_required()
+def get_announcement(id_announcement):
+    announcement = Announcement.query.get(id_announcement)
     if not announcement:
         return jsonify({'error': 'Announcement not found'}), 404
     return jsonify(AnnouncementDTO.to_dict(announcement)), 200
 
 
 # GET skills searched by an announcement
-@announcements_bp.route('/<int:announcement_id>/research', methods=['GET'])
+@announcements_bp.route('/<int:id_announcement>/research', methods=['GET'])
 @swag_from('swagger/announcements/announcements_research.yaml')
-def get_announcement_search(announcement_id):
-    skills = db.session.query(Skill).join(Search).filter(Search.id_announcement == announcement_id).all()
+@token_required()
+def get_announcement_search(id_announcement):
+    skills = db.session.query(Skill).join(Search).filter(Search.id_announcement == id_announcement).all()
     return jsonify([
         SkillDTO.to_dict(skill) for skill in skills
     ]), 200
 
 
 # GET subjects included by an announcement
-@announcements_bp.route('/<int:announcement_id>/about', methods=['GET'])
+@announcements_bp.route('/<int:id_announcement>/about', methods=['GET'])
 @swag_from('swagger/announcements/announcements_about.yaml')
-def get_announcement_about(announcement_id):
-    subjects = db.session.query(Subject).join(IsAbout).filter(IsAbout.id_announcement == announcement_id).all()
+@token_required()
+def get_announcement_about(id_announcement):
+    subjects = db.session.query(Subject).join(IsAbout).filter(IsAbout.id_announcement == id_announcement).all()
     return jsonify([
         SubjectDTO.to_dict(subject) for subject in subjects
     ]), 200
