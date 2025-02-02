@@ -37,34 +37,6 @@ def login():
     }), 200
 
 
-# Change password
-@users_bp.route('/change-password', methods=['PUT'])
-@token_required()
-def change_password():
-    data = request.json
-    old_password = data.get('old_password')
-    new_password = data.get('new_password')
-    confirm_password = data.get('confirm_password')
-
-    user = g.user
-
-    if not user.check_password(old_password):
-        return jsonify({'error': 'Invalid old password'}), 400
-
-    if new_password != confirm_password:
-        return jsonify({'error': 'New passwords do not match'}), 400
-
-    user.set_password(new_password)
-    user.first_connection = False
-    db.session.commit()
-
-    token = generate_token(user)
-    return jsonify({
-        'message': 'Password updated successfully',
-        'token': token
-    }), 200
-
-
 # Register route
 @users_bp.route('/register', methods=['POST'])
 def register_user():
@@ -146,6 +118,34 @@ def upload_students():
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
+
+# Change password
+@users_bp.route('/change-password', methods=['PUT'])
+@token_required()
+def change_password():
+    data = request.json
+    old_password = data.get('old_password')
+    new_password = data.get('new_password')
+    confirm_password = data.get('confirm_password')
+
+    user = g.user
+
+    if not user.check_password(old_password):
+        return jsonify({'error': 'Invalid old password'}), 400
+
+    if new_password != confirm_password:
+        return jsonify({'error': 'New passwords do not match'}), 400
+
+    user.set_password(new_password)
+    user.first_connection = False
+    db.session.commit()
+
+    token = generate_token(user)
+    return jsonify({
+        'message': 'Password updated successfully',
+        'token': token
+    }), 200
 
 
 # GET logged-in user information
