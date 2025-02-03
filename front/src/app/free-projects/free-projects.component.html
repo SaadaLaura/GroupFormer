@@ -1,117 +1,115 @@
-<div class="free-projects-container">
-  <app-navbar></app-navbar>
-  <br>
-  <h2 class="title-page">Projets libres</h2>
+<app-navbar></app-navbar>
+<br>
+<h2 class="title-page">Projets libres</h2>
 
-  <div *ngIf="isLoading" class="loading-message">
-    <span class="material-symbols-outlined rotating-icon">
-      autorenew
-    </span>
-    <p>Chargement des projets</p>
+<div *ngIf="isLoading" class="loading-message">
+  <span class="material-symbols-outlined rotating-icon">
+    autorenew
+  </span>
+  <p>Chargement des projets</p>
+</div>
+
+<div *ngIf="!isLoading && isDataLoaded" class="filters">
+  <div class="filter-item">
+    <span class="material-symbols-outlined">search</span>
+    <input class="keyword-input" type="text" placeholder="Recherche par mot clé" [(ngModel)]="keywords" (input)="applyFilters()" />
   </div>
-
-  <div *ngIf="!isLoading && isDataLoaded" class="filters">
-    <div class="filter-item">
-      <span class="material-symbols-outlined">search</span>
-      <input class="keyword-input" type="text" placeholder="Recherche par mot clé" [(ngModel)]="keywords" (input)="applyFilters()" />
-    </div>
-    <div class="filter-item">
-      <button class="sort-button" (click)="sortProjectsByName()">
-        <span class="material-symbols-outlined">sort_by_alpha</span>
-        <span class="sort-text">Trier</span>
-      </button>
-    </div>
-    <div *ngIf="userRole === 'admin'" class="filter-item">
-      <button class="add-project-button" (click)="openAddProjectPopup()">
-        <span class="material-symbols-outlined">add</span>
-        <span class="add-text">Ajouter un projet</span>
-      </button>
-    </div>
+  <div class="filter-item">
+    <button class="sort-button" (click)="sortProjectsByName()">
+      <span class="material-symbols-outlined">sort_by_alpha</span>
+      <span class="sort-text">Trier</span>
+    </button>
   </div>
-
-  <div *ngIf="!isLoading && isDataLoaded && isInitialLoadEmpty" class="no-results">
-    <span class="material-symbols-outlined info">
-      info
-    </span>
-    <p>Il n'y a pas de projet libre</p>
+  <div *ngIf="userRole === 'admin'" class="filter-item">
+    <button class="add-project-button" (click)="openAddProjectPopup()">
+      <span class="material-symbols-outlined">add</span>
+      <span class="add-text">Ajouter un projet</span>
+    </button>
   </div>
+</div>
 
-  <div *ngIf="!isLoading && isDataLoaded && !isInitialLoadEmpty && filteredProjects.length === 0" class="no-results">
-    <span class="material-symbols-outlined">
-      search_off
-    </span>
-    <p>Aucun projet libre n'a été trouvé</p>
-  </div>
+<div *ngIf="!isLoading && isDataLoaded && isInitialLoadEmpty" class="no-results">
+  <span class="material-symbols-outlined info">
+    info
+  </span>
+  <p>Il n'y a pas de projet libre</p>
+</div>
 
-  <table *ngIf="!isLoading && isDataLoaded && filteredProjects.length > 0" class="styled-table">
-    <thead>
-      <tr>
-        <th>Nom du projet</th>
-        <th>Description</th>
-        <th>Nombre d'étudiants maximum</th>
-        <th>Date limite</th>
-        <th *ngIf="userRole === 'admin'">Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let project of filteredProjects">
-        <td>{{ project.name }}</td>
-        <td>{{ project.description }}</td>
-        <td>{{ project.size }}</td>
-        <td>{{ formatDate(project.deadline) }}</td>
-        <td *ngIf="userRole === 'admin'">
-          <div class="action-item">
-            <button class="actions-button" (click)="openEditProjectPopup(project)">
-              <span class="material-symbols-outlined">edit</span>
-              <span>Modifier</span>
-            </button>
-          </div>
-          <div class="action-item">
-            <button class="actions-button" (click)="confirmDeleteProject(project.id)">
-              <span class="material-symbols-outlined">delete</span>
-              <span>Supprimer</span>
-            </button>
-          </div>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+<div *ngIf="!isLoading && isDataLoaded && !isInitialLoadEmpty && filteredProjects.length === 0" class="no-results">
+  <span class="material-symbols-outlined">
+    search_off
+  </span>
+  <p>Aucun projet libre n'a été trouvé</p>
+</div>
 
-  <p *ngIf="userRole !== 'admin'" class="contact-admin">Pour ajouter un projet, veuillez contacter l'administration ou le responsable du module.</p>
+<table *ngIf="!isLoading && isDataLoaded && filteredProjects.length > 0" class="styled-table">
+  <thead>
+    <tr>
+      <th>Nom du projet</th>
+      <th>Description</th>
+      <th>Nombre d'étudiants maximum</th>
+      <th>Date limite</th>
+      <th *ngIf="userRole === 'admin'">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let project of filteredProjects">
+      <td>{{ project.name }}</td>
+      <td>{{ project.description }}</td>
+      <td>{{ project.size }}</td>
+      <td>{{ formatDate(project.deadline) }}</td>
+      <td *ngIf="userRole === 'admin'">
+        <div class="action-item">
+          <button class="actions-button" (click)="openEditProjectPopup(project)">
+            <span class="material-symbols-outlined">edit</span>
+            <span>Modifier</span>
+          </button>
+        </div>
+        <div class="action-item">
+          <button class="actions-button" (click)="confirmDeleteProject(project.id)">
+            <span class="material-symbols-outlined">delete</span>
+            <span>Supprimer</span>
+          </button>
+        </div>
+      </td>
+    </tr>
+  </tbody>
+</table>
 
-  <!-- Popup pour ajouter/modifier un projet -->
-  <div *ngIf="showAddProjectPopup" class="popup-overlay">
-    <div class="popup">
-      <h3>{{ isEditMode ? 'Modifier le projet' : 'Ajouter un projet' }}</h3>
-      <label>Nom du projet <span class="required">*</span></label>
-      <input type="text" [(ngModel)]="newProject.name" (input)="checkRequiredFields()" />
-      <label>Description <span class="required">*</span></label>
-      <input type="text" [(ngModel)]="newProject.description" (input)="checkRequiredFields()" />
-      <label>Nombre d'étudiants maximum <span class="required">*</span></label>
-      <input type="number" [(ngModel)]="newProject.size" (input)="checkRequiredFields()" />
-      <label>Date limite</label>
-      <input type="date" [(ngModel)]="newProject.deadline" />
-      <div class="popup-buttons">
-        <button (click)="closeAddProjectPopup()">Annuler</button>
-        <button [disabled]="!isFormValid && !isEditMode" [title]="!isFormValid && !isEditMode ? 'Veuillez remplir les champs avec une étoile' : ''" (click)="confirmAddOrEditProject()">{{ isEditMode ? 'Modifier' : 'Confirmer' }}</button>
-      </div>
+<p *ngIf="userRole !== 'admin'" class="contact-admin">Pour ajouter un projet, veuillez contacter l'administration ou le responsable du module.</p>
+
+<!-- Popup pour ajouter/modifier un projet -->
+<div *ngIf="showAddProjectPopup" class="popup-overlay">
+  <div class="popup">
+    <h3>{{ isEditMode ? 'Modifier le projet' : 'Ajouter un projet' }}</h3>
+    <label>Nom du projet <span class="required">*</span></label>
+    <input type="text" [(ngModel)]="newProject.name" (input)="checkRequiredFields()" />
+    <label>Description <span class="required">*</span></label>
+    <input type="text" [(ngModel)]="newProject.description" (input)="checkRequiredFields()" />
+    <label>Nombre d'étudiants maximum <span class="required">*</span></label>
+    <input type="number" [(ngModel)]="newProject.size" (input)="checkRequiredFields()" />
+    <label>Date limite</label>
+    <input type="date" [(ngModel)]="newProject.deadline" />
+    <div class="popup-buttons">
+      <button (click)="closeAddProjectPopup()">Annuler</button>
+      <button [disabled]="!isFormValid && !isEditMode" [title]="!isFormValid && !isEditMode ? 'Veuillez remplir les champs avec une étoile' : ''" (click)="confirmAddOrEditProject()">{{ isEditMode ? 'Modifier' : 'Confirmer' }}</button>
     </div>
   </div>
+</div>
 
-  <!-- Message de confirmation ou d'erreur -->
-  <div *ngIf="showMessage" class="message-container">
-    <span class="material-symbols-outlined" [ngClass]="{'success': messageType === 'success', 'error': messageType === 'error'}">
-      {{ messageType === 'success' ? 'check_circle' : 'error' }}
-    </span>
-    <p>{{ message }}</p>
-  </div>
+<!-- Message de confirmation ou d'erreur -->
+<div *ngIf="showMessage" class="message-container">
+  <span class="material-symbols-outlined" [ngClass]="{'success': messageType === 'success', 'error': messageType === 'error'}">
+    {{ messageType === 'success' ? 'check_circle' : 'error' }}
+  </span>
+  <p>{{ message }}</p>
+</div>
 
-  <!-- Alerte de confirmation -->
-  <div *ngIf="showAlert" class="alert">
-    <span class="alert-message">{{ alertMessage }}</span>
-    <div class="alert-buttons">
-      <button class="alert-button" (click)="confirmAlert()">Confirmer</button>
-      <button class="alert-button" (click)="cancelAlert()">Annuler</button>
-    </div>
+<!-- Alerte de confirmation -->
+<div *ngIf="showAlert" class="alert">
+  <span class="alert-message">{{ alertMessage }}</span>
+  <div class="alert-buttons">
+    <button class="alert-button" (click)="confirmAlert()">Confirmer</button>
+    <button class="alert-button" (click)="cancelAlert()">Annuler</button>
   </div>
 </div>

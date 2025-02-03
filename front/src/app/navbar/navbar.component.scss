@@ -3,13 +3,13 @@
   justify-content: space-between;
   align-items: center;
   padding: 5px 10px;
-  background-color: #f8f9fa;
-  position: fixed; /* Rendre la barre de navigation fixe */
-  top: 0; /* Positionner en haut de la page */
-  width: 100%; /* Prendre toute la largeur de la page */
-  z-index: 1000; /* Assurer que la barre de navigation est au-dessus des autres éléments */
-  background-color: #f8f9fa;
-
+  background-color: #163767; 
+  position: fixed; 
+  top: 0; 
+  left: 0;
+  width: 100%; 
+  z-index: 1000; 
+  box-sizing: border-box; 
 }
 
 .navbar-logo {
@@ -23,20 +23,19 @@
 }
 
 .navbar-menu {
-  flex: 20;
+  flex: 1;
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around; 
   gap: 10px;
-  margin: 0 130px;
 }
 
 .navbar-menu a {
   display: flex;
-  align-items: flex-end;
+  align-items: center; 
   padding: 5px 10px;
   text-align: center;
   text-decoration: none;
-  color: black;
+  color: white; 
   border-radius: 10px;
   transition: background-color 0.3s;
   cursor: pointer;
@@ -52,7 +51,7 @@
 }
 
 .navbar-menu a:hover {
-  background-color: #e9ecef;
+  background-color: #1b4a8a; 
 }
 
 .navbar-profil {
@@ -61,17 +60,16 @@
   gap: 10px;
   position: relative;
   width: auto;
-  margin-right: 10px;
 }
 
 .navbar-profil a,
 .ng-template a {
   display: flex;
-  align-items: flex-end;
+  align-items: center; 
   padding: 5px 10px;
   text-align: center;
   text-decoration: none;
-  color: black;
+  color: white; 
   border-radius: 10px;
   transition: background-color 0.3s;
   cursor: pointer;
@@ -90,7 +88,7 @@
 
 .navbar-profil a:hover,
 .ng-template a:hover {
-  background-color: #e9ecef;
+  background-color: #1b4a8a; 
 }
 
 .initials {
