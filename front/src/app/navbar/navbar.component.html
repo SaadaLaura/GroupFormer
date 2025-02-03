@@ -1,4 +1,4 @@
-<header class="navbar">
+<header class="navbar" *ngIf="!isLoading">
   <div class="navbar-logo">
     <img src="assets/img/logo_groupFormer.png" alt="GroupFormer Logo" class="project-logo">
   </div>
@@ -7,15 +7,15 @@
       <span class="material-symbols-outlined">home</span>
       <span>Accueil</span>
     </a>
-    <a *ngIf="hasGroup === 'non'" (click)="navigateTo('group-research')">
+    <a *ngIf="userRole === 'admin' || hasGroup === 'non'" (click)="navigateTo('group-research')">
       <span class="material-symbols-outlined">group_search</span>
       <span>Groupes disponibles</span>
     </a>
-    <a *ngIf="hasGroup === 'oui'" (click)="navigateTo('student-research')">
+    <a *ngIf="userRole === 'admin' || hasGroup === 'oui'" (click)="navigateTo('student-research')">
       <span class="material-symbols-outlined">person_search</span>
       <span>Étudiants sans groupe</span>
     </a>
-    <a (click)="navigateTo('home')">
+    <a (click)="navigateTo('free-projects')">
       <span class="material-symbols-outlined">assignment</span>
       <span>Projets libres</span>
     </a>

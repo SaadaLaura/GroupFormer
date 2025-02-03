@@ -1,0 +1,300 @@
+.free-projects-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.filters {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-bottom: 20px;
+  margin-top: 25px;
+  gap: 15px;
+}
+
+.filter-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  position: relative;
+}
+
+.filter-item .material-symbols-outlined {
+  position: absolute;
+  left: 5px;
+}
+
+.filter-select,
+.keyword-input {
+  padding: 8px 8px 8px 30px; 
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-right: 10px;
+}
+
+.keyword-input {
+  width: 200px;
+}
+
+.filter_alt_off::before {
+  content: 'filter_alt_off';
+}
+
+.filter_alt::before {
+  content: 'filter_alt';
+}
+
+.no-results {
+  display: flex;
+  align-items: center; /* Aligner les éléments sur la même ligne */
+  justify-content: center;
+  height: 30vh; /* Réduire la hauteur pour remonter le contenu */
+  text-align: center;
+  margin-top: 10px; /* Réduire la marge supérieure */
+}
+
+.no-results .material-symbols-outlined {
+  font-size: 40px; 
+  color: #000;
+  margin-right: 10px; /* Ajouter un espace entre l'icône et le texte */
+}
+
+.no-results p {
+  font-size: large;
+}
+
+//Array style
+.styled-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.styled-table th, .styled-table td {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 12px;
+  font-size: 0.88em;
+}
+
+.styled-table th {
+  background-color: #f2f2f2;
+  cursor: pointer; /* Ajouter un curseur pointeur pour indiquer que la colonne est cliquable */
+}
+
+.styled-table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+// Loading message 
+.loading-message {
+  font-style: italic;
+  text-align: left;
+  display: flex;
+  align-items: center;
+}
+
+.rotating-icon {
+  animation: rotate 2s linear infinite;
+  margin-bottom: 3px;
+}
+
+@keyframes rotate {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.contact-admin {
+  font-style: italic;
+  color : gray;
+  margin-bottom: 50px;
+}
+
+//bouton Trie
+.sort-button {
+  display: flex;
+  justify-content: space-between; 
+  align-items: center;
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #f2f2f2;
+  cursor: pointer;
+  width: 75px; 
+}
+
+.sort-button .material-symbols-outlined {
+  font-size: 16px;
+}
+
+.sort-button .sort-text {
+  margin-left: auto; 
+}
+
+//bouton Ajouter un projet
+.add-project-button {
+    display: flex;
+    align-items: center;
+    padding: 8px 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #f2f2f2;
+    cursor: pointer;
+    width: 140px;
+}
+  
+.add-project-button .material-symbols-outlined {
+    font-size: 16px;
+}
+  
+.add-project-button .add-text {
+    margin-left: auto; 
+}
+ 
+//popup
+.popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+  
+.popup {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    width: 300px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+  
+.popup h3 {
+    margin-top: 0;
+    text-align: center;
+}
+  
+.popup label {
+    display: block;
+    margin-top: 10px;
+}
+  
+.popup input {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+  
+.popup-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+  
+.popup-buttons button {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;    
+    background-color: #007bff;
+    color : white;
+}
+  
+.popup-buttons button[disabled] {
+    cursor: not-allowed;
+    background-color: gray;
+}
+  
+.required {
+    color: red;
+}
+  
+.message-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 20px;
+}
+  
+.message-container .material-symbols-outlined {
+    font-size: 24px;
+    margin-right: 10px;
+}
+  
+.message-container .success {
+    color: green;
+}
+  
+.message-container .error {
+    color: red;
+}
+
+//Alert
+.alert {
+    position: fixed;
+    top: 10px;
+    left: 30%;
+    right: 30%;
+    background-color: #e2e3e5; 
+    padding: 15px;
+    text-align: center;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column; 
+    justify-content: center;
+    align-items: center;
+    border: 1px solid #d6d8db; 
+    border-radius: 4px; 
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
+}
+  
+.alert-message {
+    margin-bottom: 10px; 
+}
+  
+.alert-buttons {
+    display: flex;
+    gap: 10px; 
+}
+  
+.alert-button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+  
+.alert-button:hover {
+    background-color: #0056b3;
+}
+
+// Styles pour les icônes d'édition et de suppression
+.actions-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.actions-button .material-symbols-outlined {
+  font-size: 20px; /* Réduire la taille des icônes */
+}
+
+.action-item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 5px;
+  margin-bottom: 5px;
+}

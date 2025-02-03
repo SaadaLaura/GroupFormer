@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
 import { BASE_URL } from './api.service';
 import { Announcement } from '../class/Announcement';
+import { catchError } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +15,11 @@ export class AnnouncementService {
 
   getAnnouncements(token: string): Observable<Announcement[]> {
     const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
-    return this.http.get<Announcement[]>(`${this.baseUrl}/announcements`, { headers });
+    return this.http.get<Announcement[]>(`${this.baseUrl}/announcements`,{headers}).pipe(
+        catchError(this.handleError)
+    );
   }
+   private handleError(error: HttpErrorResponse): Observable<never> {
+      return throwError(() => error);
+    }
 }

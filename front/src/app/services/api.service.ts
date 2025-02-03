@@ -16,8 +16,7 @@ export class ApiService {
   constructor(protected http: HttpClient) {}
 
   protected handleError(error: HttpErrorResponse): Observable<never> {
-    // Logique de gestion des erreurs commune
     console.error('An error occurred:', error);
-    return throwError('Something bad happened; please try again later.');
+    return throwError(() => new Error('Something bad happened; please try again later.'));
   }
 }

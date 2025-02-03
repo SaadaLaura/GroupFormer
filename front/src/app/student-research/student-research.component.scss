@@ -1,9 +1,3 @@
-.title-page {
-  text-align: center;
-  font-size: 2rem;
-  margin-bottom: 20px;
-}
-
 .filters {
   display: flex;
   justify-content: flex-start;
@@ -70,14 +64,13 @@
 .styled-table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 20px;
 }
 
 .styled-table th, .styled-table td {
   border: 1px solid #dddddd;
   text-align: left;
   padding: 12px;
-  font-size: 0.9em;
+  font-size: 0.88em;
 }
 
 .styled-table th {

@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { Student, Interest, Skill } from '../class/Users';
+import { Student } from '../class/Users';
 import { LoginResponse, ChangePasswordResponse } from '../class/Login';
 import { BASE_URL } from './api.service';
-import { jwtDecode } from 'jwt-decode';
 
 @Injectable({
   providedIn: 'root'
@@ -33,17 +32,15 @@ export class UsersService {
   }
 
   getUserInfo(token: string): Observable<Student> {
-    return this.http.get<Student>(`${this.baseUrl}/users/me`, 
-      { headers: { Authorization: `Bearer ${token}` } }
-    ).pipe(
+    const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
+    return this.http.get<Student>(`${this.baseUrl}/users/me`,{ headers}).pipe(
       catchError(this.handleError)
     );
   }
 
   getStudentsWithoutProject(token: string): Observable<Student[]> {
-    return this.http.get<Student[]>(`${this.baseUrl}/students/alone`, 
-      { headers: { Authorization: `Bearer ${token}` } }
-    ).pipe(
+    const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
+    return this.http.get<Student[]>(`${this.baseUrl}/students/alone`,{ headers }).pipe(
       catchError(this.handleError)
     );
   }

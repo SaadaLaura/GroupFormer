@@ -5,6 +5,7 @@ import { RegisterComponent } from './register/register.component';
 import { ProfilComponent } from './profil/profil.component';
 import { StudentResearchComponent } from './student-research/student-research.component';
 import { GroupResearchComponent } from './group-research/group-research.component';
+import { FreeProjectsComponent } from './free-projects/free-projects.component';
 
 export const routes: Routes = [
     { path: '', redirectTo: '/home', pathMatch: 'full' }, // Redirection par défaut vers home
@@ -13,5 +14,6 @@ export const routes: Routes = [
     { path: 'register', component: RegisterComponent },
     { path: 'profil', component: ProfilComponent },
     { path: 'student-research', component: StudentResearchComponent},
-    { path: 'group-research', component: GroupResearchComponent}
+    { path: 'group-research', component: GroupResearchComponent},
+    { path: 'free-projects', component: FreeProjectsComponent}
 ];

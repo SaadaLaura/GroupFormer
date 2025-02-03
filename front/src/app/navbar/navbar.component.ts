@@ -18,6 +18,7 @@ export class NavbarComponent implements OnInit {
   hasGroup: string | null = null;
   userRole: string = '';
   profilePageName: string = 'Profil';
+  isLoading: boolean = true;
 
   constructor(private router: Router, private stateService: StateService, private usersService: UsersService) {}
 
@@ -31,7 +32,10 @@ export class NavbarComponent implements OnInit {
         this.stateService.setHasGroup(user.project ? 'oui' : 'non');
         this.userRole = user.role;
         this.profilePageName = this.userRole === 'admin' ? 'Gestion étudiants' : 'Profil';
+        this.isLoading = false;
       });
+    } else {
+      this.isLoading = false;
     }
 
     this.stateService.initials$.subscribe(initials => {
