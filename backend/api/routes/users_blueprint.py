@@ -2,6 +2,7 @@ import os
 
 import pandas as pd
 from email_validator import validate_email, EmailNotValidError
+from flasgger import swag_from
 from flask import Blueprint, request, jsonify, g
 from werkzeug.utils import secure_filename
 
@@ -21,6 +22,7 @@ def allowed_file(filename):
 
 # Login route
 @users_bp.route('/login', methods=['POST'])
+@swag_from('../routes/swagger/users/login.yaml')
 def login():
     data = request.json
     email = data.get('email')
@@ -39,7 +41,8 @@ def login():
 
 # Register route
 @users_bp.route('/register', methods=['POST'])
-def register_user():
+@swag_from('../routes/swagger/users/register.yaml')
+def register():
     data = request.json
     firstname = data.get('firstname')
     lastname = data.get('lastname')
@@ -74,6 +77,7 @@ def register_user():
 
 # Upload students from a file
 @users_bp.route('/upload-students', methods=['POST'])
+@swag_from('../routes/swagger/users/upload_students.yaml')
 @token_required(Role.ADMIN.value)
 def upload_students():
     if 'file' not in request.files:
@@ -122,6 +126,7 @@ def upload_students():
 
 # Change password
 @users_bp.route('/change-password', methods=['PUT'])
+@swag_from('../routes/swagger/users/change_password.yaml')
 @token_required()
 def change_password():
     data = request.json
@@ -150,6 +155,7 @@ def change_password():
 
 # GET logged-in user information
 @users_bp.route('/me', methods=['GET'])
+@swag_from('../routes/swagger/users/get_logged_in_user.yaml')
 @token_required()
 def get_logged_in_user():
     user = g.user

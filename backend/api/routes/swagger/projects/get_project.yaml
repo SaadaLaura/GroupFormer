@@ -1,0 +1,66 @@
+tags:
+  - Project
+summary: Get a project by ID
+description: Retrieve details of a specific project.
+security:
+  - BearerAuth: []
+parameters:
+  - in: path
+    name: id_project
+    required: true
+    type: integer
+    description: ID of the project to retrieve
+    example: 101
+responses:
+  200:
+    description: Project details
+    schema:
+      $ref: '#/definitions/ProjectDTO'
+  404:
+    description: Project not found
+  401:
+    description: Unauthorized (missing or invalid token)
+
+definitions:
+  ProjectDTO:
+    type: object
+    properties:
+      id:
+        type: integer
+        example: 101
+      name:
+        type: string
+        example: "GroupFormer"
+      description:
+        type: string
+        example: "A project for managing projects and students."
+      size:
+        type: integer
+        example: 6
+      missing:
+        type: integer
+        example: 5
+      members:
+        type: array
+        items:
+          type: object
+          properties:
+            id:
+              type: integer
+              example: 10
+            firstname:
+              type: string
+              example: "Ahmed"
+            lastname:
+              type: string
+              example: "Ité"
+            email:
+              type: string
+              example: "ahmed.ite@example.com"
+            role:
+              type: string
+              example: "student"
+      deadline:
+        type: string
+        format: date
+        example: "2025-06-30"

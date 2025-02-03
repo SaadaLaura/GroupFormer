@@ -1,0 +1,22 @@
+tags:
+  - Student
+summary: Get skills of a student
+description: Retrieve all skills associated with a specific student.
+security:
+  - BearerAuth: []
+parameters:
+  - in: path
+    name: student_id
+    required: true
+    type: integer
+    description: ID of the student
+    example: 1
+responses:
+  200:
+    description: List of skills for the student
+    schema:
+      type: array
+      items:
+        $ref: '#/definitions/Skill'
+  401:
+    description: Unauthorized (missing or invalid token)

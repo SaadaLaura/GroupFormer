@@ -1,0 +1,15 @@
+tags:
+  - Student
+summary: Get all students
+description: Retrieve a list of all students.
+security:
+  - BearerAuth: []
+responses:
+  200:
+    description: List of students
+    schema:
+      type: array
+      items:
+        $ref: '#/definitions/StudentDTO'
+  401:
+    description: Unauthorized (missing or invalid token)

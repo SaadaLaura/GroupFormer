@@ -1,0 +1,54 @@
+tags:
+  - Student
+summary: Get a student by ID
+description: Retrieve details of a specific student.
+security:
+  - BearerAuth: []
+parameters:
+  - in: path
+    name: student_id
+    required: true
+    type: integer
+    description: ID of the student to retrieve
+    example: 1
+responses:
+  200:
+    description: Student details
+    schema:
+      type: array
+      items:
+        $ref: '#/definitions/StudentDTO'
+  404:
+    description: Student not found
+  401:
+    description: Unauthorized (missing or invalid token)
+
+definitions:
+  StudentDTO:
+    properties:
+      id:
+        type: integer
+        example: 2
+      email:
+        type: string
+        example: "ahmed.ite@example.com"
+      firstname:
+        type: string
+        example: "Ahmed"
+      lastname:
+        type: string
+        example: "Ité"
+      role:
+        type: string
+        example: "student"
+      skills:
+        type: array
+        items:
+          $ref: '#/definitions/Skill'
+      subjects:
+        type: array
+        items:
+          $ref: '#/definitions/Subject'
+      project:
+        type: object
+        $ref: '#/definitions/Project'

@@ -1,3 +1,4 @@
+from flasgger import swag_from
 from flask import Blueprint, jsonify, request
 
 from backend.api.database import db
@@ -11,6 +12,7 @@ subjects_bp = Blueprint('subjects', __name__)
 
 # GET all subjects
 @subjects_bp.route('', methods=['GET'])
+@swag_from('../routes/swagger/subjects/get_all_subjects.yaml')
 @token_required()
 def get_all_subjects():
     subjects = Subject.query.all()
@@ -21,6 +23,7 @@ def get_all_subjects():
 
 # POST a subject
 @subjects_bp.route('', methods=['POST'])
+@swag_from('../routes/swagger/subjects/add_subject.yaml')
 @token_required(Role.ADMIN.value)
 def add_subject():
     subject = Subject(name=request.json.get('name'))
@@ -34,6 +37,7 @@ def add_subject():
 
 # DELETE a subject
 @subjects_bp.route('/<int:id_subject>', methods=['DELETE'])
+@swag_from('../routes/swagger/subjects/delete_subject.yaml')
 @token_required(Role.ADMIN.value)
 def delete_subject(id_subject):
     subject = Subject.query.get(id_subject)

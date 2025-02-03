@@ -1,0 +1,28 @@
+tags:
+  - Subject
+summary: "🔐 Required role: ADMIN | Delete a subject"
+description: Deletes a subject from the database.
+security:
+  - BearerAuth: []
+parameters:
+  - in: path
+    name: id_subject
+    required: true
+    type: integer
+    description: ID of the subject to delete
+    example: 2
+responses:
+  200:
+    description: subject deleted successfully
+    schema:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Subject deleted successfully"
+  404:
+    description: Subject not found
+  401:
+    description: Unauthorized (missing or invalid token)
+  403:
+    description: Forbidden (not an admin)

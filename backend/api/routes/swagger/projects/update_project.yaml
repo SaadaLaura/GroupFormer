@@ -1,0 +1,49 @@
+tags:
+  - Project
+summary: "🔐 Required role: ADMIN | Update an existing project"
+description: Modifies the details of an existing project.
+security:
+  - BearerAuth: []
+parameters:
+  - in: path
+    name: id_project
+    required: true
+    type: integer
+    description: ID of the project to update
+    example: 101
+  - in: body
+    name: project
+    required: true
+    schema:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "Updated Project"
+        description:
+          type: string
+          example: "An updated description of the project."
+        size:
+          type: integer
+          example: 6
+        deadline:
+          type: string
+          format: date
+          example: "2025-07-15"
+responses:
+  200:
+    description: Project updated successfully
+    schema:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Project updated successfully"
+  400:
+    description: Bad request (invalid input)
+  401:
+    description: Unauthorized (missing or invalid token)
+  403:
+    description: Forbidden (not an admin)
+  404:
+    description: Project not found
