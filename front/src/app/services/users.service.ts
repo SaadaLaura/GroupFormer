@@ -40,6 +40,13 @@ export class UsersService {
     );
   }
 
+  register(user: { firstname: string, lastname: string, email: string, password: string, role: string }): Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}/users/register`, user).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  
   //Pour les Students
   getStudentsWithoutProject(token: string): Observable<Student[]> {
     const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });

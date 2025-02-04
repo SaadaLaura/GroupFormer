@@ -15,7 +15,9 @@
         </div>
     </section>
     <ng-container *ngIf="isLoggedIn; else notLoggedInContent">
-       <!-- TO DO : stat personnel ou recommandation d'équipe ou projet a voir-->
+        <ng-container *ngIf="userRole === 'admin'">
+            <p class="infoAdmin">Pour permettre aux étudiants d'accéder à la plateforme, veuillez suivre les instructions sur la page <a href="/profil">gestion-étudiant</a>.</p>
+        </ng-container>
     </ng-container>
     <ng-template #notLoggedInContent>
         <button (click)="navigateTo('register')" class="signup-btn">S'inscrire maintenant</button>
