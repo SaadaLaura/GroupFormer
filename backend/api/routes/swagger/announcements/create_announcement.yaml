@@ -12,7 +12,6 @@ parameters:
       type: object
       required:
         - title
-        - id_project
       properties:
         title:
           type: string
@@ -20,9 +19,6 @@ parameters:
         description:
           type: string
           example: "We are looking for AI researchers."
-        id_project:
-          type: integer
-          example: 101
         skills:
           type: array
           items:
@@ -37,7 +33,7 @@ responses:
   201:
     description: Announcement created successfully
   400:
-    description: Missing required fields or invalid data
+    description: Missing required fields or invalid data OR student has no project
   404:
     description: Project or skill/subject not found
   401:

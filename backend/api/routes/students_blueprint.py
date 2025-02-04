@@ -139,11 +139,14 @@ def add_project_to_student(id_project):
     student_id = g.user.id_user
     student = Person.query.filter_by(id_user=student_id, role=Role.STUDENT).first()
 
+    if student.project:
+        return jsonify({'error': 'Student is already in a project'}), 409
+
     project = Project.query.get(id_project)
     if not project:
         return jsonify({'error': 'Project not found'}), 404
 
-    student_count = project.students.count()
+    student_count = len(project.students)
     if student_count >= project.size:
         return jsonify({'error': 'Project is already full'}), 400
 

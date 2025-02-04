@@ -16,3 +16,5 @@ responses:
     description: Project is already full
   404:
     description: Project not found
+  409:
+    description: Student is already in a project

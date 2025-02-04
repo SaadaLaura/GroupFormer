@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from flasgger import swag_from
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, g
 
 from backend.api.database import db
 from backend.api.dtos.announcement_dto import AnnouncementDTO
@@ -18,15 +18,18 @@ announcements_bp = Blueprint('announcements', __name__)
 @swag_from('../routes/swagger/announcements/create_announcement.yaml')
 @token_required()
 def create_announcement():
+    student = g.user
     data = request.json
     title = data.get('title')
     description = data.get('description')
-    id_project = data.get('id_project')
 
-    if not title or not id_project:
-        return jsonify({'error': 'Title and project ID are required'}), 400
+    if not title:
+        return jsonify({'error': 'Title is required'}), 400
 
-    project = Project.query.get(id_project)
+    if student.id_project is None:
+        return jsonify({'error': 'Student has no project'}), 400
+
+    project = Project.query.get(student.id_project)
     if not project:
         return jsonify({'error': 'Project not found'}), 404
 
@@ -34,7 +37,7 @@ def create_announcement():
         title=title,
         description=description,
         publication=datetime.now(),
-        id_project=id_project
+        id_project=student.id_project
     )
 
     db.session.add(announcement)
