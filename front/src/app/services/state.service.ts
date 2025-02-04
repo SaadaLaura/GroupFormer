@@ -17,10 +17,10 @@ export class StateService {
   private passwordSubject = new BehaviorSubject<string | null>(localStorage.getItem('password'));
   password$ = this.passwordSubject.asObservable();
 
-  private skillsSubject = new BehaviorSubject<string[] | null>(this.getSkillsFromLocalStorage());
+  private skillsSubject = new BehaviorSubject<string[] | null>(null);
   skills$ = this.skillsSubject.asObservable();
 
-  private interestsSubject = new BehaviorSubject<string[] | null>(this.getInterestsFromLocalStorage());
+  private interestsSubject = new BehaviorSubject<string[] | null>(null);
   interests$ = this.interestsSubject.asObservable();
 
   setHasGroup(hasGroup: string) {
@@ -50,13 +50,13 @@ export class StateService {
   }
 
   setSkills(skills: string[]) {
-    localStorage.setItem('skills', JSON.stringify(skills));
     this.skillsSubject.next(skills);
+    localStorage.setItem('skills', JSON.stringify(skills));
   }
 
   setInterests(interests: string[]) {
-    localStorage.setItem('interests', JSON.stringify(interests));
     this.interestsSubject.next(interests);
+    localStorage.setItem('interests', JSON.stringify(interests));
   }
 
   private getInitialsFromLocalStorage(): string | null {
@@ -75,7 +75,7 @@ export class StateService {
     return skills ? JSON.parse(skills) : null;
   }
 
-  getInterestsFromLocalStorage(): string[] | null {
+    getInterestsFromLocalStorage(): string[] | null {
     const interests = localStorage.getItem('interests');
     return interests ? JSON.parse(interests) : null;
   }

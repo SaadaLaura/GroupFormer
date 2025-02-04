@@ -11,7 +11,7 @@
 
 .spaced-paragraph {
   display: block;
-  margin-bottom: 1em; /* Ajustez la valeur selon vos besoins */
+  margin-bottom: 1em;
   width: 140%;
 }
 
@@ -21,9 +21,9 @@
 
 .info-group label {
   flex: 0 0 auto;
-  margin-right: 10px; 
+  margin-right: 10px;
   text-align: left;
-  white-space: nowrap; /* Empêcher le label de se casser en plusieurs lignes */
+  white-space: nowrap;
 }
 
 .info-group input,
@@ -35,13 +35,13 @@
 }
 
 .info-group button.icone .material-symbols-outlined.add-icon {
-  margin-left: -10px; 
+  margin-left: -10px;
 }
 
 .info-group input:focus,
 .info-group select:focus {
-  outline: none; 
-  border-color: #007bff; 
+  outline: none;
+  border-color: #007bff;
 }
 
 .info-group button {
@@ -65,12 +65,12 @@
   padding: 0;
   margin-left: 5px;
   font-size: 10px;
-  color: black; 
-  outline: none; 
+  color: black;
+  outline: none;
 }
 
 .info-group button.icone:hover {
-  color: #007bff; 
+  color: #007bff;
 }
 
 .inline-container {
@@ -87,10 +87,10 @@
   top: 100%;
   left: 0;
   margin-top: -7px;
-  background-color: #F5F5F5	; 
+  background-color: #f5f5f5;
   border: 1px solid #ccc;
   padding: 5px;
-  z-index: 1; /* Assurez-vous que le menu déroulant est au-dessus des autres éléments */
+  z-index: 1;
 }
 
 .dropdown ul {
@@ -115,13 +115,13 @@
 }
 
 .list-item {
-  display: flex; /* Afficher les éléments en bloc */
-  align-items: center;  
+  display: flex;
+  align-items: center;
   margin-bottom: -2px;
 }
 
 .list-item .icone {
-  font-size: 6px; 
+  font-size: 6px;
   margin-left: 5px;
 }
 
@@ -131,82 +131,32 @@
   margin-top: 3px;
 }
 
-.required {
-  color: red;
-  font-size: 0.8em;
-  vertical-align: super;
-}
-
-.legend {
-  margin-top: 10px;
-  font-size: 0.9em;
-  color: red;
-}
-
-//Admin Info
-.admin-info {
-  .example-image {
-    max-width: 35%;
-    height: auto;
-    display: block;
-    margin: 10px 0;
-  }
-
-  .icone{
-    border: none;
-    background: none;
-    cursor: pointer;
-  }
-
-  .upload-container {
-    border: 2px dashed #ccc;
-    padding: 10px;
-    text-align: center;
-    background-color: #f9f9f9;
-    margin-top: 20px;
-    max-width: 500px; 
-  }
-
-  .upload-label {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    font-size: 1em;
-  }
-
-  .upload-label .material-symbols-outlined {
-    margin-right: 5px;    
-    margin-bottom: 5px;
-  }
-}
-
-//Alert
+// Alert
 .alert {
   position: fixed;
   top: 10px;
   left: 30%;
   right: 30%;
-  background-color: #e2e3e5; 
+  background-color: #e2e3e5;
   padding: 15px;
   text-align: center;
   z-index: 1000;
   display: flex;
-  flex-direction: column; 
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  border: 1px solid #d6d8db; 
-  border-radius: 4px; 
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
+  border: 1px solid #d6d8db;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .alert-message {
-  margin-bottom: 10px; 
+  margin-bottom: 10px;
 }
 
 .alert-buttons {
   display: flex;
-  gap: 10px; 
+  gap: 10px;
 }
 
 .alert-button {
@@ -224,25 +174,25 @@
 
 // Success message
 .success-message {
-  color: #155724; 
+  color: #155724;
   padding: 10px;
   border-radius: 4px;
   display: flex;
   align-items: center;
-  gap: 10px; 
+  gap: 10px;
 }
 
 // Error message
 .error-message {
-  color: #721c24; 
+  color: #721c24;
   padding: 10px;
   border-radius: 4px;
   display: flex;
   align-items: center;
-  gap: 10px; 
+  gap: 10px;
 }
 
-// Loading message 
+// Loading message
 .loading-message {
   text-align: left;
   display: flex;
@@ -252,7 +202,6 @@
 .loading-message p {
   margin-left: -6px;
 }
-
 
 .rotating-icon {
   animation: rotate 2s linear infinite;
@@ -307,7 +256,7 @@
 .popup input,
 .popup textarea,
 .popup select {
-  width: calc(100% - 100px); /* Ajustez cette valeur pour réduire la taille de la zone de texte */
+  width: calc(100% - 100px);
   padding: 8px;
   margin-top: 5px;
   border: 1px solid #ccc;
@@ -315,7 +264,7 @@
 }
 
 .popup textarea {
-  width: 100%; 
+  width: 100%;
 }
 
 .popup-buttons {
@@ -329,7 +278,7 @@
   padding: 8px 12px;
   border: none;
   border-radius: 4px;
-  cursor: pointer;    
+  cursor: pointer;
   background-color: #007bff;
   color: white;
   margin-left: 50px;
@@ -343,7 +292,7 @@
 // Styles spécifiques pour le popup
 .popup .list-inline {
   display: flex;
-  flex-wrap: wrap; /* Permet de passer à la ligne suivante si la largeur maximale est atteinte */
+  flex-wrap: wrap;
   max-width: 100%;
 }
 
@@ -353,6 +302,7 @@
   white-space: nowrap;
 }
 
+// Annonces
 .announcements-list {
   margin-top: 20px;
   font-size: small;

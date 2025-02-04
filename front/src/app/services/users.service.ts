@@ -5,6 +5,7 @@ import { catchError } from 'rxjs/operators';
 import { Student } from '../class/Users';
 import { LoginResponse, ChangePasswordResponse } from '../class/Login';
 import { BASE_URL } from './api.service';
+import { Skill, Interest } from '../class/Users';
 
 @Injectable({
   providedIn: 'root'
@@ -54,6 +55,35 @@ export class UsersService {
       );
   }
   
+  addSkillToStudent(token: string, skill: Skill): Observable<any> {
+    const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
+    return this.http.post<any>(`${this.baseUrl}/students/skills`, [skill], { headers }).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  addInterestToStudent(token: string, interest: Interest): Observable<any> {
+    const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
+    return this.http.post<any>(`${this.baseUrl}/students/subjects`, [interest], { headers }).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  removeInterestFromStudent(token: string, interest: Interest): Observable<any> {
+    const headers = new HttpHeaders({ Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' });
+    const body = JSON.stringify([{ id: interest.id, name: interest.name }]);
+    return this.http.request<any>('delete', `${this.baseUrl}/students/subjects`, { headers, body }).pipe(
+      catchError(this.handleError)
+    );
+  }
+  
+  removeSkillFromStudent(token: string, skill: Skill): Observable<any> {
+    const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
+    return this.http.request<any>('delete', `${this.baseUrl}/students/skills`, { headers, body: [skill] }).pipe(
+      catchError(this.handleError)
+    );
+  }
+
   private handleError(error: HttpErrorResponse): Observable<never> {
     // Handle the error without logging it to the console
     return throwError(() => error);

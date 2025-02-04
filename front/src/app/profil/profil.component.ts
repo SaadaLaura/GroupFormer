@@ -6,7 +6,7 @@ import { NavbarComponent } from '../navbar/navbar.component';
 import { StateService } from '../services/state.service';
 import { UsersService } from '../services/users.service';
 import { AbilitiesService } from '../services/abilities.service';
-import { Interest, Student, Skill, Project } from '../class/Users';
+import { Interest, Student, Skill } from '../class/Users';
 import { AnnouncementService } from '../services/announcement.service';
 import { Announcement } from '../class/Announcement';
 
@@ -22,15 +22,11 @@ export class ProfilComponent implements OnInit {
   interests: Interest[] = [];
   skills: Skill[] = [];
   major: string = '';
-  newInterest: string = '';
-  newSkill: string = '';
   newMajor: string = '';
   hasProject: boolean = false;
   projectName: string = '';
   missingMembers: number = 0;
   editMode: { [key: string]: boolean } = {
-    interests: false,
-    skills: false,
     major: false
   };
   showDropdown: { [key: string]: boolean } = {
@@ -76,8 +72,8 @@ export class ProfilComponent implements OnInit {
       this.usersService.getUserInfo(token).subscribe({
         next: (response: Student) => {
           this.user = response;
-          this.skills = response.skills.map(skill => new Skill(skill.id, skill.name));
-          this.interests = response.subject.map(subject => new Interest(subject.id, subject.name));
+          this.skills = response.skills.map((skill, index) => new Skill(index + 1, skill.name)); // Initialiser les IDs à partir de 1
+          this.interests = response.subject.map((subject, index) => new Interest(index + 1, subject.name)); // Initialiser les IDs à partir de 1
           this.stateService.setSkills(this.skills.map(skill => skill.name));
           this.stateService.setInterests(this.interests.map(interest => interest.name));
           this.userRole = response.role;
@@ -116,34 +112,35 @@ export class ProfilComponent implements OnInit {
     } else {
       this.router.navigate(['/login']);
     }
-  
+
+    //enregistre les compétences dans le local storage
     this.stateService.skills$.subscribe({
       next: (skills: string[] | null) => {
         if (skills !== null) {
-          this.skills = skills.map(name => new Skill(0, name));
+          this.skills = skills.map((name, index) => new Skill(index + 1, name)); // Initialiser les IDs à partir de 1
         }
       }
     });
-  
+    //enregistre les centres d'intérets dans le local storage
     this.stateService.interests$.subscribe({
       next: (interests: string[] | null) => {
         if (interests !== null) {
-          this.interests = interests.map(name => new Interest(0, name));
+          this.interests = interests.map((name, index) => new Interest(index + 1, name)); // Initialiser les IDs à partir de 1
         }
       }
     });
-  
+
     // Charger les compétences et centres d'intérêt depuis le localStorage
     const storedSkills = this.stateService.getSkillsFromLocalStorage();
     if (storedSkills) {
-      this.skills = storedSkills.map(name => new Skill(0, name));
+      this.skills = storedSkills.map((name, index) => new Skill(index + 1, name)); // Initialiser les IDs à partir de 1
     }
-  
+
     const storedInterests = this.stateService.getInterestsFromLocalStorage();
     if (storedInterests) {
-      this.interests = storedInterests.map(name => new Interest(0, name));
+      this.interests = storedInterests.map((name, index) => new Interest(index + 1, name)); // Initialiser les IDs à partir de 1
     }
-  
+
     // Charger les informations du fichier depuis le localStorage
     const storedFileName = localStorage.getItem('selectedFileName');
     if (storedFileName) {
@@ -151,24 +148,85 @@ export class ProfilComponent implements OnInit {
     }
   }
 
+  // Basculer l'affichage du menu déroulant pour le champ spécifié
   toggleDropdown(field: string) {
     this.showDropdown[field] = !this.showDropdown[field];
   }
 
   addInterest(interest: Interest) {
-    if (interest && !this.interests.some(i => i.id === interest.id)) {
-      this.interests.push(interest);
-      this.stateService.setInterests(this.interests.map(i => i.name)); // Enregistrer les centres d'intérêt dans le localStorage
+    const token = localStorage.getItem('token');
+    if (interest && !this.interests.some(i => i.id === interest.id) && token) {
+      this.usersService.addInterestToStudent(token, interest).subscribe({
+        next: () => {
+          this.interests.push(interest);
+          this.stateService.setInterests(this.interests.map(i => i.name)); // Enregistrer les centres d'intérêt dans le localStorage
+        },
+        error: (error) => {
+          console.error('Erreur lors de l\'ajout du centre d\'intérêt:', error);
+        }
+      });
     }
     this.showDropdown['interests'] = false;
   }
 
+  removeInterest(interest: Interest) {
+    const token = localStorage.getItem('token');
+    if (token) {
+      this.usersService.removeInterestFromStudent(token, interest).subscribe({
+        next: (response) => {
+          if (response.removed_subjects && response.removed_subjects.length > 0) {
+            this.interests = this.interests.filter(i => i.id !== interest.id);
+            this.stateService.setInterests(this.interests.map(i => i.name)); // Enregistrer les centres d'intérêt mis à jour dans le localStorage
+            if (this.interests.length === 0) {
+              console.log('No interests left.'); // Journal de débogage
+            }
+          } else {
+            console.error('Erreur lors de la suppression du centre d\'intérêt: Aucun centre d\'intérêt supprimé');
+          }
+        },
+        error: (error) => {
+          console.error('Erreur lors de la suppression du centre d\'intérêt:', error);
+        }
+      });
+    }
+  }
+
   addSkill(skill: Skill) {
-    if (skill && !this.skills.some(s => s.id === skill.id)) {
-      this.skills.push(skill);
-      this.stateService.setSkills(this.skills.map(s => s.name)); // Enregistrer les compétences dans le localStorage
+    const token = localStorage.getItem('token');
+    if (skill && !this.skills.some(s => s.id === skill.id) && token) {
+      this.usersService.addSkillToStudent(token, skill).subscribe({
+        next: () => {
+          this.skills.push(skill);
+          this.stateService.setSkills(this.skills.map(s => s.name)); // Enregistrer les compétences dans le localStorage
+        },
+        error: (error) => {
+          console.error('Erreur lors de l\'ajout de la compétence:', error);
+        }
+      });
     }
     this.showDropdown['skills'] = false;
+  }
+
+  removeSkill(skill: Skill) {
+    const token = localStorage.getItem('token');
+    if (token) {
+      this.usersService.removeSkillFromStudent(token, skill).subscribe({
+        next: (response) => {
+          if (response.removed_skills && response.removed_skills.length > 0) {
+            this.skills = this.skills.filter(s => s.id !== skill.id);
+            this.stateService.setSkills(this.skills.map(s => s.name)); // Enregistrer les compétences mises à jour dans le localStorage
+            if (this.skills.length === 0) {
+              console.log('No skills left.'); // Journal de débogage
+            }
+          } else {
+            console.error('Erreur lors de la suppression de la compétence: Aucune compétence supprimée');
+          }
+        },
+        error: (error) => {
+          console.error('Erreur lors de la suppression de la compétence:', error);
+        }
+      });
+    }
   }
 
   addMajor() {
@@ -181,18 +239,9 @@ export class ProfilComponent implements OnInit {
     }
   }
 
+ // Basculer le mode édition pour le champ spécifié 
   toggleEditMode(field: string) {
     this.editMode[field] = !this.editMode[field];
-  }
-
-  removeInterest(interest: Interest) {
-    this.interests = this.interests.filter(i => i !== interest);
-    this.stateService.setInterests(this.interests.map(i => i.name)); // Enregistrer les centres d'intérêt mis à jour dans le localStorage
-  }
-
-  removeSkill(skill: Skill) {
-    this.skills = this.skills.filter(s => s !== skill);
-    this.stateService.setSkills(this.skills.map(s => s.name)); // Enregistrer les compétences mises à jour dans le localStorage
   }
 
   onFileSelected(event: Event) {
@@ -271,7 +320,7 @@ export class ProfilComponent implements OnInit {
       subjects: this.selectedSubjects.map(subject => subject.id) // Utiliser les IDs des centres d'intérêt
     };
     const token = localStorage.getItem('token');
-  
+
     if (token) {
       this.announcementService.createAnnouncement(token, newAnnouncement).subscribe({
         next: (response) => {
@@ -292,7 +341,7 @@ export class ProfilComponent implements OnInit {
       console.error('Token non trouvé');
       this.isSubmitting = false;
     }
-  
+
     this.showAlert = false;
     this.closeAnnouncementPopup(); // Fermer le popup après confirmation
   }

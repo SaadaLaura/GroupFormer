@@ -36,6 +36,7 @@
       </div>
     </div>
   </div>
+  
   <div class="info-group">
     <label for="skills">Compétences :</label>
     <div class="inline-container">
@@ -177,24 +178,24 @@
       </div>
     </div>
     <div class="info-group">
-      <label for="announcementSubjects">Centres d'intérêt :</label>
+      <label for="interests">Centre d'intérêt :</label>
       <div class="inline-container">
-        <ul *ngIf="selectedSubjects.length; else noSelectedSubjects" class="list-inline">
-          <li *ngFor="let subject of selectedSubjects" class="list-item">
-            {{ subject.name }}
-            <button class="icone" type="button" (click)="removeSelectedSubject(subject)">
+        <ul *ngIf="interests.length; else noInterests" class="list-inline">
+          <li *ngFor="let interest of interests" class="list-item">
+            {{ interest.name }}
+            <button class="icone" type="button" (click)="removeInterest(interest)">
               <span class="material-symbols-outlined">delete</span>
             </button>
           </li>
         </ul>
-        <ng-template #noSelectedSubjects><em class="no-items">vide</em></ng-template>
+        <ng-template #noInterests><em class="no-items">vide</em></ng-template>
         <div class="dropdown-container">
-          <button class="icone" type="button" (click)="toggleDropdown('announcementSubjects')">
+          <button class="icone" type="button" (click)="toggleDropdown('interests')">
             <span class="material-symbols-outlined add-icon">add</span>
           </button>
-          <div *ngIf="showDropdown['announcementSubjects']" class="dropdown">
+          <div *ngIf="showDropdown['interests']" class="dropdown">
             <ul>
-              <li *ngFor="let subject of availableInterests" (click)="addSelectedSubject(subject)">{{ subject.name }}</li>
+              <li *ngFor="let interest of availableInterests" (click)="addInterest(interest)">{{ interest.name }}</li>
             </ul>
           </div>
         </div>
