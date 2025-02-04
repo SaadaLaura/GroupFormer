@@ -6,6 +6,7 @@ from backend.api.dtos.project_dto import ProjectDTO
 from backend.api.dtos.skill_dto import SkillDTO
 from backend.api.dtos.subject_dto import SubjectDTO
 from backend.api.dtos.user_dto import UserDTO
+from backend.api.models import Project
 from backend.api.models.like import Like
 from backend.api.models.master import Master
 from backend.api.models.person import Person, Role
@@ -128,6 +129,45 @@ def remove_student_subjects():
 
     db.session.commit()
     return jsonify({'message': 'Subjects removed successfully', 'removed_subjects': removed_subjects}), 200
+
+
+# Add logged-in student to a project
+@students_bp.route('/join-project/<int:id_project>', methods=['PUT'])
+@swag_from('../routes/swagger/students/add_project_to_student.yaml')
+@token_required(Role.STUDENT.value)
+def add_project_to_student(id_project):
+    student_id = g.user.id_user
+    student = Person.query.filter_by(id_user=student_id, role=Role.STUDENT).first()
+
+    project = Project.query.get(id_project)
+    if not project:
+        return jsonify({'error': 'Project not found'}), 404
+
+    student_count = project.students.count()
+    if student_count >= project.size:
+        return jsonify({'error': 'Project is already full'}), 400
+
+    student.id_project = id_project
+    db.session.commit()
+
+    return jsonify({'message': 'Student successfully added to the project'}), 200
+
+
+# Allow a student to quit their project
+@students_bp.route('/quit-project', methods=['PUT'])
+@swag_from('../routes/swagger/students/quit_project.yaml')
+@token_required(Role.STUDENT.value)
+def quit_project():
+    student_id = g.user.id_user
+    student = Person.query.filter_by(id_user=student_id, role=Role.STUDENT).first()
+
+    if not student.id_project:
+        return jsonify({'error': 'Student is not in any project'}), 400
+
+    student.id_project = None
+    db.session.commit()
+
+    return jsonify({'message': 'Student successfully removed from the project'}), 200
 
 
 # GET all students

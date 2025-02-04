@@ -1,0 +1,11 @@
+tags:
+  - Student
+summary: "🔏 Required role: STUDENT | Quit a project"
+description: Allows a student to leave their current project.
+responses:
+  200:
+    description: Student successfully removed from the project
+  400:
+    description: Student is not in any project
+  403:
+    description: Only students can quit a project
