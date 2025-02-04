@@ -1,0 +1,40 @@
+tags:
+  - User
+summary: Register a new user
+description: Creates a new user account (should be only for admin)
+parameters:
+  - name: body
+    in: body
+    required: true
+    schema:
+      type: object
+      properties:
+        firstname:
+          type: string
+          example: "Ahmed"
+        lastname:
+          type: string
+          example: "Ité"
+        email:
+          type: string
+          example: "ahmed.ite@example.com"
+        password:
+          type: string
+          example: "password"
+        role:
+          type: string
+          enum: ["admin", "student"]
+          example: "admin"
+responses:
+  201:
+    description: User registered successfully
+    schema:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "User registered successfully"
+  400:
+    description: Invalid email or role
+  409:
+    description: Email already in use

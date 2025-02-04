@@ -1,0 +1,16 @@
+tags:
+  - Student
+summary: Get students without a project
+description: Retrieve a list of students who are not assigned to a project.
+security:
+  - BearerAuth: []
+responses:
+  200:
+    description: List of students without a project
+    schema:
+      type: array
+      items:
+        $ref: '#/definitions/StudentDTO'
+
+  401:
+    description: Unauthorized (missing or invalid token)

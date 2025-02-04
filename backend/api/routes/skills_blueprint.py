@@ -1,3 +1,4 @@
+from flasgger import swag_from
 from flask import Blueprint, jsonify, request
 
 from backend.api.database import db
@@ -11,6 +12,7 @@ skills_bp = Blueprint('skills', __name__)
 
 # GET all skills
 @skills_bp.route('', methods=['GET'])
+@swag_from('../routes/swagger/skills/get_all_skills.yaml')
 @token_required()
 def get_all_skills():
     skills = Skill.query.all()
@@ -21,6 +23,7 @@ def get_all_skills():
 
 # POST a skill
 @skills_bp.route('', methods=['POST'])
+@swag_from('../routes/swagger/skills/add_skill.yaml')
 @token_required(Role.ADMIN.value)
 def add_skill():
     skill = Skill(name=request.json.get('name'))
@@ -34,6 +37,7 @@ def add_skill():
 
 # DELETE a skill
 @skills_bp.route('/<int:id_skill>', methods=['DELETE'])
+@swag_from('../routes/swagger/skills/delete_skill.yaml')
 @token_required(Role.ADMIN.value)
 def delete_skill(id_skill):
     skill = Skill.query.get(id_skill)

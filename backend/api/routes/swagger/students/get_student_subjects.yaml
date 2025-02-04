@@ -1,0 +1,22 @@
+tags:
+  - Student
+summary: Get subjects of a student
+description: Retrieve all subjects associated with a specific student.
+security:
+  - BearerAuth: []
+parameters:
+  - in: path
+    name: student_id
+    required: true
+    type: integer
+    description: ID of the student
+    example: 1
+responses:
+  200:
+    description: List of subjects for the student
+    schema:
+      type: array
+      items:
+        $ref: '#/definitions/Subject'
+  401:
+    description: Unauthorized (missing or invalid token)

@@ -1,0 +1,20 @@
+tags:
+  - Student
+summary: "🔏 Required role: STUDENT | Add logged-in student to a project"
+description: Allows a student to join a project if there is space available.
+parameters:
+  - name: id_project
+    in: path
+    required: true
+    description: ID of the project the student wants to join
+    schema:
+      type: integer
+responses:
+  200:
+    description: Student successfully added to the project
+  400:
+    description: Project is already full
+  404:
+    description: Project not found
+  409:
+    description: Student is already in a project

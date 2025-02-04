@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from flasgger import swag_from
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, g
 
 from backend.api.database import db
 from backend.api.dtos.announcement_dto import AnnouncementDTO
@@ -15,17 +15,21 @@ announcements_bp = Blueprint('announcements', __name__)
 
 # POST an announcement
 @announcements_bp.route('/add', methods=['POST'])
+@swag_from('../routes/swagger/announcements/create_announcement.yaml')
 @token_required()
 def create_announcement():
+    student = g.user
     data = request.json
     title = data.get('title')
     description = data.get('description')
-    id_project = data.get('id_project')
 
-    if not title or not id_project:
-        return jsonify({'error': 'Title and project ID are required'}), 400
+    if not title:
+        return jsonify({'error': 'Title is required'}), 400
 
-    project = Project.query.get(id_project)
+    if student.id_project is None:
+        return jsonify({'error': 'Student has no project'}), 400
+
+    project = Project.query.get(student.id_project)
     if not project:
         return jsonify({'error': 'Project not found'}), 404
 
@@ -33,7 +37,7 @@ def create_announcement():
         title=title,
         description=description,
         publication=datetime.now(),
-        id_project=id_project
+        id_project=student.id_project
     )
 
     db.session.add(announcement)
@@ -65,6 +69,7 @@ def create_announcement():
 
 # Update an announcement by ID
 @announcements_bp.route('/<int:id_announcement>', methods=['PUT'])
+@swag_from('../routes/swagger/announcements/update_announcement.yaml')
 @token_required()
 def update_announcement(id_announcement):
     announcement = Announcement.query.get(id_announcement)
@@ -103,6 +108,7 @@ def update_announcement(id_announcement):
 
 # DELETE an announcement by ID
 @announcements_bp.route('/<int:id_announcement>', methods=['DELETE'])
+@swag_from('../routes/swagger/announcements/delete_announcement.yaml')
 @token_required()
 def delete_announcement(id_announcement):
     announcement = Announcement.query.get(id_announcement)
@@ -121,7 +127,7 @@ def delete_announcement(id_announcement):
 
 # GET all announcements
 @announcements_bp.route('', methods=['GET'])
-@swag_from('swagger/announcements/announcements.yaml')
+@swag_from('../routes/swagger/announcements/get_all_announcements.yaml')
 @token_required()
 def get_all_announcements():
     announcements = Announcement.query.all()
@@ -132,7 +138,7 @@ def get_all_announcements():
 
 # GET an announcement by ID
 @announcements_bp.route('/<int:id_announcement>', methods=['GET'])
-@swag_from('swagger/announcements/announcements_by_id.yaml')
+@swag_from('../routes/swagger/announcements/get_announcement.yaml')
 @token_required()
 def get_announcement(id_announcement):
     announcement = Announcement.query.get(id_announcement)
@@ -143,7 +149,7 @@ def get_announcement(id_announcement):
 
 # GET skills searched by an announcement
 @announcements_bp.route('/<int:id_announcement>/research', methods=['GET'])
-@swag_from('swagger/announcements/announcements_research.yaml')
+@swag_from('../routes/swagger/announcements/get_announcement_search.yaml')
 @token_required()
 def get_announcement_search(id_announcement):
     skills = db.session.query(Skill).join(Search).filter(Search.id_announcement == id_announcement).all()
@@ -154,7 +160,7 @@ def get_announcement_search(id_announcement):
 
 # GET subjects included by an announcement
 @announcements_bp.route('/<int:id_announcement>/about', methods=['GET'])
-@swag_from('swagger/announcements/announcements_about.yaml')
+@swag_from('../routes/swagger/announcements/get_announcement_about.yaml')
 @token_required()
 def get_announcement_about(id_announcement):
     subjects = db.session.query(Subject).join(IsAbout).filter(IsAbout.id_announcement == id_announcement).all()

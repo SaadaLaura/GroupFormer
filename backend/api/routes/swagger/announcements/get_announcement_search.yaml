@@ -1,0 +1,22 @@
+tags:
+  - Announcement
+summary: Get skills searched by an announcement
+description: Retrieve all skills associated with a specific announcement.
+security:
+  - BearerAuth: []
+parameters:
+  - in: path
+    name: id_announcement
+    required: true
+    type: integer
+    description: ID of the announcement
+    example: 1213
+responses:
+  200:
+    description: List of skills for the announcement
+    schema:
+      type: array
+      items:
+        $ref: '#/definitions/Skill'
+  401:
+    description: Unauthorized (missing or invalid token)

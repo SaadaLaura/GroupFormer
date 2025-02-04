@@ -1,0 +1,26 @@
+tags:
+  - Subject
+summary: Retrieve all subjects
+description: Fetches a list of all available subjects in the database.
+security:
+  - BearerAuth: []
+responses:
+  200:
+    description: A list of all subjects
+    schema:
+      type: array
+      items:
+        $ref: '#/definitions/Subject'
+  401:
+    description: Unauthorized (missing or invalid token)
+
+definitions:
+  Subject:
+    type: object
+    properties:
+      id:
+        type: integer
+        example: 3
+      name:
+        type: string
+        example: "IT"

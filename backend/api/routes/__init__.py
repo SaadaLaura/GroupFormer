@@ -10,6 +10,23 @@ from backend.api.routes.students_blueprint import students_bp
 from backend.api.routes.subjects_blueprint import subjects_bp
 from backend.api.routes.users_blueprint import users_bp
 
+swagger_template = {
+    "swagger": "2.0",
+    "info": {
+        "title": "GroupFormer API",
+        "description": "API for managing projects and students.",
+        "version": "1.0"
+    },
+    "securityDefinitions": {
+        "BearerAuth": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header",
+            "description": "In the field, enter: Bearer <YOUR_ACCESS_TOKEN>"
+        }
+    }
+}
+
 
 def create_app():
     app = Flask(__name__)
@@ -17,7 +34,7 @@ def create_app():
     app.config['JSON_AS_ASCII'] = False
 
     db.init_app(app)
-    Swagger(app)
+    Swagger(app, template=swagger_template)
 
     app.register_blueprint(students_bp, url_prefix='/students')
     app.register_blueprint(announcements_bp, url_prefix='/announcements')

@@ -1,0 +1,40 @@
+tags:
+  - Announcement
+summary: Create an announcement
+description: Create a new announcement for a project.
+security:
+  - BearerAuth: []
+parameters:
+  - in: body
+    name: body
+    required: true
+    schema:
+      type: object
+      required:
+        - title
+      properties:
+        title:
+          type: string
+          example: "New Research Opportunity"
+        description:
+          type: string
+          example: "We are looking for AI researchers."
+        skills:
+          type: array
+          items:
+            type: integer
+          example: [3, 5, 8]
+        subjects:
+          type: array
+          items:
+            type: integer
+          example: [2, 6]
+responses:
+  201:
+    description: Announcement created successfully
+  400:
+    description: Missing required fields or invalid data OR student has no project
+  404:
+    description: Project or skill/subject not found
+  401:
+    description: Unauthorized (missing or invalid token)

@@ -1,0 +1,31 @@
+tags:
+  - Subject
+summary: "🔐 Required role: ADMIN | Add a new subject"
+description: Adds a new subject to the database.
+security:
+  - BearerAuth: []
+parameters:
+  - in: body
+    name: subject
+    required: true
+    schema:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "IT"
+responses:
+  201:
+    description: Subject added successfully
+    schema:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Subject added successfully"
+  400:
+    description: Bad request (invalid input)
+  401:
+    description: Unauthorized (missing or invalid token)
+  403:
+    description: Forbidden (not an admin)

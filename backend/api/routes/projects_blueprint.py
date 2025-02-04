@@ -16,6 +16,7 @@ projects_bp = Blueprint('projects', __name__)
 
 # POST a project
 @projects_bp.route('/add', methods=['POST'])
+@swag_from('../routes/swagger/projects/create_project.yaml')
 @token_required(Role.ADMIN.value)
 def create_project():
     data = request.json
@@ -42,6 +43,7 @@ def create_project():
 
 # Update a project by ID
 @projects_bp.route('/<int:id_project>', methods=['PUT'])
+@swag_from('../routes/swagger/projects/update_project.yaml')
 @token_required(Role.ADMIN.value)
 def update_project(id_project):
     project = Project.query.get(id_project)
@@ -62,6 +64,7 @@ def update_project(id_project):
 
 # DELETE a project by ID
 @projects_bp.route('/<int:id_project>', methods=['DELETE'])
+@swag_from('../routes/swagger/projects/delete_project.yaml')
 @token_required(Role.ADMIN.value)
 def delete_project(id_project):
     project = Project.query.get(id_project)
@@ -84,6 +87,7 @@ def delete_project(id_project):
 
 # GET all projects
 @projects_bp.route('', methods=['GET'])
+@swag_from('../routes/swagger/projects/get_all_projects.yaml')
 @token_required()
 def get_all_projects():
     projects = Project.query.all()
@@ -94,6 +98,7 @@ def get_all_projects():
 
 # GET projects without students
 @projects_bp.route('/empty', methods=['GET'])
+@swag_from('../routes/swagger/projects/get_project_without_students.yaml')
 @token_required()
 def get_project_without_students():
     empty_projects = Project.query.filter_by(students=None).all()
@@ -104,7 +109,7 @@ def get_project_without_students():
 
 # GET a project by ID
 @projects_bp.route('/<int:id_project>', methods=['GET'])
-@swag_from('swagger/projects/projects_by_id.yaml')
+@swag_from('../routes/swagger/projects/get_project.yaml')
 @token_required()
 def get_project(id_project):
     project = Project.query.get(id_project)
@@ -115,7 +120,7 @@ def get_project(id_project):
 
 # GET project announcements
 @projects_bp.route('/<int:id_project>/announcements', methods=['GET'])
-@swag_from('swagger/projects/projects_announcements.yaml')
+@swag_from('../routes/swagger/projects/get_project_announcements.yaml')
 @token_required()
 def get_project_announcements(id_project):
     announcements = Announcement.query.filter_by(id_project=id_project).all()

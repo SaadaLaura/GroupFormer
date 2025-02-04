@@ -1,0 +1,26 @@
+tags:
+  - Skill
+summary: Retrieve all skills
+description: Fetches a list of all available skills in the database.
+security:
+  - BearerAuth: []
+responses:
+  200:
+    description: A list of all skills
+    schema:
+      type: array
+      items:
+        $ref: '#/definitions/Skill'
+  401:
+    description: Unauthorized (missing or invalid token)
+
+definitions:
+  Skill:
+    type: object
+    properties:
+      id:
+        type: integer
+        example: 1
+      name:
+        type: string
+        example: "Python"

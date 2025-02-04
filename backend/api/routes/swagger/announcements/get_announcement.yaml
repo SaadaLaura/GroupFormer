@@ -1,0 +1,49 @@
+tags:
+  - Announcement
+summary: Get an announcement by ID
+description: Retrieve details of a specific announcement.
+security:
+  - BearerAuth: []
+parameters:
+  - in: path
+    name: id_announcement
+    required: true
+    type: integer
+    description: ID of the announcement to retrieve
+    example: 1213
+responses:
+  200:
+    description: Announcement details
+    schema:
+      $ref: '#/definitions/AnnouncementDTO'
+  404:
+    description: Announcement not found
+  401:
+    description: Unauthorized (missing or invalid token)
+
+definitions:
+  AnnouncementDTO:
+    properties:
+      id:
+        type: integer
+        example: 1213
+      title:
+        type: string
+        example: "New Research Opportunity"
+      description:
+        type: string
+        example: "We are looking for AI researchers."
+      project:
+        $ref: '#/definitions/Project'
+      skills:
+        type: array
+        items:
+          $ref: '#/definitions/Skill'
+      subjects:
+        type: array
+        items:
+          $ref: '#/definitions/Subject'
+      publication:
+        type: string
+        format: date-time
+        example: "2025-02-01T12:00:00Z"

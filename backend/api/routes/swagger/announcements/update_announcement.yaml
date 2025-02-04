@@ -1,0 +1,44 @@
+tags:
+  - Announcement
+summary: Update an announcement by ID
+description: Update an existing announcement.
+security:
+  - BearerAuth: []
+parameters:
+  - in: path
+    name: id_announcement
+    required: true
+    type: integer
+    description: ID of the announcement to update
+    example: 1
+  - in: body
+    name: body
+    required: true
+    schema:
+      type: object
+      properties:
+        title:
+          type: string
+          example: "Updated Announcement Title"
+        description:
+          type: string
+          example: "Updated description of the announcement."
+        skills:
+          type: array
+          items:
+            type: integer
+          example: [3, 6]
+        subjects:
+          type: array
+          items:
+            type: integer
+          example: [1, 4]
+responses:
+  200:
+    description: Announcement updated successfully
+  400:
+    description: Invalid skill/subject ID
+  404:
+    description: Announcement not found
+  401:
+    description: Unauthorized (missing or invalid token)

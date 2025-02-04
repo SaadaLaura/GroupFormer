@@ -1,0 +1,33 @@
+tags:
+  - Student
+summary: "🔏 Required role: STUDENT | Remove subjects from the logged-in student"
+description: Allows a student to remove subjects from their profile.
+security:
+  - BearerAuth: []
+parameters:
+  - in: body
+    name: body
+    required: true
+    schema:
+      type: array
+      items:
+        type: object
+        required:
+          - id
+          - name
+        properties:
+          id:
+            type: integer
+            example: 2
+          name:
+            type: string
+            example: "IA"
+responses:
+  200:
+    description: Subjects removed successfully
+  400:
+    description: Invalid input format
+  404:
+    description: Subject not found
+  401:
+    description: Unauthorized (missing or invalid token)

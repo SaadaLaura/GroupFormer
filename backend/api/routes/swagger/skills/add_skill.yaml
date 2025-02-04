@@ -1,0 +1,31 @@
+tags:
+  - Skill
+summary: "🔐 Required role: ADMIN | Add a new skill"
+description: Adds a new skill to the database.
+security:
+  - BearerAuth: []
+parameters:
+  - in: body
+    name: skill
+    required: true
+    schema:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "Java"
+responses:
+  201:
+    description: Skill added successfully
+    schema:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Skill added successfully"
+  400:
+    description: Bad request (invalid input)
+  401:
+    description: Unauthorized (missing or invalid token)
+  403:
+    description: Forbidden (not an admin)
