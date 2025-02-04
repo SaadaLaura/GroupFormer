@@ -15,6 +15,7 @@ export class UsersService {
 
   constructor(private http: HttpClient) {}
 
+  //Pour les utilisateurs 
   login(email: string, password: string): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(`${this.baseUrl}/users/login`, { email, password })
       .pipe(
@@ -39,6 +40,7 @@ export class UsersService {
     );
   }
 
+  //Pour les Students
   getStudentsWithoutProject(token: string): Observable<Student[]> {
     const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
     return this.http.get<Student[]>(`${this.baseUrl}/students/alone`,{ headers }).pipe(
@@ -69,10 +71,16 @@ export class UsersService {
     );
   }
 
+  quitProject(token: string): Observable<any> {
+    const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
+    return this.http.put<any>(`${this.baseUrl}/students/quit-project`, {}, { headers }).pipe(
+      catchError(this.handleError)
+    );
+  }
+
   removeInterestFromStudent(token: string, interest: Interest): Observable<any> {
     const headers = new HttpHeaders({ Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' });
-    const body = JSON.stringify([{ id: interest.id, name: interest.name }]);
-    return this.http.request<any>('delete', `${this.baseUrl}/students/subjects`, { headers, body }).pipe(
+    return this.http.request<any>('delete', `${this.baseUrl}/students/subjects`, { headers, body:[interest] }).pipe(
       catchError(this.handleError)
     );
   }

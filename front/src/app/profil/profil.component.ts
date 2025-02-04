@@ -113,7 +113,6 @@ export class ProfilComponent implements OnInit {
       this.router.navigate(['/login']);
     }
 
-    //enregistre les compétences dans le local storage
     this.stateService.skills$.subscribe({
       next: (skills: string[] | null) => {
         if (skills !== null) {
@@ -121,7 +120,7 @@ export class ProfilComponent implements OnInit {
         }
       }
     });
-    //enregistre les centres d'intérets dans le local storage
+
     this.stateService.interests$.subscribe({
       next: (interests: string[] | null) => {
         if (interests !== null) {
@@ -147,12 +146,12 @@ export class ProfilComponent implements OnInit {
       this.selectedFile = new File([], storedFileName);
     }
   }
-
   // Basculer l'affichage du menu déroulant pour le champ spécifié
   toggleDropdown(field: string) {
     this.showDropdown[field] = !this.showDropdown[field];
   }
 
+  // Méthodes pour les centres d'intérêts
   addInterest(interest: Interest) {
     const token = localStorage.getItem('token');
     if (interest && !this.interests.some(i => i.id === interest.id) && token) {
@@ -191,6 +190,7 @@ export class ProfilComponent implements OnInit {
     }
   }
 
+  // Méthodes pour les compétences
   addSkill(skill: Skill) {
     const token = localStorage.getItem('token');
     if (skill && !this.skills.some(s => s.id === skill.id) && token) {
@@ -229,6 +229,7 @@ export class ProfilComponent implements OnInit {
     }
   }
 
+  // Méthode pour la majeure
   addMajor() {
     if (this.editMode['major']) {
       this.major = this.newMajor.trim();
@@ -239,7 +240,7 @@ export class ProfilComponent implements OnInit {
     }
   }
 
- // Basculer le mode édition pour le champ spécifié 
+  // Basculer le mode édition pour le champ spécifié
   toggleEditMode(field: string) {
     this.editMode[field] = !this.editMode[field];
   }
@@ -414,5 +415,41 @@ export class ProfilComponent implements OnInit {
         console.error('Token non trouvé');
       }
     }
+  }
+
+  // Méthode pour quitter un projet avec confirmation
+  confirmQuitProject() {
+    this.showAlertWithAction('Voulez-vous vraiment quitter ce projet ?', this.quitProject.bind(this));
+  }
+
+  // Méthode pour quitter un projet
+  quitProject() {
+    const token = localStorage.getItem('token');
+    if (token) {
+      this.usersService.quitProject(token).subscribe({
+        next: () => {
+          this.hasProject = false;
+          this.projectName = '';
+          this.missingMembers = 0;
+          this.announcements = [];
+        },
+        error: (error) => {
+          console.error('Erreur lors de la sortie du projet:', error);
+        }
+      });
+    } else {
+      console.error('Token non trouvé');
+    }
+    this.showAlert = false;
+  }
+
+  // Méthode pour afficher un message
+  showMessage(message: string, type: string) {
+    this.alertMessage = message;
+    this.alertAction = null;
+    this.showAlert = true;
+    setTimeout(() => {
+      this.showAlert = false;
+    }, 3000);
   }
 }

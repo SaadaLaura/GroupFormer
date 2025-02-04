@@ -1,11 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { NavbarComponent } from '../navbar/navbar.component';
-import { AnnouncementService } from '../services/announcement.service';
 import { ProjectService } from '../services/project.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Project, ProjectDetail } from '../class/Project';
-import { Announcement } from '../class/Announcement';
 import { StateService } from '../services/state.service';
 
 @Component({
@@ -32,7 +30,6 @@ export class GroupResearchComponent implements OnInit {
 
   constructor(
     private projectService: ProjectService,
-    private announcementService: AnnouncementService,
     private stateService: StateService
   ) {}
 
@@ -63,7 +60,7 @@ export class GroupResearchComponent implements OnInit {
     });
   }
 
-  loadProjectDetails(): void {
+    loadProjectDetails(): void {
     this.projectDetails = this.projects.map(project => {
       const announcements = project.announcements;
       return announcements.map(announcement => {
@@ -76,11 +73,12 @@ export class GroupResearchComponent implements OnInit {
           announcement.description,
           this.formatDate(announcement.publication),
           announcement.id,
-          announcement.subjects.map(subject => subject.name)
+          announcement.subjects.map(subject => subject.name),
+          project.members.map(member => member.email)
         );
       });
     }).flat();
-
+  
     this.loadMissingStudentsRange();
     this.applyFilters();
     this.isLoading = false;

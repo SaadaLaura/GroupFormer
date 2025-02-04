@@ -49,12 +49,14 @@
       <th>Description du projet</th>
       <th>Nombre d'étudiants manquants</th>
       <th>Date de publication</th>
+      <th>Emails des membres</th> <!-- Ajoutez cette ligne -->
     </tr>
   </thead>
   <tbody>
     <tr *ngFor="let detail of filteredProjectDetails">
       <td>{{ detail.projectName }}</td>
-      <td>{{ detail.announcementDescription }}</td>
+      <td>{{ detail.announcementDescription }}</td>  
+      <td>{{ detail.memberEmails.join(', ') }}</td>
       <td>{{ detail.skills }}</td>
       <td>{{ detail.specialties.join(', ') }}</td>
       <td>{{ detail.projectDescription }}</td>

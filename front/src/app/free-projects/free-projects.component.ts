@@ -197,6 +197,36 @@ export class FreeProjectsComponent implements OnInit {
     this.showAlert = false;
   }
 
+  confirmJoinProject(projectId: number): void {
+    this.alertMessage = 'Voulez-vous vraiment rejoindre ce projet ?';
+    this.alertAction = () => this.executeJoinProject(projectId);
+    this.showAlert = true;
+  }
+
+  executeJoinProject(projectId: number): void {
+    const token = localStorage.getItem('token');
+    if (token) {
+      this.projectService.joinProject(token, projectId).subscribe({
+        next: () => {
+          this.message = 'Vous avez rejoint le projet avec succès';
+          this.messageType = 'success';
+          setTimeout(() => {
+            this.showMessage = false;
+          }, 3000);
+          this.loadProjects(token);
+        },
+        error: (error) => {
+          this.message = `Erreur : ${error.message}`;
+          this.messageType = 'error';
+          setTimeout(() => {
+            this.showMessage = false;
+          }, 5000);
+        }
+      });
+    }
+    this.showAlert = false;
+  }
+
   confirmAlert(): void {
     this.alertAction();
   }

@@ -49,7 +49,7 @@
       <th>Description</th>
       <th>Nombre d'étudiants maximum</th>
       <th>Date limite</th>
-      <th *ngIf="userRole === 'admin'">Actions</th>
+      <th *ngIf="userRole === 'admin' || userRole === 'student'">Actions</th>
     </tr>
   </thead>
   <tbody>
@@ -69,6 +69,14 @@
           <button class="actions-button" (click)="confirmDeleteProject(project.id)">
             <span class="material-symbols-outlined">delete</span>
             <span>Supprimer</span>
+          </button>
+        </div>
+      </td>
+      <td *ngIf="userRole === 'student'">
+        <div class="action-item">
+          <button class="actions-button" (click)="confirmJoinProject(project.id)">
+            <span class="material-symbols-outlined">group_add</span>
+            <span>Rejoindre</span>
           </button>
         </div>
       </td>

@@ -22,6 +22,7 @@ export class ProjectDetail {
     public announcementDescription: string,
     public publicationDate: string,
     public announcementId: number,
-    public specialties: string[]
+    public specialties: string[],
+    public memberEmails : string[]
   ) {}
 }
