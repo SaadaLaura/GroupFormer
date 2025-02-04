@@ -10,9 +10,10 @@
     <p class="spaced-paragraph">Consultez la page <a href="/free-projects">Projets libres</a> pour choisir un projet ou proposer le vôtre à l'administration.</p>
   </div>
   <div *ngIf="hasProject" class="hasProject">
-    <p>Vous êtes dans le projet {{ projectName }}. Il manque {{ remainingMembers }} personne{{ remainingMembers > 1 ? 's' : '' }} pour compléter le groupe.</p>  </div>
+    <p>Vous êtes dans le projet {{ projectName }}. Il manque {{ missingMembers }} personne{{ missingMembers > 1 ? 's' : '' }} pour compléter le groupe.</p>
+  </div>
   <div class="info-group">
-    <label for="interests">Centre d'intérêt <span class="required">*</span> :</label>
+    <label for="interests">Centre d'intérêt :</label>
     <div class="inline-container">
       <ul *ngIf="interests.length; else noInterests" class="list-inline">
         <li *ngFor="let interest of interests" class="list-item">
@@ -29,14 +30,14 @@
         </button>
         <div *ngIf="showDropdown['interests']" class="dropdown">
           <ul>
-            <li *ngFor="let interest of availableInterests" (click)="addInterest(interest)">{{ interest }}</li>
+            <li *ngFor="let interest of availableInterests" (click)="addInterest(interest)">{{ interest.name }}</li>
           </ul>
         </div>
       </div>
     </div>
   </div>
   <div class="info-group">
-    <label for="skills">Compétences <span class="required">*</span> :</label>
+    <label for="skills">Compétences :</label>
     <div class="inline-container">
       <ul *ngIf="skills.length; else noSkills" class="list-inline">
         <li *ngFor="let skill of skills" class="list-item">
@@ -53,7 +54,7 @@
         </button>
         <div *ngIf="showDropdown['skills']" class="dropdown">
           <ul>
-            <li *ngFor="let skill of availableSkills" (click)="addSkill(skill)">{{ skill }}</li>
+            <li *ngFor="let skill of availableSkills" (click)="addSkill(skill)">{{ skill.name }}</li>
           </ul>
         </div>
       </div>
@@ -71,10 +72,37 @@
       <span class="material-symbols-outlined">{{ editMode['major'] ? 'check' : 'edit' }}</span>
     </button>
   </div>
-  <p class="legend"><em>* : important à remplir</em></p>
-  <p> <em>A faire : création d'annonces en cas de groupe</em></p>
+  <button *ngIf="missingMembers > 0" class="btn-create-announcement" (click)="openAnnouncementPopup()">Créer une annonce</button>
+
+  <!-- Afficher les annonces -->
+  <div *ngIf="announcements.length > 0" class="announcements-list">
+    <h3>Annonces des recherches étudiants</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Titre</th>
+          <th>Description</th>
+          <th>Date de publication</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let announcement of announcements">
+          <td>{{ announcement.title }}</td>
+          <td>{{ announcement.description }}</td>
+          <td>{{ announcement.publication | date:'dd/MM/yyyy' }}</td>
+          <td>
+            <button class="icone" type="button" (click)="deleteAnnouncement(announcement.id)">
+              <span class="material-symbols-outlined">delete</span> Supprimer
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>
 
+<!-- Contenu pour les admins-->
 <div *ngIf="user && userRole === 'admin'" class="admin-info">
   <p>Pour permettre à vos étudiants d'accéder à l'outil, veuillez déposer votre fichier Excel en respectant le format de l'exemple ci-dessous :</p>
   <img src="assets/img/Exemple_excel.png" alt="Exemple de fichier Excel" class="example-image">
@@ -102,10 +130,78 @@
     <span *ngIf="!importSuccess" class="material-symbols-outlined">error</span>
   </div>
 </div>
+
+<!-- Alerte-->
 <div *ngIf="showAlert" class="alert">
-  <span class="alert-message">Voulez-vous vraiment ajouter les étudiants dans la base de données ?</span>
+  <span class="alert-message">{{ alertMessage }}</span>
   <div class="alert-buttons">
     <button class="alert-button" (click)="confirmAlert()">Confirmer</button>
     <button class="alert-button" (click)="cancelAlert()">Annuler</button>
   </div>
+</div>
+
+<!-- Popup pour créer ou modifier une annonce -->
+<div *ngIf="showAnnouncementPopup" class="popup-overlay">
+  <div class="popup">
+    <h3>Créer une annonce pour rechercher des étudiants</h3>
+    <div class="info-group">
+      <label for="announcementTitle">Titre :</label>
+      <input type="text" id="announcementTitle" [(ngModel)]="announcementTitle" (input)="checkFormValidity()">
+    </div>
+    <div class="info-group">
+      <label for="announcementDescription">Description :</label>
+      <textarea id="announcementDescription" [(ngModel)]="announcementDescription" (input)="checkFormValidity()"></textarea>
+    </div>
+    <div class="info-group">
+      <label for="announcementSkills">Compétences :</label>
+      <div class="inline-container">
+        <ul *ngIf="selectedSkills.length; else noSelectedSkills" class="list-inline">
+          <li *ngFor="let skill of selectedSkills" class="list-item">
+            {{ skill.name }}
+            <button class="icone" type="button" (click)="removeSelectedSkill(skill)">
+              <span class="material-symbols-outlined">delete</span>
+            </button>
+          </li>
+        </ul>
+        <ng-template #noSelectedSkills><em class="no-items">vide</em></ng-template>
+        <div class="dropdown-container">
+          <button class="icone" type="button" (click)="toggleDropdown('announcementSkills')">
+            <span class="material-symbols-outlined add-icon">add</span>
+          </button>
+          <div *ngIf="showDropdown['announcementSkills']" class="dropdown">
+            <ul>
+              <li *ngFor="let skill of availableSkills" (click)="addSelectedSkill(skill)">{{ skill.name }}</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="info-group">
+      <label for="announcementSubjects">Centres d'intérêt :</label>
+      <div class="inline-container">
+        <ul *ngIf="selectedSubjects.length; else noSelectedSubjects" class="list-inline">
+          <li *ngFor="let subject of selectedSubjects" class="list-item">
+            {{ subject.name }}
+            <button class="icone" type="button" (click)="removeSelectedSubject(subject)">
+              <span class="material-symbols-outlined">delete</span>
+            </button>
+          </li>
+        </ul>
+        <ng-template #noSelectedSubjects><em class="no-items">vide</em></ng-template>
+        <div class="dropdown-container">
+          <button class="icone" type="button" (click)="toggleDropdown('announcementSubjects')">
+            <span class="material-symbols-outlined add-icon">add</span>
+          </button>
+          <div *ngIf="showDropdown['announcementSubjects']" class="dropdown">
+            <ul>
+              <li *ngFor="let subject of availableInterests" (click)="addSelectedSubject(subject)">{{ subject.name }}</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="popup-buttons">
+      <button (click)="closeAnnouncementPopup()">Annuler</button> 
+      <button (click)="submitAnnouncement()" [disabled]="!isFormValid">Confirmer</button>
+    </div>
 </div>

@@ -7,6 +7,8 @@ import { StateService } from '../services/state.service';
 import { UsersService } from '../services/users.service';
 import { AbilitiesService } from '../services/abilities.service';
 import { Interest, Student, Skill, Project } from '../class/Users';
+import { AnnouncementService } from '../services/announcement.service';
+import { Announcement } from '../class/Announcement';
 
 @Component({
   selector: 'app-profil',
@@ -25,7 +27,7 @@ export class ProfilComponent implements OnInit {
   newMajor: string = '';
   hasProject: boolean = false;
   projectName: string = '';
-  remainingMembers: number = 0;
+  missingMembers: number = 0;
   editMode: { [key: string]: boolean } = {
     interests: false,
     skills: false,
@@ -33,10 +35,12 @@ export class ProfilComponent implements OnInit {
   };
   showDropdown: { [key: string]: boolean } = {
     interests: false,
-    skills: false
+    skills: false,
+    announcementSkills: false,
+    announcementSubjects: false
   };
-  availableSkills: string[] = [];
-  availableInterests: string[] = [];
+  availableSkills: Skill[] = [];
+  availableInterests: Interest[] = [];
   selectedFile: File | null = null;
   isLoading: boolean = false;
   showAlert: boolean = false; 
@@ -44,11 +48,26 @@ export class ProfilComponent implements OnInit {
   importSuccess: boolean = false;
   userRole: string = ''; 
 
+  alertMessage: string = '';
+  alertAction: (() => void) | null = null;
+
+  // Variables pour l'annonce
+  showAnnouncementPopup: boolean = false;
+  announcementTitle: string = '';
+  announcementDescription: string = '';
+  selectedSkills: Skill[] = [];
+  selectedSubjects: Interest[] = [];
+  isFormValid: boolean = false;
+  isSubmitting: boolean = false;
+  announcementSuccessMessage: string = '';
+  announcements: Announcement[] = [];
+
   constructor(
     private router: Router,
     private stateService: StateService,
     private usersService: UsersService,
-    private abilitiesService: AbilitiesService
+    private abilitiesService: AbilitiesService,
+    private announcementService: AnnouncementService
   ) {}
 
   ngOnInit() {
@@ -66,13 +85,14 @@ export class ProfilComponent implements OnInit {
           if (response.project) {
             this.hasProject = true;
             this.projectName = response.project.name;
-            this.remainingMembers = response.project.missing;
+            this.missingMembers = response.project.missing;
+            this.loadAnnouncements(response.project.id);
           }
 
           // Récupérer les compétences et centres d'intérêt disponibles
           this.abilitiesService.getAllSkills(token).subscribe({
             next: (skills: Skill[]) => {
-              this.availableSkills = skills.map(skill => skill.name);
+              this.availableSkills = skills;
             },
             error: (error) => {
               console.error('An error occurred while fetching skills:', error);
@@ -81,7 +101,7 @@ export class ProfilComponent implements OnInit {
 
           this.abilitiesService.getAllSubjects(token).subscribe({
             next: (subjects: Interest[]) => {
-              this.availableInterests = subjects.map(subject => subject.name);
+              this.availableInterests = subjects;
             },
             error: (error) => {
               console.error('An error occurred while fetching subjects:', error);
@@ -135,17 +155,17 @@ export class ProfilComponent implements OnInit {
     this.showDropdown[field] = !this.showDropdown[field];
   }
 
-  addInterest(interest: string) {
-    if (interest && !this.interests.some(i => i.name === interest)) {
-      this.interests.push(new Interest(0, interest));
+  addInterest(interest: Interest) {
+    if (interest && !this.interests.some(i => i.id === interest.id)) {
+      this.interests.push(interest);
       this.stateService.setInterests(this.interests.map(i => i.name)); // Enregistrer les centres d'intérêt dans le localStorage
     }
     this.showDropdown['interests'] = false;
   }
 
-  addSkill(skill: string) {
-    if (skill && !this.skills.some(s => s.name === skill)) {
-      this.skills.push(new Skill(0, skill));
+  addSkill(skill: Skill) {
+    if (skill && !this.skills.some(s => s.id === skill.id)) {
+      this.skills.push(skill);
       this.stateService.setSkills(this.skills.map(s => s.name)); // Enregistrer les compétences dans le localStorage
     }
     this.showDropdown['skills'] = false;
@@ -185,22 +205,11 @@ export class ProfilComponent implements OnInit {
   }
 
   confirmAlert() {
-    if (this.selectedFile) {
-      this.isLoading = true;
-      this.usersService.uploadStudents(this.selectedFile).subscribe({
-        next: (response) => {
-          this.isLoading = false;
-          this.importMessage = 'Les étudiants ont été ajoutés avec succès';
-          this.importSuccess = true;
-        },
-        error: (error) => {
-          this.isLoading = false;
-          this.importMessage = this.translateErrorMessage(error.error.message);
-          this.importSuccess = false;
-        }
-      });
+    if (this.alertAction) {
+      this.alertAction();
     }
     this.showAlert = false;
+    this.alertAction = null;
   }
 
   cancelAlert() {
@@ -223,6 +232,138 @@ export class ProfilComponent implements OnInit {
         return 'Votre fichier Excel n\'a pas le bon format, il manque une ou plusieurs colonnes';
       default:
         return 'Une erreur est survenue';
+    }
+  }
+
+  // Méthode pour afficher l'alerte de confirmation
+  showAlertWithAction(message: string, action: () => void) {
+    this.alertMessage = message;
+    this.alertAction = action;
+    this.showAlert = true;
+  }
+
+  // Méthode pour supprimer une annonce avec confirmation
+  deleteAnnouncement(announcementId: number) {
+    const token = localStorage.getItem('token');
+    if (token) {
+      this.showAlertWithAction('Voulez-vous vraiment supprimer cette annonce ?', () => {
+        this.announcementService.deleteAnnouncement(token, announcementId).subscribe({
+          next: (response) => {
+            this.announcements = this.announcements.filter(a => a.id !== announcementId);
+          },
+          error: (error) => {
+            console.error('Erreur lors de la suppression de l\'annonce:', error);
+          }
+        });
+      });
+    } else {
+      console.error('Token non trouvé');
+    }
+  }
+
+  // Méthode pour confirmer l'ajout de l'annonce
+  confirmAnnouncement() {
+    this.isSubmitting = true;
+    const newAnnouncement = {
+      title: this.announcementTitle,
+      description: this.announcementDescription,
+      skills: this.selectedSkills.map(skill => skill.id), // Utiliser les IDs des compétences
+      subjects: this.selectedSubjects.map(subject => subject.id) // Utiliser les IDs des centres d'intérêt
+    };
+    const token = localStorage.getItem('token');
+  
+    if (token) {
+      this.announcementService.createAnnouncement(token, newAnnouncement).subscribe({
+        next: (response) => {
+          this.isSubmitting = false;
+          this.announcementSuccessMessage = 'Votre annonce a été ajoutée avec succès';
+          this.loadAnnouncements(this.user?.project?.id); // Recharger les annonces après ajout
+          setTimeout(() => {
+            this.announcementSuccessMessage = '';
+            this.closeAnnouncementPopup();
+          }, 3000);
+        },
+        error: (error) => {
+          this.isSubmitting = false;
+          console.error('Erreur lors de la création de l\'annonce:', error);
+        }
+      });
+    } else {
+      console.error('Token non trouvé');
+      this.isSubmitting = false;
+    }
+  
+    this.showAlert = false;
+    this.closeAnnouncementPopup(); // Fermer le popup après confirmation
+  }
+
+  // Méthode pour afficher l'alerte de confirmation pour l'ajout d'une annonce
+  submitAnnouncement() {
+    if (this.isFormValid) {
+      this.showAlertWithAction('Voulez-vous vraiment ajouter cette annonce ?', this.confirmAnnouncement.bind(this));
+    }
+  }
+
+  // Méthodes pour gérer l'annonce
+  openAnnouncementPopup() {
+    this.showAnnouncementPopup = true;
+  }
+
+  closeAnnouncementPopup() {
+    this.showAnnouncementPopup = false;
+    this.resetAnnouncementForm();
+  }
+
+  checkFormValidity() {
+    this.isFormValid = this.announcementTitle.trim().length > 0;
+  }
+
+  resetAnnouncementForm() {
+    this.announcementTitle = '';
+    this.announcementDescription = '';
+    this.selectedSkills = [];
+    this.selectedSubjects = [];
+    this.isFormValid = false;
+  }
+
+  addSelectedSkill(skill: Skill) {
+    if (!this.selectedSkills.includes(skill)) {
+      this.selectedSkills.push(skill);
+    }
+    this.showDropdown['announcementSkills'] = false;
+  }
+
+  removeSelectedSkill(skill: Skill) {
+    this.selectedSkills = this.selectedSkills.filter(s => s !== skill);
+  }
+
+  addSelectedSubject(subject: Interest) {
+    if (!this.selectedSubjects.includes(subject)) {
+      this.selectedSubjects.push(subject);
+    }
+    this.showDropdown['announcementSubjects'] = false;
+  }
+
+  removeSelectedSubject(subject: Interest) {
+    this.selectedSubjects = this.selectedSubjects.filter(s => s !== subject);
+  }
+
+  // Méthode pour charger les annonces du projet
+  loadAnnouncements(projectId: number | undefined) {
+    if (projectId) {
+      const token = localStorage.getItem('token');
+      if (token) {
+        this.announcementService.getProjectAnnouncements(token, projectId).subscribe({
+          next: (announcements: Announcement[]) => {
+            this.announcements = announcements;
+          },
+          error: (error) => {
+            console.error('Erreur lors du chargement des annonces:', error);
+          }
+        });
+      } else {
+        console.error('Token non trouvé');
+      }
     }
   }
 }

@@ -19,7 +19,29 @@ export class AnnouncementService {
         catchError(this.handleError)
     );
   }
-   private handleError(error: HttpErrorResponse): Observable<never> {
+
+  getProjectAnnouncements(token : string, projectId: number): Observable<Announcement[]> {
+    const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
+    return this.http.get<Announcement[]>(`${this.baseUrl}/projects/${projectId}/announcements`, { headers }).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  createAnnouncement(token : string, announcement: any): Observable<any> {
+    const headers = new HttpHeaders({ Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' });
+    return this.http.post<any>(`${this.baseUrl}/announcements/add`, announcement, { headers }).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  deleteAnnouncement(token : string, announcementId: number): Observable<any> {
+    const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
+    return this.http.delete<any>(`${this.baseUrl}/announcements/${announcementId}`, { headers }).pipe(
+      catchError(this.handleError)
+    );
+  }
+  
+  private handleError(error: HttpErrorResponse): Observable<never> {
       return throwError(() => error);
-    }
+  }
 }
