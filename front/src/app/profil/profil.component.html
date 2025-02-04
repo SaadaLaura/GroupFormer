@@ -4,22 +4,13 @@
 
 <div *ngIf="user && userRole === 'student'" class="profil-info">
   <!-- Contenu pour les étudiants -->
-  <div class="info-group">
-    <label for="hasGroup">Avez-vous un groupe ? <span class="required">*</span> :</label>
-    <select id="hasGroup" name="hasGroup" [(ngModel)]="hasGroup" (change)="onGroupChange()">
-      <option value="">Sélectionnez</option>
-      <option value="oui">Oui</option>
-      <option value="non">Non</option>
-    </select>
+  <div *ngIf="!hasProject" class="hasnoProject">
+    <p class="spaced-paragraph">Vous n'avez pas de projet ou de groupe pour le moment.</p>
+    <p class="spaced-paragraph">Consultez la page <a href="/group-research">Groupes disponibles</a> pour trouver un groupe.</p>
+    <p class="spaced-paragraph">Consultez la page <a href="/free-projects">Projets libres</a> pour choisir un projet ou proposer le vôtre à l'administration.</p>
   </div>
-  <div *ngIf="hasGroup === 'oui'" class="info-group">
-    <label for="hasProjectTopic">Votre groupe a-t-il un sujet de projet ? <span class="required">*</span> :</label>
-    <select id="hasProjectTopic" name="hasProjectTopic" [(ngModel)]="hasProjectTopic">
-      <option value="">Sélectionnez</option>
-      <option value="oui">Oui</option>
-      <option value="non">Non</option>
-    </select>
-  </div>
+  <div *ngIf="hasProject" class="hasProject">
+    <p>Vous êtes dans le projet {{ projectName }}. Il manque {{ remainingMembers }} personne{{ remainingMembers > 1 ? 's' : '' }} pour compléter le groupe.</p>  </div>
   <div class="info-group">
     <label for="interests">Centre d'intérêt <span class="required">*</span> :</label>
     <div class="inline-container">

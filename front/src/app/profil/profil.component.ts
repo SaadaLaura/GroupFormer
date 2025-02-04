@@ -6,7 +6,7 @@ import { NavbarComponent } from '../navbar/navbar.component';
 import { StateService } from '../services/state.service';
 import { UsersService } from '../services/users.service';
 import { AbilitiesService } from '../services/abilities.service';
-import { Interest, Student, Skill } from '../class/Users';
+import { Interest, Student, Skill, Project } from '../class/Users';
 
 @Component({
   selector: 'app-profil',
@@ -23,8 +23,9 @@ export class ProfilComponent implements OnInit {
   newInterest: string = '';
   newSkill: string = '';
   newMajor: string = '';
-  hasGroup: string = ''; 
-  hasProjectTopic: string = '';
+  hasProject: boolean = false;
+  projectName: string = '';
+  remainingMembers: number = 0;
   editMode: { [key: string]: boolean } = {
     interests: false,
     skills: false,
@@ -62,6 +63,12 @@ export class ProfilComponent implements OnInit {
           this.stateService.setInterests(this.interests.map(interest => interest.name));
           this.userRole = response.role;
 
+          if (response.project) {
+            this.hasProject = true;
+            this.projectName = response.project.name;
+            this.remainingMembers = response.project.missing;
+          }
+
           // Récupérer les compétences et centres d'intérêt disponibles
           this.abilitiesService.getAllSkills(token).subscribe({
             next: (skills: Skill[]) => {
@@ -89,14 +96,6 @@ export class ProfilComponent implements OnInit {
     } else {
       this.router.navigate(['/login']);
     }
-  
-    this.stateService.hasGroup$.subscribe({
-      next: (hasGroup: string | null) => {
-        if (hasGroup !== null) {
-          this.hasGroup = hasGroup;
-        }
-      }
-    });
   
     this.stateService.skills$.subscribe({
       next: (skills: string[] | null) => {
@@ -164,13 +163,6 @@ export class ProfilComponent implements OnInit {
 
   toggleEditMode(field: string) {
     this.editMode[field] = !this.editMode[field];
-  }
-
-  onGroupChange() {
-    if (this.hasGroup === 'non') {
-      this.hasProjectTopic = '';
-    }
-    this.stateService.setHasGroup(this.hasGroup);
   }
 
   removeInterest(interest: Interest) {
