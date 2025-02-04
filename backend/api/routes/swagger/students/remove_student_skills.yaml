@@ -1,0 +1,33 @@
+tags:
+  - Student
+summary: "🔏 Required role: STUDENT | Remove skills from the logged-in student"
+description: Allows a student to remove skills from their profile.
+security:
+  - BearerAuth: []
+parameters:
+  - in: body
+    name: body
+    required: true
+    schema:
+      type: array
+      items:
+        type: object
+        required:
+          - id
+          - name
+        properties:
+          id:
+            type: integer
+            example: 5
+          name:
+            type: string
+            example: "Management"
+responses:
+  200:
+    description: Skills removed successfully
+  400:
+    description: Invalid input format
+  404:
+    description: Skill not found
+  401:
+    description: Unauthorized (missing or invalid token)

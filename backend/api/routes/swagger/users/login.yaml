@@ -1,0 +1,31 @@
+tags:
+  - User
+summary: User login
+description: Authenticates a user and returns a JWT token
+parameters:
+  - name: body
+    in: body
+    required: true
+    schema:
+      type: object
+      properties:
+        email:
+          type: string
+          example: "user@example.com"
+        password:
+          type: string
+          example: "password"
+responses:
+  200:
+    description: Login successful
+    schema:
+      type: object
+      properties:
+        token:
+          type: string
+          example: "eyJhbGciOiJIUzI1NiIsInR..."
+        first_connection:
+          type: boolean
+          example: true
+  401:
+    description: Invalid email or password

@@ -1,0 +1,22 @@
+tags:
+  - Student
+summary: Get the project of a student
+description: Retrieve the project assigned to a specific student.
+security:
+  - BearerAuth: []
+parameters:
+  - in: path
+    name: student_id
+    required: true
+    type: integer
+    description: ID of the student
+    example: 1
+responses:
+  200:
+    description: Student project details
+    schema:
+      $ref: '#/definitions/ProjectDTO'
+  404:
+    description: Student not found
+  401:
+    description: Unauthorized (missing or invalid token)

@@ -1,0 +1,20 @@
+tags:
+  - Announcement
+summary: Delete an announcement by ID
+description: Remove an announcement and its associated skills and subjects.
+security:
+  - BearerAuth: []
+parameters:
+  - in: path
+    name: id_announcement
+    required: true
+    type: integer
+    description: ID of the announcement to delete
+    example: 1213
+responses:
+  200:
+    description: Announcement deleted successfully
+  404:
+    description: Announcement not found
+  401:
+    description: Unauthorized (missing or invalid token)

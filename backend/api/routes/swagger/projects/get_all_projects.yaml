@@ -1,0 +1,15 @@
+tags:
+  - Project
+summary: Get all projects
+description: Retrieve a list of all projects in the database.
+security:
+  - BearerAuth: []
+responses:
+  200:
+    description: List of all projects
+    schema:
+      type: array
+      items:
+        $ref: '#/definitions/ProjectDTO'
+  401:
+    description: Unauthorized (missing or invalid token)

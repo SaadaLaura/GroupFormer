@@ -1,0 +1,62 @@
+tags:
+  - Project
+summary: "🔐 Required role: ADMIN | Create a new project"
+description: Adds a new project to the database.
+security:
+  - BearerAuth: []
+parameters:
+  - in: body
+    name: project
+    required: true
+    schema:
+      type: object
+      required:
+        - name
+        - description
+        - size
+      properties:
+        name:
+          type: string
+          example: "GroupFormer"
+        description:
+          type: string
+          example: "A project for managing projects and students."
+        size:
+          type: integer
+          example: 6
+        deadline:
+          type: string
+          format: date
+          example: "2025-06-30"
+responses:
+  201:
+    description: Project created successfully
+    schema:
+      $ref: '#/definitions/Project'
+
+  400:
+    description: Bad request (missing required fields)
+  401:
+    description: Unauthorized (missing or invalid token)
+  403:
+    description: Forbidden (not an admin)
+
+definitions:
+  Project:
+    properties:
+      id:
+        type: integer
+        example: 101
+      name:
+        type: string
+        example: "GroupFormer"
+      description:
+        type: string
+        example: "A project for managing projects and students."
+      size:
+        type: integer
+        example: 6
+      deadline:
+        type: string
+        format: date
+        example: "2025-06-30"

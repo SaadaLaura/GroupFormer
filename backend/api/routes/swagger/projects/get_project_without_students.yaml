@@ -1,0 +1,15 @@
+tags:
+  - Project
+summary: Get projects without students
+description: Retrieve a list of all projects that have no assigned students.
+security:
+  - BearerAuth: []
+responses:
+  200:
+    description: List of empty projects
+    schema:
+      type: array
+      items:
+        $ref: '#/definitions/Project'
+  401:
+    description: Unauthorized (missing or invalid token)

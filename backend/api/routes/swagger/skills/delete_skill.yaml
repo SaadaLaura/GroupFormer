@@ -1,0 +1,28 @@
+tags:
+  - Skill
+summary: "🔐 Required role: ADMIN | Delete a skill"
+description: Deletes a skill from the database.
+security:
+  - BearerAuth: []
+parameters:
+  - in: path
+    name: id_skill
+    required: true
+    type: integer
+    description: ID of the skill to delete
+    example: 2
+responses:
+  200:
+    description: Skill deleted successfully
+    schema:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Skill deleted successfully"
+  404:
+    description: Skill not found
+  401:
+    description: Unauthorized (missing or invalid token)
+  403:
+    description: Forbidden (not an admin)
