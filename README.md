@@ -51,7 +51,7 @@ Des tableaux de bord permettent de suivre différents indicateurs, notamment :
 
 ### Base de données
 
-* **PostgreSQL** — Système de gestion de base de données
+* **SQL** — Système de gestion de base de données
 
 ### Outils
 
